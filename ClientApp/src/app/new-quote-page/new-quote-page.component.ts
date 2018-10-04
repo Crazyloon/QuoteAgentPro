@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Quote } from '../../data/models/domain/quote';
+import { CalculationEngineService } from '../calculation-engine.service';
 
 @Component({
   selector: 'app-new-quote-page',
@@ -12,7 +13,7 @@ export class NewQuotePageComponent implements OnInit {
   public driverOptions: {id: number, name: string}[] = [];
   public driverData: {};
 
-  constructor() { }
+  constructor(private calcEngine: CalculationEngineService) { }
 
   ngOnInit() {
     this.quote = new Quote();
@@ -26,5 +27,9 @@ export class NewQuotePageComponent implements OnInit {
 
   onCustomerIsDriver(driverData: any) {
     this.driverData = Object.assign({}, driverData);
+  }
+
+  calculateQuote(){
+    this.calcEngine.calculateQuote(this.quote);
   }
 }

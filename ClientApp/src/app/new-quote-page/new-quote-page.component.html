@@ -11,4 +11,7 @@
   <div class="vehicle-form">    
     <app-vehicle-form [quote]="quote" (quoteChange)="onQuoteUpdated($event)"></app-vehicle-form>
   </div> 
-</div> 
+</div>
+<div class="submit-quote">
+  <button (click)="calculateQuote()">>Calculate Quote</button>
+</div>
