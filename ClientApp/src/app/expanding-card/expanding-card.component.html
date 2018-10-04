@@ -1,0 +1,23 @@
+<div class="expanding-card">
+  <div class="expanding-card-header">
+    <h5>{{title}}</h5>
+    <button (click)="onToggleClicked()" type="button">
+      <img src="../../assets/icons/012-chevron-arrow-down.svg" [class.open]="isOpen" />
+    </button>
+  </div>
+  <div class="expanding-card-container" [class.open]="isOpen">
+    <!-- SET isOpen to !isOpen  -->
+    <div class="expanding-card-body">
+      <div>// STUFF HERE</div>
+      <div>// STUFF HERE</div>
+      <div>// STUFF HERE</div>
+      <div>// STUFF HERE</div>
+    </div>
+    <div class="expanding-card-footer">
+      <h5>100% Complete</h5>
+      <button (click)="onToggleClicked()" type="button">
+        <img src="../../assets/icons/012-chevron-arrow-down.svg" [class.open]="isOpen" />
+      </button>
+    </div>
+  </div>
+</div>

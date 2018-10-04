@@ -1,0 +1,101 @@
+<div *ngIf="quote" class="quote-summary">
+  <div class="quote-heading">
+    <h1>Quote Summary</h1>
+    <small>Date: {{quote.dateQuoted | date}}</small>
+    <h2>Total Price: {{quote.price | currency:USD}}</h2>
+  </div>
+  <div class="quote-customer">
+    <h3>Customer: {{quote.firstName}} {{quote.lastName}}</h3>
+    <div class="customer-details">
+      <span>Date of Birth: </span><span>{{quote.dateOfBirth | date:mediumDate}}</span>
+      <span>Address: </span><span>{{quote.address}}</span>
+      <span>City, State: </span><span>{{quote.city}}, {{quote.state}}</span>
+      <span>Zip: </span><span>{{quote.zip}}</span>
+      <span>Previous Carrier: </span><span>{{quote.previousCarrier}}</span>
+    </div>
+    <div class="customer-discounts">
+      <h5>Discounts & Premiums</h5>
+      <div *ngIf="quote.previousCarrierLizard || quote.previousCarrierPervasive">
+        <span>Previous Carrier Discount: </span>
+        <span *ngIf="quote.previousCarrierLizard" [ngClass]="isDiscount(quote.previousCarrierLizardDiscount) ? 'discount' : 'premium'">{{quote.previousCarrierLizardDiscount | percent}}</span>
+        <span *ngIf="quote.previousCarrierPervasive" [ngClass]="isDiscount(quote.previousCarrierPervasiveDiscount) ? 'discount' : 'premium'">{{quote.previousCarrierPervasiveDiscount | percent}}</span>
+      </div>
+      <div *ngIf="quote.pastClaims">
+        <span>Past Claims Premium: </span><span [ngClass]="isDiscount(quote.pastClaimsDiscount) ? 'discount' : 'premium'">{{quote.pastClaimsDiscount | percent}}</span>
+      </div>
+      <div *ngIf="quote.movingViolations">
+        <span>Moving Volations Premium: </span><span [ngClass]="isDiscount(quote.movingViolationsDiscount) ? 'discount' : 'premium'">{{quote.movingViolationsDiscount | percent}}</span>
+      </div>
+      <div *ngIf="quote.newDriver">
+        <span>New Driver Premium: </span><span [ngClass]="isDiscount(quote.newDriverDiscount) ? 'discount' : 'premium'">{{quote.newDriverDiscount | percent}}</span>
+      </div>
+      <div *ngIf="quote.multiCar">
+        <span>Multi-Car Discount: </span><span [ngClass]="isDiscount(quote.multiCarDiscount) ? 'discount' : 'premium'">{{quote.multiCarDiscount | percent}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="quote-drivers">
+    <h3>Driver(s):</h3>
+    <ng-container *ngFor="let driver of quote.drivers">
+        <div class="driver-details">
+          <span>Name: </span><span>{{driver.firstName}} {{driver.lastName}}</span>
+          <span>Date of Birth: </span><span>{{driver.dateOfBirth | date:mediumDate}}</span>
+          <span>License Number: </span><span>{{driver.licenseNumber}}</span>
+          <span>Issuing State: </span><span>{{driver.issuingState}}</span>
+        </div>
+        <div class="driver-discounts">
+          <h5>Discounts & Premiums</h5>
+          <div *ngIf="driver.safeDrivingSchool">
+            <span>Safe Driving Discount: </span><span [ngClass]="isDiscount(driver.safeDrivingSchoolDiscount) ? 'discount' : 'premium'">{{driver.safeDrivingSchoolDiscount | percent}}</span>
+          </div>
+          <div *ngIf="driver.under23YearsOld">
+            <span>Under 23 Years Old Premium: </span><span [ngClass]="isDiscount(driver.under23YearsOldDiscount) ? 'discount' : 'premium'">{{driver.under23YearsOldDiscount | percent}}</span>
+          </div>
+        </div>
+    </ng-container>
+  </div>
+  <div class="quote-vehicles">
+    <h3>Vehicle(s):</h3>
+    <ng-container *ngFor="let vehicle of quote.vehicles">
+      <div class="vehicle-details">
+          <span>Vehicle: </span><span>{{vehicle.year}}, {{vehicle.make}}, {{vehicle.model}}</span>
+          <span>Current Value: </span><span>{{vehicle.currentValue | currency:USA}}</span>
+          <span>VIN: </span><span>{{vehicle.vin}}</span>
+          <span>Primary Driver: </span><span>{{vehicle.primaryDriver}}</span>
+          <span>Miles to Work: </span><span>{{vehicle.milesToWork | number}}</span>
+          <span>Annual Mileage: </span><span>{{vehicle.annualMileage | number}}</span>
+          <span>Days Driven Per Week: </span><span>{{vehicle.daysDrivenPerWeek}}</span>
+      </div>
+      <div class="vehicle-discounts">
+          <h5>Discounts & Premiums</h5>
+        <div *ngIf="vehicle.antiTheft">
+          <span>Anti-Theft Discount: </span><span [ngClass]="isDiscount(vehicle.antiTheftDiscount) ? 'discount' : 'premium'">{{vehicle.antiTheftDiscount | percent}}</span>
+        </div>
+        <div *ngIf="vehicle.antilockBrakes">
+          <span>Antilock-Brakes Discount: </span><span [ngClass]="isDiscount(vehicle.antilockBrakesDiscount) ? 'discount' : 'premium'">{{vehicle.antilockBrakesDiscount | percent}}</span>
+        </div>
+        <div *ngIf="vehicle.daytimeLights">
+          <span>Daytime Lights Discount: </span><span [ngClass]="isDiscount(vehicle.daytimeLightsDiscount) ? 'discount' : 'premium'">{{vehicle.daytimeLightsDiscount | percent}}</span>
+        </div>
+        <div *ngIf="vehicle.nonResidenceGarage">
+          <span>Non-Residence Garage Premium: </span><span [ngClass]="isDiscount(vehicle.nonResidenceGarageDiscount) ? 'discount' : 'premium'">{{vehicle.nonResidenceGarageDiscount | percent}}</span>
+        </div>
+        <div *ngIf="vehicle.passiveRestraints">
+          <span>Passive Restraints Discount: </span><span [ngClass]="isDiscount(vehicle.passiveRestraintsDiscount) ? 'discount' : 'premium'">{{vehicle.passiveRestraintsDiscount | percent}}</span>
+        </div>
+        <div *ngIf="vehicle.reducedUsed">
+          <span>Reduced Used Discount: </span><span [ngClass]="isDiscount(vehicle.reducedUsedDiscount) ? 'discount' : 'premium'">{{vehicle.reducedUsedDiscount | percent}}</span>
+        </div>
+        <div *ngIf="vehicle.annualMileageUnder6k">
+          <span>Annual Mileage Under 6k Discount: </span><span [ngClass]="isDiscount(vehicle.annualMileageUnder6kDiscount) ? 'discount' : 'premium'">{{vehicle.annualMileageUnder6kDiscount | percent}}</span>
+        </div>
+        <div *ngIf="vehicle.daysDrivenPerWeekOver4">
+          <span>Days Driven Per Week Over 4 Premium: </span><span [ngClass]="isDiscount(vehicle.daysDrivenPerWeekOver4Discount) ? 'discount' : 'premium'">{{vehicle.daysDrivenPerWeekOver4Discount | percent}}</span>
+        </div>
+        <div *ngIf="vehicle.milesToWorkUnder26">
+          <span>Miles to Work Under 26 Discount: </span><span [ngClass]="isDiscount(vehicle.milesToWorkUnder26Discount) ? 'discount' : 'premium'">{{vehicle.milesToWorkUnder26Discount | percent}}</span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

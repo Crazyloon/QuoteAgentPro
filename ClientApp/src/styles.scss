@@ -1,0 +1,131 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/_variables";
+@import "src/_variables";
+
+body{
+  margin: 0;
+  font-family: 'Righteous', sans-serif;
+}
+
+a{
+  color: $color-primary;
+  text-decoration: none !important;
+  &:hover label{
+    color: $color-secondary;
+    cursor: pointer;
+  }
+}
+
+img.icon{
+  align-self: center;
+  width: 40px;
+  height: 40px;
+  &:hover{
+    padding: 5px;
+  }
+}
+
+
+input.form-control.is-invalid, select.form-control.is-invalid, button{
+  & ~ div.alert.alert-danger, & ~ div.alert.alert-warning{
+    margin: 5px 0 0 0;
+    padding: 0 0 0 .75rem;
+    z-index: -1;
+    @media screen and (min-width: map-get($grid-breakpoints, sm)) {
+      max-width: 250px;
+    }
+    span{
+      display: block;
+    }
+  }
+}
+
+div.valid-feedback{
+  margin-left: 13px;
+}
+
+.alert.alert-warning{
+  span.invalid-feedback{
+    color: #bda043;
+  }
+}
+
+.thead-brand{
+  color: #ffffff;
+  background-color: $color-primary;
+}
+
+input {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
+  &:focus {
+    border-color: $color-trim;
+    box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25);
+    animation: pulsing_shadow 3s infinite;
+  }
+
+  &[type="text"], &[type="date"], &[type="email"], &[type="number"], &[type="password"] {
+    @media screen and (min-width: map-get($grid-breakpoints, sm)) {
+      max-width: 250px;
+    }
+  }
+  
+  &[type="checkbox"]{
+    &:focus{
+      border-color: $color-trim;
+      box-shadow: 0 0 8px 0.2rem rgba(0, 11, 106, 0.65);
+    }
+  }
+
+}
+
+select {
+  &:focus{
+    border-color: $color-trim;
+    box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25);
+    animation: pulsing_shadow 3s infinite;
+  }
+  
+  @media screen and (min-width: map-get($grid-breakpoints, sm)) {
+    max-width: 250px;
+  }
+}
+
+div.table-responsive{
+  position: relative;
+  top: -2px;
+  table.table.table-striped{
+    margin-bottom: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+// Beveled Buttons - Works with bootstrap 4 buttons of medium (standard) size 'btn btn-type'
+.bevel{
+  box-shadow: $btn-bevel-down;
+}
+.bevel:focus{
+  box-shadow: $btn-bevel-down !important;
+}
+.bevel-md:active:focus{
+  padding-top: 7px;
+  padding-left: 13px;
+  padding-right: 11px;
+  padding-bottom: 5px;
+  box-shadow: $btn-bevel-up !important;
+}
+
+// shadow animation for form controls: used to indicate focus
+@-webkit-keyframes pulsing_shadow {
+  0% { box-shadow: 0 0 4px 0.2rem rgba(0, 11, 106, 0.25) }
+  50% { box-shadow: 0 0 10px 0.2rem rgba(0, 11, 106, 0.65) }
+  100% { box-shadow: 0 0 4px 0.2rem rgba(0, 11, 106, 0.25) }
+}
+@keyframes pulsing_shadow {
+  0% { box-shadow: 0 0 4px 0.2rem rgba(0, 11, 106, 0.25) }
+  50% { box-shadow: 0 0 10px 0.2rem rgba(0, 11, 106, 0.65) }
+  100% { box-shadow: 0 0 4px 0.2rem rgba(0, 11, 106, 0.25) }
+}

@@ -1,0 +1,64 @@
+<h1>Find a Quote:</h1>
+<pre>
+  {{ filters | json }}
+</pre>
+<div class="filter-options-list">
+  <app-filter-option (filterRemoved)="onRemoveFilterClick($event)" *ngFor="let filter of filters" [type]="filter.type" [symbol]="filter.symbol" [value]="filter.value"></app-filter-option>
+</div>
+<app-quote-list [quotes]="quotes"></app-quote-list>
+<div class="centered-content-container">
+  <div class="quote-search-section">
+    <h4>Quote</h4>
+    <hr/>
+    <div class="form-group">
+      <label>Quote ID</label>
+      <input class="form-control" type="text" #txtQuoteId (input)="onQuoteIdInput(txtQuoteId.value)">
+    </div>
+    <div class="form-group">
+      <label>Date Range (Inclusive)</label>
+      after <input class="form-control" type="date" #dateStart (input)="onDateAfterInput(dateStart.value)">
+      before <input class="form-control" type="date" #dateEnd (input)="onDateBeforeInput(dateEnd.value)">
+    </div>
+    <div class="form-group">
+      <label>Price Range (Inclusive)</label>
+      min <input class="form-control" type="text" #priceMin (input)="onPriceMinInput(priceMin.value)">
+      max <input class="form-control" type="text" #priceMax (input)="onPriceMaxInput(priceMax.value)">
+    </div>
+  </div>
+  <div class="customer-search-section">
+    <h4>Customer</h4>
+    <hr/>
+    <div class="form-group">
+      <label>First Name</label>
+      <input class="form-control" type="text" #txtFirstName (input)="onFirstNameInput(txtFirstName.value)">
+    </div>
+    <div class="form-group">
+      <label>Last Name</label>
+      <input class="form-control" type="text" #txtLastName (input)="onLastNameInput(txtLastName.value)">
+    </div>
+    <div class="form-group">
+      <label>Phone No.</label>
+      <input class="form-control" type="text" #txtPhoneNo (input)="onPhoneNoInput(txtPhoneNo.value)">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input class="form-control" type="text" #txtEmail (input)="onEmailInput(txtEmail.value)">
+    </div>
+    <div class="form-group">
+      <label>City</label>
+      <input class="form-control" type="text" #txtCity (input)="onCityInput(txtCity.value)">
+    </div>
+    <div class="form-group">
+      <label>State</label>
+      <select class="form-control" #cboState (change)="onStateSelected(cboState.selectedIndex, cboState.value)">
+        <option *ngFor="let option of stateOptions" value="{{option}}">
+          {{option}}
+        </option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Zip</label>
+      <input class="form-control" type="text" #txtZip (input)="onZipInput(txtZip.value)">
+    </div>
+  </div>
+</div>

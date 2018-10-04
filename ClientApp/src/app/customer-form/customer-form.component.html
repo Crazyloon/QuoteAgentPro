@@ -1,0 +1,234 @@
+<div class="expanding-card">
+  <div class="expanding-card-header">
+    <h5>1. Customer Details</h5>
+    <button (click)="onToggleClicked()" type="button">
+      <img src="../../assets/icons/012-chevron-arrow-down.svg" [class.open]="isOpen" />
+    </button>
+  </div>
+  <div class="expanding-card-container" [class.open]="isOpen">
+
+    <div class="expanding-card-body">
+      <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label>First Name</label>
+          <input class="form-control"
+            [class.is-valid]="fName.valid"          
+            [class.is-invalid]="fName.invalid && (fName.dirty || fName.touched)" 
+            formControlName="firstName"
+            type="text"
+            required 
+            />
+          <div *ngIf="fName.invalid && (fName.dirty || fName.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="fName.errors.required">
+              First name is required.
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input class="form-control"
+            [class.is-valid]="lName.valid"
+            [class.is-invalid]="lName.invalid && (lName.dirty || lName.touched)" 
+            formControlName="lastName"
+            type="text"
+            required 
+            />
+          <div *ngIf="lName.invalid && (lName.dirty || lName.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="lName.errors.required">
+              Last name is required.
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <input class="form-control"
+            [class.is-valid]="dateOfBirth.valid" 
+            [class.is-invalid]="dateOfBirth.invalid && (dateOfBirth.dirty || dateOfBirth.touched)"
+            formControlName="dateOfBirth"
+            type="date"
+            required 
+          />
+          <div *ngIf="dateOfBirth.invalid && (dateOfBirth.dirty || dateOfBirth.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="dateOfBirth.errors.required">
+              Date of Birth is required.
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input class="form-control"
+              [class.is-valid]="email.valid"
+              [class.is-invalid]="email.invalid && (email.dirty || email.touched)"
+              formControlName="email" 
+              [email]="true"
+              type="email" 
+              required
+              />
+          <div *ngIf="email.invalid && (email.dirty || email.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="email.errors.required">
+              Email is required.
+            </span>
+            <span class="invalid-feedback" *ngIf="email.errors.email">
+              Email example: you12@gmail.com
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input class="form-control" 
+              [class.is-valid]="phone.valid && (phone.dirty || phone.touched)"
+              [class.is-invalid]="phone.invalid && (phone.dirty || phone.touched)"
+              formControlName="phone" 
+              type="text" 
+              />
+          <div *ngIf="phone.invalid && (phone.dirty || phone.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="phone.errors.required">
+              Phone format must be correct.
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Address</label>
+          <input class="form-control"
+              [class.is-valid]="address.valid"
+              [class.is-invalid]="address.invalid && (address.dirty || address.touched)"
+              formControlName="address"
+              type="text"
+              required 
+              />
+          <div *ngIf="address.invalid && (address.dirty || address.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="address.errors.required">
+              Address is required.
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>City</label>
+          <input class="form-control"
+              [class.is-valid]="city.valid"
+              [class.is-invalid]="city.invalid && (city.dirty || city.touched)"
+              formControlName="city"
+              type="text"
+              required 
+              />
+          <div *ngIf="city.invalid && (city.dirty || city.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="city.errors.required">
+              City is required.
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>State</label>
+          <select class="form-control"
+              [class.is-valid]="state.valid && (state.dirty || state.touched)"
+              [class.is-invalid]="state.invalid && (state.dirty || state.touched)"
+              formControlName="state"
+              required 
+              >
+            <option *ngFor="let option of stateOptions" value="{{option}}">
+              {{option}}
+            </option>
+          </select>
+          <div *ngIf="state.invalid && (state.dirty || state.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="state.errors.required || state.errors.minlength || state.errors.maxlength">
+              State is required.
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Zip</label>
+          <input class="form-control"
+              [class.is-valid]="zip.valid"
+              [class.is-invalid]="zip.invalid && (zip.dirty || zip.touched)"
+              formControlName="zip"
+              type="text"
+              required 
+              />
+          <div *ngIf="zip.invalid && (zip.dirty || zip.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="zip.errors.required">
+              Zip is required.
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Social Security Number</label>
+          <input class="form-control"
+              [class.is-valid]="ssn.valid"
+              [class.is-invalid]="ssn.invalid && (ssn.dirty || ssn.touched)"
+              formControlName="ssn"
+              type="text"
+              />
+          <div *ngIf="ssn.invalid && (ssn.dirty || ssn.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="ssn.errors.required">
+              SSN is required.
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Previous Carrier</label>
+          <select class="form-control"
+            formControlName="previousCarrier"
+            required >
+            <option *ngFor="let option of previousCarrierOptions" value="{{option}}">
+              {{option}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="check-box-input">
+            <input class="form-control" 
+              formControlName="pastClaims" 
+              type="checkbox" 
+              />
+            Claims in the last 5 years?
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="check-box-input">
+            <input class="form-control"
+              formControlName="movingViolations" 
+              type="checkbox"
+              />
+            Any moving violations within 5 years?
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="check-box-input">
+            <input class="form-control"
+              formControlName="newDriver" 
+              type="checkbox"
+              />
+            Under 3 years driving experience?
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="check-box-input">
+            <input class="form-control"
+              formControlName="multiCar" 
+              type="checkbox"
+              />
+            Force multi-car discount?
+          </label>
+        </div>
+        <div class="customer-button-group">
+          <button type="submit" class="btn btn-success bevel bevel-md" [disabled]="!customerForm.valid">Save Customer</button>
+          <button type="button" (click)="onCopyToDriver()" class="btn btn-seconday bevel bevel-md" [disabled]="!customerForm.valid">Copy Customer to Driver Form</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="expanding-card-footer">
+      <!-- <h5>{{ (1.00) | percent}} Complete</h5> -->
+      <h5>Form Status: {{ customerForm.status }}</h5>
+      <button (click)="onToggleClicked()" type="button">
+        <img src="../../assets/icons/012-chevron-arrow-down.svg" [class.open]="isOpen" />
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- View data 
+<pre>{{customerForm.value | json}}</pre>
+<pre>{{quote | json}}</pre>
+ -->
+ 

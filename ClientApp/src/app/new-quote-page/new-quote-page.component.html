@@ -1,0 +1,14 @@
+<h1>New Quote</h1>
+
+<pre>{{quote | json}}</pre>
+<div class="form-grid">  
+  <div class="customer-form">
+    <app-customer-form [quote]="quote" (quoteChange)="onQuoteUpdated($event)" (driverData)="onCustomerIsDriver($event)"></app-customer-form>
+  </div>
+  <div class="driver-form">    
+    <app-driver-form [quote]="quote" (quoteChange)="onQuoteUpdated($event)" [driverData]="driverData"></app-driver-form>
+  </div>
+  <div class="vehicle-form">    
+    <app-vehicle-form [quote]="quote" (quoteChange)="onQuoteUpdated($event)"></app-vehicle-form>
+  </div> 
+</div> 

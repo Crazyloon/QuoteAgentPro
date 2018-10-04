@@ -1,0 +1,26 @@
+// COLORS:
+$color-primary: #000b6a;
+$color-secondary: #02d9e0;
+$color-trim: #696acc;
+
+// Gradients:
+$gradient-primary: linear-gradient(to right, $color-primary, $color-secondary, $color-primary);
+
+// LOGO:
+$logo-small: '../../assets/images/AIAsmall.png';
+$logo-large: '../../assets/images/AIA4x1.png';
+
+// BREAKPOINTS:
+$xs: 0;
+$mini: 320;
+$sm: 576;
+$md: 768;
+$lg: 992;
+$xl: 1200;
+
+// BUTTONS
+$btn-bevel-down: 3px 2px 8px -1px RGBA(0, 0, 0, 0.6),
+                 inset 3px 3px 5px 0px RGBA(255, 255, 255, 0.4),
+                 inset -13px -14px 10px -11px RGBA(0, 0, 0, 0.4);
+$btn-bevel-up: inset 3px 3px 5px 0px RGBA(0,0,0,0.4), 
+               inset -3px -3px 5px 0px RGBA(255,255,255,0.4);

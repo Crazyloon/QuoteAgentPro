@@ -1,0 +1,156 @@
+<div class="expanding-card">
+  <div class="expanding-card-header">
+    <h5>2. Driver Details</h5>
+    <button (click)="onToggleClicked()" type="button">
+      <img src="../../assets/icons/012-chevron-arrow-down.svg" [class.open]="isOpen" />
+    </button>
+  </div>
+  <div class="expanding-card-container" [class.open]="isOpen">
+
+    <div class="expanding-card-body">
+      <div *ngIf="quote.drivers.length > 0" class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="thead-brand">
+            <tr>
+              <th>Name</th>
+              <th>DOB</th>
+              <th>Age</th>
+              <th>License</th>
+              <th>Iussed in</th>
+              <th>SSN</th>
+            </tr>
+          </thead> 
+          <tbody>
+            <ng-container *ngFor="let driver of quote.drivers">
+              <tr>
+                <td>{{driver.firstName}} {{driver.lastName}}</td>
+                <td>{{driver.dateOfBirth | date}}</td>
+                <td>{{calculateAge(driver.dateOfBirth)}}</td>
+                <td>{{driver.licenseNumber}}</td>
+                <td>{{driver.issuingState}}</td>
+                <td>{{driver.ssn}}</td>
+              </tr>
+            </ng-container>
+          </tbody> 
+        </table>  
+      </div>
+      <form [formGroup]="driverForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label>First Name</label>
+          <input class="form-control"
+            [class.is-valid]="fName.valid"          
+            [class.is-invalid]="fName.invalid && (fName.dirty || fName.touched)" 
+            formControlName="firstName"
+            type="text"
+            required 
+            />
+          <div *ngIf="fName.invalid && (fName.dirty || fName.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="fName.errors.required">
+              First name is required.
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input class="form-control"
+            [class.is-valid]="lName.valid"
+            [class.is-invalid]="lName.invalid && (lName.dirty || lName.touched)" 
+            formControlName="lastName"
+            type="text"
+            required 
+            />
+          <div *ngIf="lName.invalid && (lName.dirty || lName.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="lName.errors.required">
+              Last name is required.
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <input class="form-control"
+            [class.is-valid]="dateOfBirth.valid" 
+            [class.is-invalid]="dateOfBirth.invalid && (dateOfBirth.dirty || dateOfBirth.touched)"
+            formControlName="dateOfBirth"
+            type="date"
+            required 
+          />
+          <div *ngIf="dateOfBirth.invalid && (dateOfBirth.dirty || dateOfBirth.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="dateOfBirth.errors.required">
+              Date of Birth is required.
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Social Security Number</label>
+          <input class="form-control"
+              [class.is-valid]="ssn.valid"
+              [class.is-invalid]="ssn.invalid && (ssn.dirty || ssn.touched)"
+              formControlName="ssn"
+              type="text"
+              />
+          <div *ngIf="ssn.invalid && (ssn.dirty || ssn.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="ssn.errors.required">
+              SSN is required.
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Drivers License Number</label>
+          <input class="form-control"
+              [class.is-valid]="licenseNumber.valid"
+              [class.is-invalid]="licenseNumber.invalid && (licenseNumber.dirty || licenseNumber.touched)"
+              formControlName="licenseNumber"
+              type="text"
+              />
+          <div *ngIf="licenseNumber.invalid && (licenseNumber.dirty || licenseNumber.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="licenseNumber.errors.required">
+              Drivers License Number is required.
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>License Issuing State</label>
+          <select class="form-control"
+              [class.is-valid]="issuingState.valid && (issuingState.dirty || issuingState.touched)"
+              [class.is-invalid]="issuingState.invalid && (issuingState.dirty || issuingState.touched)"
+              formControlName="issuingState"
+              required 
+              >
+            <option *ngFor="let option of stateOptions" value="{{option}}">
+              {{option}}
+            </option>
+          </select>
+          <div *ngIf="issuingState.invalid && (issuingState.dirty || issuingState.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="issuingState.errors.required || issuingState.errors.minlength || issuingState.errors.maxlength">
+              Issuing State is required.
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="check-box-input">
+            <input class="form-control" 
+              formControlName="safeDrivingSchool" 
+              type="checkbox" 
+              />
+            Attended Safe Driving School?
+          </label>
+        </div>
+        <button type="submit" class="btn btn-success bevel bevel-md" [disabled]="!driverForm.valid || !quote.id || isFormUpdating">Save Driver</button>
+        <div *ngIf="!quote.id" class="alert alert-warning">
+            <span class="invalid-feedback" style="display: block;">
+              Save customer information before adding a driver.
+            </span>
+          </div>
+      </form>
+    </div>
+
+    <div class="expanding-card-footer">
+      <!-- <h5>{{ (1.00) | percent}} Complete</h5> -->
+      <h5>Form Status: {{ driverForm.status }}</h5>
+      <button (click)="onToggleClicked()" type="button">
+        <img src="../../assets/icons/012-chevron-arrow-down.svg" [class.open]="isOpen" />
+      </button>
+    </div>
+  </div>
+</div>
+ 

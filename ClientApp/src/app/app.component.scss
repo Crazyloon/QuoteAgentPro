@@ -1,0 +1,11 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/_variables";
+@import "src/_variables";
+
+section{
+  position: absolute;
+  margin-top: 84px; // header + trim height 
+  @media screen and (min-width: map-get($grid-breakpoints, md)){
+    margin-top: 99px; // header + trim height md+
+  }
+}

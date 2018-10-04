@@ -1,0 +1,15 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/_variables";
+@import "src/_variables";
+
+.metrics-grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  margin: 15px 0;
+  grid-gap: 20px;
+  justify-items: center;
+
+  @media screen and (min-width: map-get($grid-breakpoints, lg)) {
+    grid-template-columns: 1fr 1fr;
+  }
+}

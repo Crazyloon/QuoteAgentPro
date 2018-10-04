@@ -1,0 +1,7 @@
+<div class="filter">
+  <div class="filter-option">
+    <label *ngIf="type == 'Min Price' || type == 'Max Price'; else next">{{type}}: {{symbol}} {{_value | currency:USD}}</label>
+    <ng-template #next><label>{{type}}: {{symbol}} {{_value}}</label></ng-template>
+    <button (click)="onRemoveFilter(type)"><img src="../../assets/icons/016-remove-symbol.svg"/></button>
+  </div>
+</div>
