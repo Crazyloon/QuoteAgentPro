@@ -17,7 +17,12 @@ namespace web_agent_pro.Models
         }
 
         [DisplayName("Quote ID")]
-        public long QuoteId { get; set; }
+        public long Id { get; set; }
+
+        [Required]
+        [DisplayName("User Id")]
+        [MaxLength(450)]
+        public string UserId { get; set; }
         
         [Required]
         [DisplayName("First Name")]
@@ -58,11 +63,11 @@ namespace web_agent_pro.Models
         [Required]
         [DisplayName("Social Security Number")]
         [StringLength(9, MinimumLength = 9)]
-        public string SocialSecurityNumber { get; set; }
+        public string SSN { get; set; }
 
         [Required]
         [DisplayName("Previous Carrier")]
-        public string PreviousInsurer { get; set; }
+        public string PreviousCarrier { get; set; }
 
         [DisplayName("Claims in last 5 years")]
         public bool PastClaims { get; set; }
@@ -87,17 +92,17 @@ namespace web_agent_pro.Models
         public double? MultiCarDiscount { get; set; }
 
         [DisplayName("Previous Carrier is Lizard")]
-        public bool PreviousInsurerLizard { get; set; }
+        public bool PreviousCarrierLizard { get; set; }
 
-        public double? PreviousInsurerLizardDiscount { get; set; }
+        public double? PreviousCarrierLizardDiscount { get; set; }
 
         [DisplayName("Previous Carrier is Pervasive")]
-        public bool PreviousInsurerPervasive { get; set; }
+        public bool PreviousCarrierPervasive { get; set; }
 
-        public double? PreviousInsurerPervasiveDiscount { get; set; }
+        public double? PreviousCarrierPervasiveDiscount { get; set; }
 
         [DisplayName("Price")]
-        public decimal QuotePrice { get; set; }
+        public decimal Price { get; set; }
 
         [DisplayName("Date Quoted")]
         public DateTime DateQuoted { get; set; }
@@ -108,14 +113,17 @@ namespace web_agent_pro.Models
         [DisplayName("Date Sold")]
         public DateTime? DateSold { get; set; }
 
-        [DisplayName("Agent")]
+        [DisplayName("Discarded")]
+        public bool Discarded { get; set; }
+
+        [DisplayName("Date Discarded")]
+        public DateTime? DateDiscarded { get; set; }
+        public decimal QuoteMultiplier { get; set; }
+
         public virtual ApplicationUser User { get; set; }
         
         public ICollection<Driver> Drivers { get; set; }
 
         public ICollection<Vehicle> Vehicles { get; set; }
-
-        public decimal QuoteMultiplier { get; set; }
-
     }
 }

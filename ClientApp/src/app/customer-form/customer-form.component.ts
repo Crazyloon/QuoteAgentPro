@@ -87,6 +87,10 @@ export class CustomerFormComponent implements OnInit {
   addQuote(): void {
     Object.assign(this.quote, this.customerForm.value);
     this.quote.dateQuoted = new Date(Date.now());
+    this.quote.userId = "fa3d0fd6-c504-47ef-8bef-0452680ffe66"; //TODO: getCurrentUserId();
+    this.quote.previousCarrierLizard = this.quote.previousCarrier == "Lizard";
+    this.quote.previousCarrierPervasive = this.quote.previousCarrier == "Pervasive";
+    // TODO: populate discount (on the server?)
     this.quoteService.addQuote(this.quote)
       .subscribe(quote => {
         this.quote.id = quote.id;

@@ -3,20 +3,9 @@ import { Vehicle } from "./vehicle";
 
 export class Quote {
   constructor() {}
-  // constructor(user: number, fName: string, lName: string, dob: string,
-  //             addr: string, city: string, state: string, zip: string){
-  //               this.userId = user;
-  //               this.firstName = fName;
-  //               this.lastName = lName;
-  //               this.dateOfBirth = dob;
-  //               this.address = addr;
-  //               this.city = city;
-  //               this.state = state;
-  //               this.zip = zip;
-  // }
 
   id: number;
-  userId: number;
+  userId: string;
   firstName: string;
   lastName: string;
   dateOfBirth: Date;
@@ -29,7 +18,7 @@ export class Quote {
   ssn: string;
   price: number;
   dateQuoted: Date;
-  sold: boolean;
+  submitted: boolean;
   dateSold: Date;
   discarded: boolean;
   dateDiscarded: Date;
@@ -48,6 +37,7 @@ export class Quote {
   previousCarrierPervasiveDiscount: number;
   drivers: Driver[];
   vehicles: Vehicle[];
+  quoteMultiplier: number;
 
   addDriver(driver: Driver): void {
     this.drivers.push(driver);

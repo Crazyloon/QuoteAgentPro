@@ -28,10 +28,10 @@ export class Vehicle{
   reducedUsed: boolean;
   reducedUsedDiscount: number;
   annualMileageUnder6k: boolean;
-  annualMileageUnder6kDiscount: number;
+  annualMileageDiscount: number;
   daysDrivenPerWeekOver4: boolean;
   daysDrivenPerWeekOver4Discount: number;
   milesToWorkUnder26: boolean;
   milesToWorkUnder26Discount: number;
-  multiplier: number;
+  quoteMultiplier: number;
 }

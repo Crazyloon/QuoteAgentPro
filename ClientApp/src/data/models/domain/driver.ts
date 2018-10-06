@@ -11,11 +11,11 @@ export class Driver {
   lastName: string;
   dateOfBirth: Date;
   ssn: string;
-  licenseNumber: string;
+  driversLicenseNumber: string;
   issuingState: string;
   safeDrivingSchool: boolean;
   safeDrivingSchoolDiscount: number;
   under23YearsOld: boolean;
   under23YearsOldDiscount: number;
-  multiplier: number;  
+  quoteMultiplier: number;  
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using web_agent_pro.Data;
 
 namespace webagentpro.Migrations
 {
     [DbContext(typeof(WebAgentProDbContext))]
-    partial class WebAgentProDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181005204350_SyncModelsFrontAndBackEnd")]
+    partial class SyncModelsFrontAndBackEnd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -322,17 +324,17 @@ namespace webagentpro.Migrations
 
                     b.Property<bool>("Submitted");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasMaxLength(450);
-
                     b.Property<string>("Zip")
                         .IsRequired()
                         .HasMaxLength(5);
 
+                    b.Property<string>("userId")
+                        .IsRequired()
+                        .HasMaxLength(450);
+
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("userId");
 
                     b.ToTable("Quotes");
                 });
@@ -474,7 +476,7 @@ namespace webagentpro.Migrations
                 {
                     b.HasOne("web_agent_pro.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

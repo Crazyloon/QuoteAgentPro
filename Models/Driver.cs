@@ -12,7 +12,7 @@ namespace web_agent_pro.Models
             Vehicles = new HashSet<Vehicle>();
         }
 
-        public long DriverId { get; set; }
+        public long Id { get; set; }
         public long QuoteId { get; set; }
 
         [Required]
@@ -30,6 +30,11 @@ namespace web_agent_pro.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateOfBirth { get; set; }
+
+        [Required]
+        [DisplayName("Social Security Number")]
+        [StringLength(9, MinimumLength = 9)]
+        public string SSN { get; set; }
 
         [DisplayName("Attended Safe Driving School")]
         public bool SafeDrivingSchool { get; set; }

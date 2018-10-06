@@ -35,22 +35,10 @@ export class QuoteService {
   }
 
   getQuotes(filters?: any): Observable<Quote[]> {
-    //if(!filters){
-      return this.http.get<Quote[]>(this.quotesUrl)
-      .pipe(
+      return this.http.get<Quote[]>(this.quotesUrl).pipe(
         tap(quotes => this.log('Quote Service: got quotes!')),
         catchError(this.handleError('getQuotes', []))
       );
-    //}
-    // const { lessThan, greaterThan, quoteId, dateStart, dateEnd, fName, lName, phone, email, city, state, zip } = filters;
-    // return this.http.get<Quote[]>(this.quotesUrl)
-    //   .pipe(
-    //     filter((quote: Quote) => city? quote.city.toLowerCase() == city.toLowerCase() : true),
-    //     filter((quote: Quote) => state? quote.state.toLowerCase() == state.toLowerCase() : true),
-    //     // Should I really add a filter for each option in filters, or is there a better way?
-    //     catchError(this.handleError('getQuotes', []))
-    //   );
-
   }
   /** GET quote by id. Will 404 if id not found */
   getQuote(id: number): Observable<Quote> {
@@ -79,7 +67,6 @@ export class QuoteService {
     );
   }
 
-  /** PUT: update the quote on the server */
   updateQuote (quote: Quote): Observable<any> {
     const url = `${this.quotesUrl}/${quote.id}`;
     return this.http.put<Quote>(url, quote, httpOptions).pipe(
