@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using web_agent_pro.Data;
 using web_agent_pro.Models;
+using web_agent_pro.Models.StringMaps;
 
 namespace web_agent_pro.Controllers
 {
@@ -19,10 +20,12 @@ namespace web_agent_pro.Controllers
     public class QuotesController : ControllerBase
     {
         private readonly WebAgentProDbContext _context;
+        private DiscountNames _discountNames;
 
         public QuotesController(WebAgentProDbContext context)
         {
             _context = context;
+            _discountNames = new DiscountNames();
         }
 
         // GET: api/Quotes
@@ -90,6 +93,9 @@ namespace web_agent_pro.Controllers
         [HttpPost]
         public async Task<IActionResult> PostQuote([FromBody] Quote quote)
         {
+
+
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -97,30 +103,30 @@ namespace web_agent_pro.Controllers
 
             // apply quote discounts
             // BEGIN EXTRACT METHOD
-            List<Discount> quoteDiscounts = _context.Discounts.Where(disc => disc.Scope == "Quote" && disc.State == quote.State).ToList();
-            if (quote.PastClaims)
+            List<Discount> quoteDiscounts = _context.Discounts.Where(d => d.Scope == "Quote" && d.State == quote.State).ToList();
+            if(quote.PastClaims)
             {
-                //quote.PastClaimsDiscount = quoteDiscounts.Find(d => d.Name == "Claims in last 5 years").Amount;
+                quote.PastClaimsDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PastClaims")).SingleOrDefault().Amount;
             }
-            if (quote.MovingViolations)
+            if(quote.NewDriver)
             {
-                //quote.MovingViolationsDiscount = quoteDiscounts.Find(d => d.Name == "Moving Violation in last 5 years").Amount;
+                quote.NewDriverDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("NewDriver")).SingleOrDefault().Amount;
             }
-            if (quote.NewDriver)
+            if(quote.MovingViolations) 
             {
-                quote.NewDriverDiscount = quoteDiscounts.Find(d => d.Name == "Customer less than 3 years driving").Amount;
+                quote.MovingViolationsDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("MovingViolations")).SingleOrDefault().Amount;
             }
-            if (quote.MultiCar)
+            if(quote.MultiCar)
             {
-                quote.MultiCarDiscount = quoteDiscounts.Find(d => d.Name == "Multi-car discount").Amount;
+                quote.MultiCarDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("MultiCar")).SingleOrDefault().Amount;
             }
-            if (quote.PreviousCarrierLizard)
+            if(quote.PreviousCarrierLizard)
             {
-                quote.PreviousCarrierLizardDiscount = quoteDiscounts.Find(d => d.Name == "Previous carrier is Lizard Ins").Amount;
+                quote.PreviousCarrierLizardDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PreviousCarrierLizard")).SingleOrDefault().Amount;
             }
-            if (quote.PreviousCarrierPervasive)
+            if(quote.PreviousCarrierPervasive)
             {
-                quote.PreviousCarrierPervasiveDiscount = quoteDiscounts.Find(d => d.Name == "Previous carrier is Pervasive Ins").Amount;
+                quote.PreviousCarrierPervasiveDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PreviousCarrierPervasive")).SingleOrDefault().Amount;
             }
             // END EXTRACT METHOD
             _context.Quotes.Add(quote);
