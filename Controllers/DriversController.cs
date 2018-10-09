@@ -94,6 +94,7 @@ namespace web_agent_pro.Controllers
             {
                 return BadRequest(ModelState);
             }
+            // TODO: Set rates and multipliers
 
             _context.Drivers.Add(driver);
             await _context.SaveChangesAsync();

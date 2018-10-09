@@ -6,9 +6,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap, take, filter } from 'rxjs/operators';
 import { Driver } from '../data/models/domain/driver';
 import { Vehicle } from '../data/models/domain/vehicle';
+import { AccountService } from './account.service';
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  headers: new HttpHeaders({
+    'Content-Type': 'application/json',
+  })
 };
 
 @Injectable({
@@ -22,6 +25,7 @@ export class QuoteService {
   constructor(
     private http: HttpClient,
     private messageService: MessageService,
+    private accountService: AccountService,
   ) {
     this.quotesUrl = 'api/quotes';
     this.driversUrl = 'api/drivers';
@@ -34,8 +38,10 @@ export class QuoteService {
     this.messageService.add(`QuoteService: ${message}`);
   }
 
-  getQuotes(filters?: any): Observable<Quote[]> {
-      return this.http.get<Quote[]>(this.quotesUrl).pipe(
+  getQuotes(): Observable<Quote[]> {
+    const options = {...httpOptions, params: { 'userId': this.accountService.getUserId() }}
+    console.log(options);
+    return this.http.get<Quote[]>(this.quotesUrl, options).pipe(
         tap(quotes => this.log('Quote Service: got quotes!')),
         catchError(this.handleError('getQuotes', []))
       );
@@ -85,8 +91,7 @@ export class QuoteService {
   }
 
   addDriver(driver: Driver): Observable<Driver> {
-    const url = `${this.driversUrl}`;
-    return this.http.post<Driver>(url, driver, httpOptions).pipe(
+    return this.http.post<Driver>(this.driversUrl, driver, httpOptions).pipe(
       tap((d: Driver) => this.log(`Quote Service: Driver - ${d.id} added!`)),
       catchError(this.handleError<Driver>('addDriver'))
     );

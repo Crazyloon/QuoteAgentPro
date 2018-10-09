@@ -24,7 +24,7 @@ export class DriverFormComponent implements OnInit {
         'lastName': driverData['lastName'],
         'dateOfBirth': driverData['dateOfBirth'],
         'ssn': driverData['ssn'],
-        'licenseNumber': this.driverForm.get('licenseNumber').value,
+        'driversLicenseNumber': this.driverForm.get('driversLicenseNumber').value,
         'issuingState': this.driverForm.get('issuingState').value,
         'safeDrivingSchool': this.driverForm.get('safeDrivingSchool').value,
         'under23YearsOld': this.driverForm.get('under23YearsOld').value,
@@ -38,7 +38,7 @@ export class DriverFormComponent implements OnInit {
     lastName: ['', Validators.required],
     dateOfBirth: ['1988-08-15', Validators.required],
     ssn: ['648-13-5223', Validators.required],
-    licenseNumber: ['TESTR**123NN', Validators.required],
+    driversLicenseNumber: ['TESTR**123NN', Validators.required],
     issuingState: ['', Validators.required],
     safeDrivingSchool: [false],
     under23YearsOld: [false]
@@ -54,7 +54,7 @@ export class DriverFormComponent implements OnInit {
   get lName() { return this.driverForm.get('lastName'); }
   get dateOfBirth() { return this.driverForm.get('dateOfBirth'); }
   get ssn() { return this.driverForm.get('ssn'); }
-  get licenseNumber() { return this.driverForm.get('licenseNumber'); }
+  get driversLicenseNumber() { return this.driverForm.get('driversLicenseNumber'); }
   get issuingState() { return this.driverForm.get('issuingState'); }
   get safeDrivingSchool() { return this.driverForm.get('safeDrivingSchool'); }
   get under23YearsOld() { return this.driverForm.get('under23YearsOld'); }
@@ -72,11 +72,15 @@ export class DriverFormComponent implements OnInit {
 
   addDriver(): void {
     Object.assign(this.driver, this.driverForm.value);
+    this.driver.quoteId = this.quote.id;
+    this.driver.under23YearsOld = this.calculateAge(this.driver.dateOfBirth) < 23;
+    console.log(this.driver);
     this.quoteService.addDriver(this.driver)
       .subscribe(d => {
         this.driver = d;
         this.quote.addDriver(this.driver);
-        this.updateQuote();
+        this.quoteChange.emit(this.quote);
+        //this.updateQuote();
       });
   }
   

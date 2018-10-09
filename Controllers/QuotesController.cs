@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using web_agent_pro.Data;
 using web_agent_pro.Models;
+using web_agent_pro.Models.RouteQueries;
 using web_agent_pro.Models.StringMaps;
 
 namespace web_agent_pro.Controllers
@@ -21,18 +23,21 @@ namespace web_agent_pro.Controllers
     {
         private readonly WebAgentProDbContext _context;
         private DiscountNames _discountNames;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public QuotesController(WebAgentProDbContext context)
+        public QuotesController(WebAgentProDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
             _discountNames = new DiscountNames();
         }
 
         // GET: api/Quotes
         [HttpGet]
-        public IEnumerable<Quote> GetQuotes()
+        public IEnumerable<Quote> GetQuotes([FromQuery] CurrentUser query)
         {
-            return _context.Quotes;
+            var user = _userManager.Users.SingleOrDefault(u => u.Id == query.UserId);
+            return _context.Quotes.Where(q => q.UserId == user.Id);
         }
 
         // GET: api/Quotes/5

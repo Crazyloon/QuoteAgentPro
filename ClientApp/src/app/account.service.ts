@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, tap, take, filter } from 'rxjs/operators';
+import * as jwt_decode from '../../node_modules/jwt-decode';
 import { LoginCredentials } from '../data/models/domain/accountCredentials';
 
+
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
 
+export const JWT_TOKEN_KEY: string = "token";
 
 @Injectable({
   providedIn: 'root'
@@ -16,22 +19,65 @@ const httpOptions = {
 export class AccountService {
   private loginUrl: string;
   private registerUrl: string;
-
+  private userIdUrl: string;
+  
   constructor(
     private http: HttpClient,
     private messageService: MessageService
     ) {
       this.loginUrl = 'api/account/login';
       this.registerUrl = 'api/account/register';
+      this.userIdUrl = 'api/account/User';
    }
 
   login(creds: LoginCredentials): Observable<string> {
-    return this.http.post<string>(this.loginUrl, creds, httpOptions).pipe(
-      tap((key: string) => this.log(`Account Service: ${creds.username} logged in.`)),
-      catchError(this.handleError<string>('addLoginCredentials'))
+    return this.http.post(this.loginUrl, creds, { ...httpOptions, responseType: 'text' }).pipe(
+      tap((key) => {
+        this.log(`login: ${creds.email} logged in.`);
+      }),
+      catchError(this.handleError<string>('LoginCredentials'))
     );
   }
 
+  getToken(): string {
+    return localStorage.getItem(JWT_TOKEN_KEY)
+  }
+
+  setToken(token: string) {
+    localStorage.setItem(JWT_TOKEN_KEY, `Bearer ${token}`);
+  }
+
+  getUserId(token?: string): string {
+    if (!token) token = this.getToken();
+    if (!token) return null;
+
+    const decoded = jwt_decode(token);
+    const nameIdentifier = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+
+    if (nameIdentifier === undefined) {
+      return null;
+    }
+    return nameIdentifier;
+  }
+
+  getTokenExpirationDate(token: string): Date {
+    const decoded = jwt_decode(token);
+
+    if (decoded.exp === undefined) return null;
+
+    const date = new Date(0);
+    date.setUTCSeconds(decoded.exp);
+    return date;
+  }
+
+  isTokenExpired(token?: string): boolean {
+    if (!token) token = this.getToken();
+    if (!token) return true;
+
+    const date = this.getTokenExpirationDate(token);
+    if (date === undefined) return false;
+    return !(date.valueOf() > new Date().valueOf());
+  }
   
   /**
    * Handle Http operation that failed.
@@ -51,7 +97,7 @@ export class AccountService {
   }
   
   private log(message: string) {
-    console.log(`QuoteService: ${message}`);
-    this.messageService.add(`QuoteService: ${message}`);
+    console.log(`AccountService: ${message}`);
+    this.messageService.add(`AccountService: ${message}`);
   }
 }

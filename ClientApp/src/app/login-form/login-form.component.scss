@@ -55,13 +55,15 @@
 }
 
 div.alert.alert-danger, div.alert.alert-warning{
+  padding: 0;
   margin: 5px 0 0 0;
-  padding: 0 0 0 .75rem;
   z-index: -1;
   @media screen and (min-width: map-get($grid-breakpoints, sm)) {
     max-width: 250px;
   }
   span{
+    padding: 5px;
+    margin: auto;
     display: block;
   }
 }

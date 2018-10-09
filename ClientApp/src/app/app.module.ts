@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { NgModule, ErrorHandler } from '@angular/core';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,6 +23,11 @@ import { MetricsCardComponent } from './metrics-card/metrics-card.component';
 import { MetricsPageComponent } from './metrics-page/metrics-page.component';
 import { FilterOptionComponent } from './filter-option/filter-option.component';
 import { SearchResultsPageComponent } from './search-results-page/search-results-page.component';
+import { LoginPageComponent } from './login-page/login-page.component';
+import { AuthRequestOptions } from './auth-request-options';
+import { RequestOptions } from '@angular/http';
+import { AuthErrorHandler } from './auth-error-handler';
+import { TokenInterceptor } from './token-interceptor';
 
 @NgModule({
   declarations: [
@@ -43,20 +48,31 @@ import { SearchResultsPageComponent } from './search-results-page/search-results
     MetricsPageComponent,
     FilterOptionComponent,
     SearchResultsPageComponent,
+    LoginPageComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
-    // and returns simulated server responses.
-    // Remove it when a real server is ready to receive requests.
-    HttpClientInMemoryWebApiModule.forRoot(
-      InMemoryDataService, { dataEncapsulation: false }
-    ),
+    //// The HttpClientInMemoryWebApiModule module intercepts HTTP requests
+    //// and returns simulated server responses.
+    //// Remove it when a real server is ready to receive requests.
+    //HttpClientInMemoryWebApiModule.forRoot(
+    //  InMemoryDataService, { dataEncapsulation: false }
+    //),
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    //{
+    //  provide: ErrorHandler,
+    //  useClass: AuthErrorHandler
+    //}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

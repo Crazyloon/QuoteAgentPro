@@ -41,9 +41,13 @@
         </div>
       </div>
     </div>
+    <div *ngIf="loginForm.invalid && loginForm.errors && (loginForm.diry || loginForm.touched)" class="alert alert-danger">
+      <span class="invalid-feedback">
+        {{loginForm.errors}}
+      </span>
+    </div>
     <div class="container-nooverflow">
       <button class="btn btn-primary bevel bevel-md">Request Account</button>
     </div>
-    <div></div>
   </form>
 </div>

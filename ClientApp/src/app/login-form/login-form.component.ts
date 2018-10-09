@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
 import { AccountService } from '../account.service';
 import { LoginCredentials } from '../../data/models/domain/accountCredentials';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-form',
@@ -9,14 +10,13 @@ import { LoginCredentials } from '../../data/models/domain/accountCredentials';
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent implements OnInit {
-  jwtKey: string;
   creds: LoginCredentials;
   loginForm = this.fb.group({
     username: ['', Validators.required],
     password: ['', Validators.required]
   });
 
-  constructor(private fb: FormBuilder, private accountService: AccountService) { }
+  constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router) { }
 
   ngOnInit() {
   }
@@ -26,13 +26,18 @@ export class LoginFormComponent implements OnInit {
 
   onSubmit() {
     console.log("TODO: Log User In");
-    this.creds.username = this.username.value;
-    this.creds.password = this.password.value;
+    this.creds = {email: this.username.value, password: this.password.value};
     
-    this.accountService.login(this.creds).subscribe(key => this.jwtKey = key);
-
-    // test localstorage of JSON WEB TOKEN
-    localStorage.setItem("JWT", this.jwtKey)
+    this.accountService.login(this.creds).subscribe(token => {
+      if (token) {
+        localStorage.setItem('token', token);
+        localStorage.setItem('userId', this.accountService.getUserId(token))
+        this.router.navigate(['/dashboard'])
+      }
+      else {
+        this.loginForm.setErrors(['Unabled to match username with password'])
+      }
+    });
   }
 
 }

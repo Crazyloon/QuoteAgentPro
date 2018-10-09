@@ -4,6 +4,7 @@ import { Quote } from '../../data/models/domain/quote';
 import { CustomerForm } from '../../data/models/page/customerform';
 import { QuoteInput } from '../../data/models/domain/quoteinput';
 import { QuoteService } from '../quote.service';
+import { AccountService } from '../account.service';
 
 @Component({
   selector: 'app-customer-form',
@@ -38,7 +39,7 @@ export class CustomerFormComponent implements OnInit {
     multiCar: [false]
   });
 
-  constructor(private fb: FormBuilder, private quoteService: QuoteService) { }
+  constructor(private fb: FormBuilder, private quoteService: QuoteService, private accountService: AccountService) { }
 
   ngOnInit() {
   }
@@ -87,7 +88,7 @@ export class CustomerFormComponent implements OnInit {
   addQuote(): void {
     Object.assign(this.quote, this.customerForm.value);
     this.quote.dateQuoted = new Date(Date.now());
-    this.quote.userId = "fa3d0fd6-c504-47ef-8bef-0452680ffe66"; //TODO: getCurrentUserId();
+    this.quote.userId = this.accountService.getUserId();
     this.quote.previousCarrierLizard = this.quote.previousCarrier == "Lizard";
     this.quote.previousCarrierPervasive = this.quote.previousCarrier == "Pervasive";
     // TODO: populate discount (on the server?)

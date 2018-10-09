@@ -26,7 +26,7 @@
                 <td>{{driver.firstName}} {{driver.lastName}}</td>
                 <td>{{driver.dateOfBirth | date}}</td>
                 <td>{{calculateAge(driver.dateOfBirth)}}</td>
-                <td>{{driver.licenseNumber}}</td>
+                <td>{{driver.driversLicenseNumber}}</td>
                 <td>{{driver.issuingState}}</td>
                 <td>{{driver.ssn}}</td>
               </tr>
@@ -97,13 +97,13 @@
         <div class="form-group">
           <label>Drivers License Number</label>
           <input class="form-control"
-              [class.is-valid]="licenseNumber.valid"
-              [class.is-invalid]="licenseNumber.invalid && (licenseNumber.dirty || licenseNumber.touched)"
-              formControlName="licenseNumber"
+              [class.is-valid]="driversLicenseNumber.valid"
+              [class.is-invalid]="driversLicenseNumber.invalid && (driversLicenseNumber.dirty || driversLicenseNumber.touched)"
+              formControlName="driversLicenseNumber"
               type="text"
               />
-          <div *ngIf="licenseNumber.invalid && (licenseNumber.dirty || licenseNumber.touched)" class="alert alert-danger">
-            <span class="invalid-feedback" *ngIf="licenseNumber.errors.required">
+          <div *ngIf="driversLicenseNumber.invalid && (driversLicenseNumber.dirty || driversLicenseNumber.touched)" class="alert alert-danger">
+            <span class="invalid-feedback" *ngIf="driversLicenseNumber.errors.required">
               Drivers License Number is required.
             </span>
           </div>
@@ -153,4 +153,3 @@
     </div>
   </div>
 </div>
- 

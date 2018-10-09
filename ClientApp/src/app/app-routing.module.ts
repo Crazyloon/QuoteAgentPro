@@ -7,15 +7,17 @@ import { QuoteSummaryComponent } from './quote-summary/quote-summary.component';
 import { NewQuotePageComponent } from './new-quote-page/new-quote-page.component';
 import { MetricsPageComponent } from './metrics-page/metrics-page.component';
 import { SearchResultsPageComponent } from './search-results-page/search-results-page.component';
-
+import { LoginPageComponent } from './login-page/login-page.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: LandingPageComponent },
-  { path: 'quote/new', component: NewQuotePageComponent },
-  { path: 'quote/search', component: SearchResultsPageComponent },
-  { path: 'quote/details/:id', component: QuoteSummaryComponent },
-  { path: 'metrics', component: MetricsPageComponent },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full', canActivate: [AuthGuard]},
+  { path: 'dashboard', component: LandingPageComponent, canActivate: [AuthGuard] },
+  { path: 'quote/new', component: NewQuotePageComponent, canActivate: [AuthGuard] },
+  { path: 'quote/search', component: SearchResultsPageComponent, canActivate: [AuthGuard] },
+  { path: 'quote/details/:id', component: QuoteSummaryComponent, canActivate: [AuthGuard] },
+  { path: 'metrics', component: MetricsPageComponent, canActivate: [AuthGuard] },
+  { path: 'login', component: LoginPageComponent }
 ];
 
 @NgModule({
