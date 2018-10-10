@@ -165,7 +165,8 @@ namespace web_agent_pro.Controllers
             return Ok(quote);
         }
 
-        public decimal CalculateQuote(int quoteId)
+        [HttpGet("calculate")]
+        public async Task<decimal> CalculateQuote(int quoteId)
         {
             Quote quote = _context.Quotes
                 .Where(q => q.Id == quoteId)
@@ -173,7 +174,13 @@ namespace web_agent_pro.Controllers
                 .Include(q => q.Vehicles)
                 .SingleOrDefault();
 
-            return CalculateQuote(quote);
+            decimal quotePrice = CalculateQuote(quote);
+            quote.Price = quotePrice;
+
+            _context.Quotes.Update(quote);
+            await _context.SaveChangesAsync();
+
+            return quote.Price;
         }
 
         private decimal CalculateQuote(Quote quote)
@@ -181,13 +188,14 @@ namespace web_agent_pro.Controllers
             var vehicleSubtotalCost = 0m;
             var driverSubtotalCost = 0m;
             var SubmittedQuoteCost = 0m;
+            List<Discount> discounts = _context.Discounts.Where(d => d.State == quote.State).ToList();
             foreach (var driver in quote.Drivers)
             {
                 var driverCost = GetBaseDriverCost();
                 driver.QuoteMultiplier = 1;
-                if (driver.SafeDrivingSchool) driver.QuoteMultiplier *= GetSafeDrivingDiscount(quote);
+                if (driver.SafeDrivingSchool) driver.QuoteMultiplier *= GetSafeDrivingDiscount(quote, discounts);
 
-                if (driver.DateOfBirth > DateTime.Now.AddYears(-23)) driver.QuoteMultiplier *= GetUnder23YearsOldDiscount(quote);
+                if (driver.DateOfBirth > DateTime.Now.AddYears(-23)) driver.QuoteMultiplier *= GetUnder23YearsOldDiscount(quote, discounts);
                 driverCost *= driver.QuoteMultiplier;
                 driverSubtotalCost += driverCost;
 
@@ -197,15 +205,15 @@ namespace web_agent_pro.Controllers
             {
                 var vehicleCost = GetBaseVehicleCost(vehicle.CurrentValue);
                 vehicle.QuoteMultiplier = 1;
-                if (vehicle.AnnualMileage < 6000) vehicle.QuoteMultiplier *= GetAnnualMileage(quote);
-                if (vehicle.AntilockBrakes) vehicle.QuoteMultiplier *= GetAntilockBrakes(quote);
-                if (vehicle.AntiTheft) vehicle.QuoteMultiplier *= GetAntiTheft(quote);
-                if (vehicle.DaysDrivenPerWeek > 4) vehicle.QuoteMultiplier *= GetDaysDriven(quote);
-                if (vehicle.MilesToWork < 25) vehicle.QuoteMultiplier *= GetMilesDriven(quote);
-                if (vehicle.DaytimeLights) vehicle.QuoteMultiplier *= GetDaytimeLights(quote);
-                if (vehicle.NonResidenceGarage) vehicle.QuoteMultiplier *= GetGarage(quote);
-                if (vehicle.PassiveRestraints) vehicle.QuoteMultiplier *= GetPR(quote);
-                if (vehicle.ReducedUsed) vehicle.QuoteMultiplier *= GetRUD(quote);
+                if (vehicle.AnnualMileage < 6000) vehicle.QuoteMultiplier *= GetAnnualMileage(quote, discounts);
+                if (vehicle.AntilockBrakes) vehicle.QuoteMultiplier *= GetAntilockBrakes(quote, discounts);
+                if (vehicle.AntiTheft) vehicle.QuoteMultiplier *= GetAntiTheft(quote, discounts);
+                if (vehicle.DaysDrivenPerWeek > 4) vehicle.QuoteMultiplier *= GetDaysDriven(quote, discounts);
+                if (vehicle.MilesToWork < 25) vehicle.QuoteMultiplier *= GetMilesDriven(quote, discounts);
+                if (vehicle.DaytimeLights) vehicle.QuoteMultiplier *= GetDaytimeLights(quote, discounts);
+                if (vehicle.NonResidenceGarage) vehicle.QuoteMultiplier *= GetGarage(quote, discounts);
+                if (vehicle.PassiveRestraints) vehicle.QuoteMultiplier *= GetPR(quote, discounts);
+                if (vehicle.ReducedUsed) vehicle.QuoteMultiplier *= GetRUD(quote, discounts);
 
                 //TODO:
                 var primaryOperator = quote.Drivers.Where(d => d.Id == vehicle.PrimaryDriverId).SingleOrDefault();
@@ -217,12 +225,12 @@ namespace web_agent_pro.Controllers
             SubmittedQuoteCost = GetBaseSubmittedQuoteCost();
             quote.QuoteMultiplier = 1;
             SubmittedQuoteCost += driverSubtotalCost + vehicleSubtotalCost;
-            if (quote.PastClaims) quote.QuoteMultiplier *= GetPastClaims(quote);
-            if (quote.MultiCar || quote.Vehicles.Count > 1) quote.QuoteMultiplier *= GetMulticar(quote);
-            if (quote.NewDriver) quote.QuoteMultiplier *= GetNewDriver(quote);
-            if (quote.MovingViolations) quote.QuoteMultiplier *= GetMovingViolations(quote);
-            if (quote.PreviousCarrierLizard) quote.QuoteMultiplier *= GetLizard(quote);
-            if (quote.PreviousCarrierPervasive) quote.QuoteMultiplier *= GetPerv(quote);
+            if (quote.PastClaims) quote.QuoteMultiplier *= GetPastClaims(quote, discounts);
+            if (quote.MultiCar || quote.Vehicles.Count > 1) quote.QuoteMultiplier *= GetMulticar(quote, discounts);
+            if (quote.NewDriver) quote.QuoteMultiplier *= GetNewDriver(quote, discounts);
+            if (quote.MovingViolations) quote.QuoteMultiplier *= GetMovingViolations(quote, discounts);
+            if (quote.PreviousCarrierLizard) quote.QuoteMultiplier *= GetLizard(quote, discounts);
+            if (quote.PreviousCarrierPervasive) quote.QuoteMultiplier *= GetPerv(quote, discounts);
             SubmittedQuoteCost *= quote.QuoteMultiplier;
             quote.Price = SubmittedQuoteCost;
 
@@ -236,89 +244,89 @@ namespace web_agent_pro.Controllers
         }
 
         #region DISCOUNTS
-        private decimal GetSafeDrivingDiscount(Quote quote)
+        private decimal GetSafeDrivingDiscount(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Attended Safe Driving School" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("SafeDriver")).Amount;
         }
 
-        private decimal GetUnder23YearsOldDiscount(Quote quote)
+        private decimal GetUnder23YearsOldDiscount(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "A driver less than 23 years old" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("YoungDriver")).Amount;
         }
 
-        private decimal GetAnnualMileage(Quote quote)
+        private decimal GetAnnualMileage(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Annual mileage < 6000" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("AnnualMilage")).Amount;
         }
 
-        private decimal GetAntilockBrakes(Quote quote)
+        private decimal GetAntilockBrakes(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Antilock Brakes" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("AntilockBrakes")).Amount;
         }
 
-        private decimal GetAntiTheft(Quote quote)
+        private decimal GetAntiTheft(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Anti-theft Installed" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("AntiTheft")).Amount;
         }
 
-        private decimal GetDaysDriven(Quote quote)
+        private decimal GetDaysDriven(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Days driven per week > 4" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("DaysDriven")).Amount;
         }
 
-        private decimal GetMilesDriven(Quote quote)
+        private decimal GetMilesDriven(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Miles driven to work <= 25" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("MilesToWork")).Amount;
         }
 
-        private decimal GetDaytimeLights(Quote quote)
+        private decimal GetDaytimeLights(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Daytime Running Lights" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("DaytimeLights")).Amount;
         }
 
-        private decimal GetGarage(Quote quote)
+        private decimal GetGarage(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Garage address different from Residence" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("GarageDiffers")).Amount;
         }
 
-        private decimal GetPR(Quote quote)
+        private decimal GetPR(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Passive Restraints" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PassiveRestraints")).Amount;
         }
 
-        private decimal GetRUD(Quote quote)
+        private decimal GetRUD(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Reduce Use Discounts" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("ReducedUsed")).Amount;
         }
 
-        private decimal GetPastClaims(Quote quote)
+        private decimal GetPastClaims(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Claim in last 5 years" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PastClaims")).Amount;
         }
 
-        private decimal GetMulticar(Quote quote)
+        private decimal GetMulticar(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Multi-car discount" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("MultiCar")).Amount;
         }
 
-        private decimal GetNewDriver(Quote quote)
+        private decimal GetNewDriver(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Customer less than 3 years driving" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("NewDriver")).Amount;
         }
 
-        private decimal GetMovingViolations(Quote quote)
+        private decimal GetMovingViolations(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Moving Violation in last 5 years" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("MovingViolations")).Amount;
         }
 
-        private decimal GetLizard(Quote quote)
+        private decimal GetLizard(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Previous carrier is Lizard Ins" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PreviousCarrierLizard")).Amount;
         }
 
-        private decimal GetPerv(Quote quote)
+        private decimal GetPerv(Quote quote, List<Discount> discounts)
         {
-            return 1 + (decimal)_context.Discounts.First(d => d.Name == "Previous carrier is Pervasive State Ins" && d.State == quote.State).Amount;
+            return 1 + (decimal)discounts.First(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PreviousCarrierPervasive")).Amount;
         }
 
         private decimal GetBaseSubmittedQuoteCost()

@@ -31,7 +31,7 @@ export class CustomerFormComponent implements OnInit {
     city: ['', Validators.required],
     state: ['Select State', [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
     zip: ['', Validators.required],
-    ssn: ['648-32-5442', Validators.required],
+    ssn: ['648325442', Validators.required],
     previousCarrier: ['None', Validators.required],
     pastClaims: [false],
     movingViolations: [false],

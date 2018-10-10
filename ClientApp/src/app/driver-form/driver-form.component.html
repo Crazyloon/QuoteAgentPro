@@ -137,15 +137,14 @@
         </div>
         <button type="submit" class="btn btn-success bevel bevel-md" [disabled]="!driverForm.valid || !quote.id || isFormUpdating">Save Driver</button>
         <div *ngIf="!quote.id" class="alert alert-warning">
-            <span class="invalid-feedback" style="display: block;">
-              Save customer information before adding a driver.
-            </span>
-          </div>
+          <span class="invalid-feedback" style="display: block;">
+            Save customer information before adding a driver.
+          </span>
+        </div>
       </form>
     </div>
 
     <div class="expanding-card-footer">
-      <!-- <h5>{{ (1.00) | percent}} Complete</h5> -->
       <h5>Form Status: {{ driverForm.status }}</h5>
       <button (click)="onToggleClicked()" type="button">
         <img src="../../assets/icons/012-chevron-arrow-down.svg" [class.open]="isOpen" />

@@ -5,6 +5,7 @@
 .quote-summary{
   border: 1px solid $color-primary;
   padding: 0 10px 10px 10px;
+  margin: 15px 0;
   h2, h3, h4, h5, h6{
     margin-top: 10px;
   }
@@ -71,34 +72,9 @@
 .premium{
   color: rgb(220, 20, 20);
 }
-// .quote-drivers{
-//   .driver-details, .driver-discounts{
-//     display: flex;
-//     justify-content: space-between;
-//     flex-wrap: wrap;
-//     padding-left: 5px;
-//     border-left: 2px solid $color-primary;
-//     > span{
-//       flex: 1 0 50%;
-//       &:nth-child(n + 3){
-//         margin-top: 5px;
-//       }
-//     }
-//   }
-// }
 
-// .quote-vehicles{
-//   .vehicle-details, .vehicle-discounts{
-//     display: flex;
-//     justify-content: space-between;
-//     flex-wrap: wrap;
-//     padding-left: 5px;
-//     border-left: 2px solid $color-primary;
-//     > span{
-//       flex: 1 0 50%;
-//       &:nth-child(n + 3){
-//         margin-top: 5px;
-//       }
-//     }
-//   }
-// }
+.recalculate-quote {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}

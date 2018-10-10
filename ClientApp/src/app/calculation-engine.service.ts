@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { MessageService } from './message.service';
 import { Quote } from '../data/models/domain/quote';
 import { Observable, of } from 'rxjs';
@@ -11,7 +11,9 @@ import { tap, catchError } from 'rxjs/operators';
 export class CalculationEngineService {
   private calcUrl: string;
 
-  constructor(private http: HttpClient, private messageService: MessageService) { }
+  constructor(private http: HttpClient, private messageService: MessageService) {
+    this.calcUrl = "api/quotes/calculate"
+  }
 
   private log(message: string) {
     console.log(`QuoteService: ${message}`);
@@ -19,8 +21,10 @@ export class CalculationEngineService {
   }
 
   calculateQuote(quote: Quote): Observable<number> {
-    return this.http.get<number>(this.calcUrl).pipe(
-      tap(result => this.log('Calc Engine: Got final price!')),
+    const params = new HttpParams().append('quoteId', quote.id.toString());
+
+    return this.http.get<number>(this.calcUrl, {params: params}).pipe(
+      tap(result => this.log(`Calc Engine: Got final price: ${result}!`)),
       catchError(this.handleError<number>('calculateQuote'))
     );
   }

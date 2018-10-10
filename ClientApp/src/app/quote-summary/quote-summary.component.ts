@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { QuoteService } from '../quote.service';
 import { Quote } from '../../data/models/domain/quote';
+import { CalculationEngineService } from '../calculation-engine.service';
 
 @Component({
   selector: 'app-quote-summary',
@@ -15,7 +16,8 @@ export class QuoteSummaryComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private quoteService: QuoteService,
-    private location: Location
+    private location: Location,
+    private calcEngine: CalculationEngineService
   ) { }
 
   ngOnInit() {
@@ -39,5 +41,14 @@ export class QuoteSummaryComponent implements OnInit {
 
   isDiscount(val: number): boolean {
     return val < 0;
+  }
+
+  recalculateQuote(quote: Quote) {
+    this.calcEngine.calculateQuote(quote)
+      .subscribe(price => this.quote.price = price);
+  }
+
+  printSummary() {
+    window.print();
   }
 }

@@ -1,3 +1,7 @@
+<div class="recalculate-quote no-print">
+  <button (click)="printSummary()" class="btn btn-secondary bevel bevel-md">Print Quote</button>
+  <button (click)="recalculateQuote(quote)" class="btn btn-primary bevel bevel-md">Recalculate Quote</button>
+</div>
 <div *ngIf="quote" class="quote-summary">
   <div class="quote-heading">
     <h1>Quote Summary</h1>

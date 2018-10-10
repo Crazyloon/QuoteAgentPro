@@ -103,6 +103,13 @@ div.table-responsive{
   }
 }
 
+// add no-print to any section of the page that should not show up when printing
+@media print {
+  .no-print, .no-print * {
+    display: none !important;
+  }
+}
+
 // Beveled Buttons - Works with bootstrap 4 buttons of medium (standard) size 'btn btn-type'
 .bevel{
   box-shadow: $btn-bevel-down;

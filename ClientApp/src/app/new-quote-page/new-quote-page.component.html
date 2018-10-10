@@ -1,6 +1,9 @@
 <h1>New Quote</h1>
 
 <pre>{{quote | json}}</pre>
+<div class="submit-quote">
+  <button [disabled]="!isValidQuote" (click)="calculateQuote()" class="btn btn-primary bevel bevel-md">Calculate Quote</button>
+</div>
 <div class="form-grid">  
   <div class="customer-form">
     <app-customer-form [quote]="quote" (quoteChange)="onQuoteUpdated($event)" (driverData)="onCustomerIsDriver($event)"></app-customer-form>
@@ -13,5 +16,10 @@
   </div> 
 </div>
 <div class="submit-quote">
-  <button (click)="calculateQuote()">>Calculate Quote</button>
+  <button [disabled]="!isValidQuote" (click)="calculateQuote()" class="btn btn-primary bevel bevel-md">Calculate Quote</button>
+</div>
+<div *ngIf="!isValidQuote" class="alert alert-warning">
+  <span class="invalid-feedback" style="display: block;">
+    Save customer, driver and vehicle info to proceed.
+  </span>
 </div>

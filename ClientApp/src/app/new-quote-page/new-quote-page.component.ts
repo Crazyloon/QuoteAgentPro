@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Quote } from '../../data/models/domain/quote';
 import { CalculationEngineService } from '../calculation-engine.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-quote-page',
@@ -12,8 +13,9 @@ export class NewQuotePageComponent implements OnInit {
   public driverSelection: {id: number, name: string};
   public driverOptions: {id: number, name: string}[] = [];
   public driverData: {};
+  private isValidQuote: boolean = false;
 
-  constructor(private calcEngine: CalculationEngineService) { }
+  constructor(private calcEngine: CalculationEngineService, private router: Router) { }
 
   ngOnInit() {
     this.quote = new Quote();
@@ -23,6 +25,9 @@ export class NewQuotePageComponent implements OnInit {
 
   onQuoteUpdated(quote: Quote) {
     this.quote = Object.assign(new Quote(), quote);
+    if (this.quote.id && this.quote.drivers.length > 0 && this.quote.vehicles.length > 0) {
+      this.isValidQuote = true;
+    }
   }
 
   onCustomerIsDriver(driverData: any) {
@@ -30,6 +35,11 @@ export class NewQuotePageComponent implements OnInit {
   }
 
   calculateQuote(){
-    this.calcEngine.calculateQuote(this.quote);
+    this.calcEngine.calculateQuote(this.quote)
+      .subscribe(price => {
+        console.log('Price: ' + price);
+        this.quote.price = price;
+        this.router.navigate([`quote/details/${this.quote.id}`]);
+      });
   }
 }
