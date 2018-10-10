@@ -66,13 +66,13 @@ export class CustomerFormComponent implements OnInit {
   
   onSubmit() {
     if(!this.isFormUpdating){
+      this.isFormUpdating = true;
       if(this.quote.id){
         this.updateQuote();
       }
       else{
         this.addQuote();
       }
-      this.isFormUpdating = true;
     }
   }
 
@@ -96,6 +96,9 @@ export class CustomerFormComponent implements OnInit {
       .subscribe(quote => {
         this.quote.id = quote.id;
         this.quoteChange.emit(this.quote);
+        this.isFormUpdating = false;
+      }, (error) => {
+        console.error(error);
         this.isFormUpdating = false;
       });    
   }

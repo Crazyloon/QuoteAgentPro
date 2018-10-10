@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using web_agent_pro.Data;
 using web_agent_pro.Models;
+using web_agent_pro.Models.StringMaps;
 
 namespace web_agent_pro.Controllers
 {
@@ -19,10 +20,12 @@ namespace web_agent_pro.Controllers
     public class VehiclesController : ControllerBase
     {
         private readonly WebAgentProDbContext _context;
+        private DiscountNames _discountNames;
 
         public VehiclesController(WebAgentProDbContext context)
         {
             _context = context;
+            _discountNames = new DiscountNames();
         }
 
         // GET: api/Vehicles
@@ -93,6 +96,46 @@ namespace web_agent_pro.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            // TODO: Protect against NullReferenceException (on relatedQuote and '.Amount' for each discount)
+            var relatedQuote = _context.Quotes.Where(q => q.Id == vehicle.QuoteId).SingleOrDefault();
+            List<Discount> vehicleDiscounts = _context.Discounts.Where(d => d.Scope == "Vehicle" && d.State == relatedQuote.State).ToList();
+            if (vehicle.AnnualMileageUnder6k)
+            {
+                vehicle.AnnualMileageDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("AnnualMilage")).SingleOrDefault().Amount;
+            }
+            if (vehicle.AntilockBrakes)
+            {
+                vehicle.AntilockBrakesDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("AntilockBrakes")).SingleOrDefault().Amount;
+            }
+            if (vehicle.AntiTheft)
+            {
+                vehicle.AntiTheftDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("AntiTheft")).SingleOrDefault().Amount;
+            }
+            if (vehicle.DaysDrivenPerWeekOver4)
+            {
+                vehicle.DaysDrivenPerWeekOver4Discount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("DaysDriven")).SingleOrDefault().Amount;
+            }
+            if (vehicle.DaytimeLights)
+            {
+                vehicle.DaytimeLightsDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("DaytimeLights")).SingleOrDefault().Amount;
+            }
+            if (vehicle.MilesToWorkUnder26)
+            {
+                vehicle.MilesToWorkUnder26Discount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("MilesToWork")).SingleOrDefault().Amount;
+            }
+            if (vehicle.NonResidenceGarage)
+            {
+                vehicle.NonResidenceGarageDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("GarageDiffers")).SingleOrDefault().Amount;
+            }
+            if (vehicle.PassiveRestraints)
+            {
+                vehicle.PassiveRestraintsDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PassiveRestraints")).SingleOrDefault().Amount;
+            }
+            if (vehicle.ReducedUsed)
+            {
+                vehicle.ReducedUsedDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("ReducedUsed")).SingleOrDefault().Amount;
             }
 
             _context.Vehicles.Add(vehicle);

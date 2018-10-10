@@ -42,14 +42,18 @@ namespace web_agent_pro.Controllers
 
         // GET: api/Quotes/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetQuote([FromRoute] long id)
+        public IActionResult GetQuote([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var quote = await _context.Quotes.FindAsync(id);
+            //var quote = await _context.Quotes.FindAsync(id);
+            var quote = _context.Quotes.Where(q => q.Id == id)
+                                       .Include(prop => prop.Drivers)
+                                       .Include(prop => prop.Vehicles)
+                                       .SingleOrDefault();
 
             if (quote == null)
             {
@@ -109,7 +113,7 @@ namespace web_agent_pro.Controllers
             // apply quote discounts
             // BEGIN EXTRACT METHOD
             List<Discount> quoteDiscounts = _context.Discounts.Where(d => d.Scope == "Quote" && d.State == quote.State).ToList();
-            if(quote.PastClaims)
+                 if(quote.PastClaims)
             {
                 quote.PastClaimsDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PastClaims")).SingleOrDefault().Amount;
             }

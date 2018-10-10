@@ -65,22 +65,48 @@ export class DriverFormComponent implements OnInit {
 
   onSubmit() {
     if(!this.isFormUpdating){
-      this.addDriver();    
       this.isFormUpdating = true;
+
+      this.driver = Object.assign({}, this.driverForm.value);
+      this.driver.quoteId = this.quote.id;
+      this.driver.under23YearsOld = this.calculateAge(this.driver.dateOfBirth) < 23;
+
+      if (!this.driver.id) {
+        this.addDriver();    
+      }
+      else {
+        this.updateDriver();
+      }
     }
   }
 
   addDriver(): void {
-    Object.assign(this.driver, this.driverForm.value);
-    this.driver.quoteId = this.quote.id;
-    this.driver.under23YearsOld = this.calculateAge(this.driver.dateOfBirth) < 23;
-    console.log(this.driver);
     this.quoteService.addDriver(this.driver)
       .subscribe(d => {
         this.driver = d;
         this.quote.addDriver(this.driver);
         this.quoteChange.emit(this.quote);
+        // reset data to prepare for next driver inputs
+        this.driver = new Driver();
+        this.driverForm.reset();
+        this.isFormUpdating = false;
         //this.updateQuote();
+      }, (error) => {
+        console.error(error);
+        this.isFormUpdating = false;
+      });
+  }
+
+  updateDriver(): void {
+    this.quoteService.updateDriver(this.driver)
+      .subscribe(d => {
+        this.driver = d;
+        this.quote.updateDriver(this.driver);
+        this.quoteChange.emit(this.quote);
+
+        this.driver = new Driver();
+        this.driverForm.reset();
+        this.isFormUpdating = false;
       });
   }
   

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -47,8 +48,6 @@ namespace web_agent_pro.Models
 
         public decimal QuoteMultiplier { get; set; }
 
-        public Quote Quote { get; set; }
-
         [Required]
         [DisplayName("Drivers License Number")]
         [MaxLength(20)]
@@ -57,6 +56,11 @@ namespace web_agent_pro.Models
         [Required]
         [DisplayName("Issuing State")]
         public string IssuingState { get; set; }
-        public ICollection<Vehicle> Vehicles { get; set; }
+
+        [JsonIgnore]
+        public Quote Quote { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<Vehicle> Vehicles { get; set; }
   }
 }

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -94,8 +95,10 @@ namespace web_agent_pro.Models
 
     public decimal QuoteMultiplier { get; set; }
 
-    public Driver PrimaryDriver { get; set; }
+    [JsonIgnore]
+    public virtual Driver PrimaryDriver { get; set; }
 
-    public Quote Quote { get; set; }
+    [JsonIgnore]
+    public virtual Quote Quote { get; set; }
   }
 }

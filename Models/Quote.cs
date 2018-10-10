@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace web_agent_pro.Models
 {
@@ -121,9 +122,9 @@ namespace web_agent_pro.Models
         public decimal QuoteMultiplier { get; set; }
 
         public virtual ApplicationUser User { get; set; }
-        
-        public ICollection<Driver> Drivers { get; set; }
 
-        public ICollection<Vehicle> Vehicles { get; set; }
+        public virtual ICollection<Driver> Drivers { get; set; }
+
+        public virtual ICollection<Vehicle> Vehicles { get; set; }
     }
 }

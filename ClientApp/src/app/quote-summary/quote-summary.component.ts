@@ -28,7 +28,13 @@ export class QuoteSummaryComponent implements OnInit {
   getQuote(): void {
     const id = +this.route.snapshot.paramMap.get('id');
     this.quoteService.getQuote(id)
-      .subscribe(quote => this.quote = quote);
+      .subscribe(quote => {
+        this.quote = quote;
+        this.quote.vehicles.forEach(v => {
+          const primaryDriver = this.quote.drivers.find(d => d.id == v.primaryDriverId);
+          v.primaryDriver = `${primaryDriver.firstName} ${primaryDriver.lastName}`;
+        });
+      });
   }
 
   isDiscount(val: number): boolean {

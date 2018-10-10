@@ -34,7 +34,7 @@ export class VehicleFormComponent implements OnInit {
     year: ['2017', Validators.required],
     currentValue: ['10988', Validators.required],
     milesToWork: ['24'],
-    annualMileage: ['10200', Validators.required],
+    annualMileage: [10200, Validators.required],
     daysDrivenPerWeek: ['5', Validators.required],
     antiTheft: [false],
     antilockBrakes: [false],
@@ -71,25 +71,41 @@ export class VehicleFormComponent implements OnInit {
 
   onSubmit() {
     if(!this.isFormUpdating){
-      Object.assign(this.vehicle, this.vehicleForm.value);
-      let driver = this.primaryDriverOptions.find(d => d.id == this.vehicle.primaryDriverId);
-      this.vehicle.primaryDriver = `${driver.fName} ${driver.lName}`;
-      if(!this.vehicle.id){
+      this.isFormUpdating = true;
+      
+      this.vehicle = Object.assign({}, this.vehicleForm.value);
+      this.vehicle.quoteId = this._quote.id
+      this.vehicle.annualMileageUnder6k = this.vehicle.annualMileage < 6000;
+      this.vehicle.daysDrivenPerWeekOver4 = this.vehicle.daysDrivenPerWeek > 4;
+      this.vehicle.milesToWorkUnder26 = this.vehicle.milesToWork < 26;
+
+      console.log(this.vehicle);
+
+      if (!this.vehicle.id) {
         this.addVehicle();
       }
       else {
         this.updateVehicle();
       }
-      this.isFormUpdating = true;
     }
   }
 
-  addVehicle(): void {    
+  addVehicle(): void {
     this.quoteService.addVehicle(this.vehicle)
       .subscribe(v => {
         this.vehicle = v;
+        const driver = this.primaryDriverOptions.find(d => d.id == this.vehicle.primaryDriverId);
+        this.vehicle.primaryDriver = `${driver.fName} ${driver.lName}`;
         this._quote.addVehicle(this.vehicle);
-        this.updateQuote();      
+        this.quoteChange.emit(this._quote);
+
+        this.vehicle = new Vehicle();
+        this.vehicleForm.reset();
+        this.isFormUpdating = false;
+        //this.updateQuote();      
+      }, (error) => {
+        console.error(error);
+        this.isFormUpdating = false;
       });
   }
 
@@ -98,7 +114,11 @@ export class VehicleFormComponent implements OnInit {
       .subscribe(v => {
         this.vehicle = v;
         this._quote.updateVehicle(this.vehicle);
-        this.updateQuote();
+        this.quoteChange.emit(this._quote);
+        this.vehicle = new Vehicle();
+        this.vehicleForm.reset();
+        this.isFormUpdating = false;
+        ///this.updateQuote();
       });
   }
 
@@ -106,9 +126,6 @@ export class VehicleFormComponent implements OnInit {
     this.quoteService.updateQuote(this._quote)
       .subscribe(q => {
         this.quoteChange.emit(this._quote);
-        this.vehicle = new Vehicle();
-        this.vehicleForm.reset();
-        this.isFormUpdating = false;
       });
   }
 

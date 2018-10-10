@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using web_agent_pro.Data;
 using web_agent_pro.Models;
+using web_agent_pro.Models.StringMaps;
 
 namespace web_agent_pro.Controllers
 {
@@ -19,10 +20,12 @@ namespace web_agent_pro.Controllers
     public class DriversController : ControllerBase
     {
         private readonly WebAgentProDbContext _context;
+        private DiscountNames _discountNames;
 
         public DriversController(WebAgentProDbContext context)
         {
             _context = context;
+            _discountNames = new DiscountNames();
         }
 
         // GET: api/Drivers
@@ -94,7 +97,16 @@ namespace web_agent_pro.Controllers
             {
                 return BadRequest(ModelState);
             }
-            // TODO: Set rates and multipliers
+            // TODO: Protect against States that aren't in the database (Causes NullReferenceException on '.Amount' below)
+            List<Discount> driverDiscounts = _context.Discounts.Where(d => d.Scope == "Person" && d.State == driver.IssuingState).ToList();
+            if(driver.SafeDrivingSchool)
+            {
+                driver.SafeDrivingSchoolDiscount = driverDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("SafeDriver")).SingleOrDefault().Amount;
+            }
+            if(driver.Under23YearsOld)
+            {
+                driver.Under23YearsOldDiscount = driverDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("YoungDriver")).SingleOrDefault().Amount;
+            }
 
             _context.Drivers.Add(driver);
             await _context.SaveChangesAsync();
