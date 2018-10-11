@@ -41,13 +41,26 @@
         </div>
       </div>
     </div>
-    <div *ngIf="loginForm.invalid && loginForm.errors && (loginForm.diry || loginForm.touched)" class="alert alert-danger">
+    <div class="login-form-group">
+      <div class="form-group">
+        <label class="remember-me">
+          <input class="form-control"
+                 type="checkbox" />
+          Remember Me
+        </label>
+      </div>
+    </div>
+    <div *ngIf="loginForm.invalid && loginForm.errors && (loginForm.diry || loginForm.touched)" class="alert alert-danger form-control">
       <span class="invalid-feedback">
         {{loginForm.errors}}
       </span>
     </div>
     <div class="container-nooverflow">
-      <button class="btn btn-primary bevel bevel-md">Request Account</button>
+      <button class="btn btn-primary bevel bevel-md">Login</button>
     </div>
   </form>
+  <div class="login-form-links">
+    <a routerLink="/register">Register</a>
+    <a routerLink="/forgotpassword">Forgot Password?</a>
+  </div>
 </div>

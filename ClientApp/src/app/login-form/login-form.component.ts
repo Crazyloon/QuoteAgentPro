@@ -30,21 +30,23 @@ export class LoginFormComponent implements OnInit {
   onSubmit() {
     this.creds = {email: this.username.value, password: this.password.value};
     
-    this.accountService.login(this.creds).subscribe(token => {
-      if (token) {
-        localStorage.setItem('token', token);
-        localStorage.setItem('userId', this.accountService.getUserId(token));
+    if (this.creds.email && this.creds.password) {
+      this.accountService.login(this.creds).subscribe(token => {
+        if (token) {
+          localStorage.setItem('token', token);
+          localStorage.setItem('userId', this.accountService.getUserId(token));
 
-        const user = new User(this.username.value, token);
-        this.loginService.setUser(user);
-        this.loginService.userLoggedInEvent(user);
+          const user = new User(this.username.value, token);
+          this.loginService.setUser(user);
+          this.loginService.userLoggedInEvent(user);
 
-        this.router.navigate(['/dashboard']);
-      }
-      else {
-        this.loginForm.setErrors(['Unabled to match username with password']);
-      }
-    });
+          this.router.navigate(['/dashboard']);
+        }
+        else {
+          this.loginForm.setErrors(['Unabled to match username with password']);
+        }
+      });
+    }
   }
 
 }
