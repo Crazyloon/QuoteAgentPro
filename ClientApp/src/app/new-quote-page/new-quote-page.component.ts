@@ -37,7 +37,6 @@ export class NewQuotePageComponent implements OnInit {
   calculateQuote(){
     this.calcEngine.calculateQuote(this.quote)
       .subscribe(price => {
-        console.log('Price: ' + price);
         this.quote.price = price;
         this.router.navigate([`quote/details/${this.quote.id}`]);
       });

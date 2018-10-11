@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
 import { AccountService } from '../account.service';
 import { LoginCredentials } from '../../data/models/domain/accountCredentials';
 import { Router } from '@angular/router';
+import { User } from '../../data/models/domain/user';
+import { LoginNotificationService } from '../login-notification.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-login-form',
@@ -16,7 +19,7 @@ export class LoginFormComponent implements OnInit {
     password: ['', Validators.required]
   });
 
-  constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router) { }
+  constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router, private loginService: LoginNotificationService) { }
 
   ngOnInit() {
   }
@@ -25,17 +28,21 @@ export class LoginFormComponent implements OnInit {
   get password() { return this.loginForm.get('password'); }
 
   onSubmit() {
-    console.log("TODO: Log User In");
     this.creds = {email: this.username.value, password: this.password.value};
     
     this.accountService.login(this.creds).subscribe(token => {
       if (token) {
         localStorage.setItem('token', token);
-        localStorage.setItem('userId', this.accountService.getUserId(token))
-        this.router.navigate(['/dashboard'])
+        localStorage.setItem('userId', this.accountService.getUserId(token));
+
+        const user = new User(this.username.value, token);
+        this.loginService.setUser(user);
+        this.loginService.userLoggedInEvent(user);
+
+        this.router.navigate(['/dashboard']);
       }
       else {
-        this.loginForm.setErrors(['Unabled to match username with password'])
+        this.loginForm.setErrors(['Unabled to match username with password']);
       }
     });
   }

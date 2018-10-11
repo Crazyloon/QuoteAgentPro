@@ -60,6 +60,19 @@ export class AccountService {
     return nameIdentifier;
   }
 
+  getUserRole(token?: string): string {
+    if (!token) token = this.getToken();
+    if (!token) return null;
+
+    const decoded = jwt_decode(token);
+    const roleIdentifier = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+
+    if (roleIdentifier === undefined) {
+      return null;
+    }
+    return roleIdentifier;
+  }
+
   getTokenExpirationDate(token: string): Date {
     const decoded = jwt_decode(token);
 
@@ -97,7 +110,7 @@ export class AccountService {
   }
   
   private log(message: string) {
-    console.log(`AccountService: ${message}`);
+    //console.log(`AccountService: ${message}`);
     this.messageService.add(`AccountService: ${message}`);
   }
 }

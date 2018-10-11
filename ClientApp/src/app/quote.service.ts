@@ -34,13 +34,12 @@ export class QuoteService {
 
 
   private log(message: string) {
-    console.log(`QuoteService: ${message}`);
+    //console.log(`QuoteService: ${message}`);
     this.messageService.add(`QuoteService: ${message}`);
   }
 
   getQuotes(): Observable<Quote[]> {
     const options = {...httpOptions, params: { 'userId': this.accountService.getUserId() }}
-    console.log(options);
     return this.http.get<Quote[]>(this.quotesUrl, options).pipe(
         tap(quotes => this.log('Quote Service: got quotes!')),
         catchError(this.handleError('getQuotes', []))

@@ -28,6 +28,9 @@ import { AuthRequestOptions } from './auth-request-options';
 import { RequestOptions } from '@angular/http';
 import { AuthErrorHandler } from './auth-error-handler';
 import { TokenInterceptor } from './token-interceptor';
+import { AgentManagementPageComponent } from './agent-management-page/agent-management-page.component';
+import { PendingAgentsListComponent } from './pending-agents-list/pending-agents-list.component';
+import { AgentManagementListComponent } from './agent-management-list/agent-management-list.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +52,9 @@ import { TokenInterceptor } from './token-interceptor';
     FilterOptionComponent,
     SearchResultsPageComponent,
     LoginPageComponent,
+    AgentManagementPageComponent,
+    PendingAgentsListComponent,
+    AgentManagementListComponent,
   ],
   imports: [
     BrowserModule,

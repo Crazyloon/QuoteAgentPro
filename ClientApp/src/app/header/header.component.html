@@ -1,8 +1,8 @@
 <header class="no-print">
   <a routerLink="/" class="header-logo"></a>
   <div class="header-nav-links">
-    <ul>
-      <li>
+    <ul *ngIf="isUserLoggedIn">
+      <li *ngIf="isUserRoleManager">
         <a routerLink="agents/manage">
           <img src="../../assets/icons/023-user-management.svg" class="icon" alt="Icon"/>
         <label>Manage Agents</label>  
@@ -35,7 +35,7 @@
   </div>
   <div class="header-user">
     <div class="header-logout-button-container">
-      <button class="btn btn-danger bevel bevel-md">Log Out</button>
+      <button class="btn btn-danger bevel bevel-md" (click)="logOut()">Log Out</button>
     </div>
   </div>
 </header>

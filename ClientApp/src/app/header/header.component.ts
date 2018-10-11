@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import decode from 'jwt-decode';
+import { AccountService } from '../account.service';
+import { LoginNotificationService } from '../login-notification.service';
+
 
 @Component({
   selector: 'app-header',
@@ -6,10 +11,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-
-  constructor() { }
+  @Input() isUserRoleManager: boolean = false;
+  @Input() isUserLoggedIn: boolean = false;
+  constructor(private router: Router, private authService: AccountService, private loginService: LoginNotificationService) { }
 
   ngOnInit() {
   }
 
+  logOut(): void {
+    localStorage.clear();
+    this.loginService.userLoggedOutEvent();
+    this.router.navigate(['login']);
+  }
 }
