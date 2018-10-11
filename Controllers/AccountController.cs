@@ -71,11 +71,14 @@ namespace web_agent_pro.Controllers
 
         private async Task<object> GenerateJwtToken(string email, ApplicationUser user)
         {
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var accessLevel = userRoles.Where(r => r == "Manager" || r == "Agent").First();
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Role, accessLevel)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
