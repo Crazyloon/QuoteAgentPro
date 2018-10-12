@@ -1,3 +1,34 @@
-<p>
-  agent-management-list works!
-</p>
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead class="thead-brand">
+      <tr>
+        <th>User ID</th>
+        <th>Name</th>
+        <th>Registered On</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th class="centered">Enabled</th>
+        <th class="centered">Promote</th>
+      </tr>
+    </thead>
+    <tbody class="agent-management-list-rows">
+      <ng-container *ngFor="let agent of agents">
+        <tr>
+          <td title="{{agent.id}}">{{(agent.id | slice:0:8) + '...'}}</td>
+          <td>{{agent.firstName}} {{agent.lastName}}</td>
+          <td>{{agent.registrationDate | date}}</td>
+          <td>{{agent.email}}</td>
+          <td>{{agent.phoneNumber}}</td>
+          <td class="centered"><input type="checkbox" class="enabled" [checked]="agent.accountStatus == 1" (click)="onEnableAgentToggle($event, agent.id)" /></td>
+          <td class="centered"><input type="checkbox" class="promote" (click)="onPromoteAgentToggle($event, agent.id)" /></td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>
+<div class="button-container">
+  <button class="btn btn-secondary bevel bevel-md" (click)="toggleEnableAll()">Enable All</button>
+</div>
+<div class="button-container">
+  <button class="btn btn-primary bevel bevel-md" (click)="approveChanges()">Approve Changes</button>
+</div>

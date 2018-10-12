@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AgentManagementService } from '../agent-management.service';
+import { Agent } from '../../data/models/domain/agent';
 
 @Component({
   selector: 'app-agent-management-page',
@@ -6,10 +8,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./agent-management-page.component.scss']
 })
 export class AgentManagementPageComponent implements OnInit {
-
-  constructor() { }
+  agents: Agent[];
+  pendingAgents: Agent[];
+  constructor(private agentMgmtService: AgentManagementService) { }
 
   ngOnInit() {
+    this.agentMgmtService.getAgentAccounts().subscribe(agents => this.agents = agents);
+    this.agentMgmtService.getPendingAccounts().subscribe(agents => this.pendingAgents = agents);
   }
 
 }

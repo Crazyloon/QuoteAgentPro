@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using web_agent_pro.Models;
+using web_agent_pro.Models.Enumerations;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,6 +23,7 @@ namespace web_agent_pro.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
+        private string redirectURL = "login";
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -43,6 +45,10 @@ namespace web_agent_pro.Controllers
             if (result.Succeeded)
             {
                 var appUser = _userManager.Users.SingleOrDefault(r => r.Email == model.Email);
+                if(appUser.AccountStatus == AccountStatus.Pending)
+                {
+                    return "Pending";
+                }
                 return await GenerateJwtToken(model.Email, appUser);
             }
 
@@ -56,14 +62,19 @@ namespace web_agent_pro.Controllers
             var user = new ApplicationUser
             {
                 UserName = model.Email,
-                Email = model.Email
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                PhoneNumber = model.PhoneNumber,
+                AccountStatus = AccountStatus.Pending,
+                RegistrationDate = DateTime.Now,
             };
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, false);
-                return await GenerateJwtToken(model.Email, user);
+                await _userManager.AddToRoleAsync(user, "Agent");
+                return this.redirectURL;
             }
 
             throw new ApplicationException("UNKNOWN_ERROR");
@@ -73,6 +84,7 @@ namespace web_agent_pro.Controllers
         {
             var userRoles = await _userManager.GetRolesAsync(user);
             var accessLevel = userRoles.Where(r => r == "Manager" || r == "Agent").First();
+
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, email),
@@ -114,6 +126,14 @@ namespace web_agent_pro.Controllers
             [Required]
             [StringLength(100, ErrorMessage = "PASSWORD_MIN_LENGTH", MinimumLength = 6)]
             public string Password { get; set; }
+
+            [Required]
+            public string FirstName { get; set; }
+
+            [Required]
+            public string LastName { get; set; }
+
+            public string PhoneNumber { get; set; }
         }
     }
 }

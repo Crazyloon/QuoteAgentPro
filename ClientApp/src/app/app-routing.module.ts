@@ -9,6 +9,8 @@ import { MetricsPageComponent } from './metrics-page/metrics-page.component';
 import { SearchResultsPageComponent } from './search-results-page/search-results-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { AuthGuard } from './auth.guard';
+import { AgentManagementPageComponent } from './agent-management-page/agent-management-page.component';
+import { RegistrationPageComponent } from './registration-page/registration-page.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full', canActivate: [AuthGuard]},
@@ -17,6 +19,8 @@ const routes: Routes = [
   { path: 'quote/search', component: SearchResultsPageComponent, canActivate: [AuthGuard] },
   { path: 'quote/details/:id', component: QuoteSummaryComponent, canActivate: [AuthGuard] },
   { path: 'metrics', component: MetricsPageComponent, canActivate: [AuthGuard] },
+  { path: 'agents/manage', component: AgentManagementPageComponent, canActivate: [AuthGuard] },
+  { path: 'register', component: RegistrationPageComponent },
   { path: 'login', component: LoginPageComponent }
 ];
 

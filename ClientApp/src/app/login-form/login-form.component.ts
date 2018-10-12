@@ -14,6 +14,8 @@ import { Subject } from 'rxjs';
 })
 export class LoginFormComponent implements OnInit {
   creds: LoginCredentials;
+  isPendingUser: boolean;
+  pendingUserMessage: string = "Your account has not been activated yet. Please allow for 3-5 business days for approval, or call 555-5555 for account help.";
   loginForm = this.fb.group({
     username: ['', Validators.required],
     password: ['', Validators.required]
@@ -32,7 +34,9 @@ export class LoginFormComponent implements OnInit {
     
     if (this.creds.email && this.creds.password) {
       this.accountService.login(this.creds).subscribe(token => {
-        if (token) {
+        if (token == "Pending")
+          this.isPendingUser = true;
+        else if (token) {
           localStorage.setItem('token', token);
           localStorage.setItem('userId', this.accountService.getUserId(token));
 
@@ -47,6 +51,10 @@ export class LoginFormComponent implements OnInit {
         }
       });
     }
+  }
+
+  onInput() {
+    this.isPendingUser = false;
   }
 
 }

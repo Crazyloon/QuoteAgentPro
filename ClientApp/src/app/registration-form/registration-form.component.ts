@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { AccountService } from '../account.service';
+import { RegisterCredentials } from '../../data/models/domain/accountCredentials';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registration-form',
@@ -7,6 +10,7 @@ import { FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./registration-form.component.scss']
 })
 export class RegistrationFormComponent implements OnInit {
+  creds: RegisterCredentials;
   registrationForm = this.fb.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
@@ -15,7 +19,10 @@ export class RegistrationFormComponent implements OnInit {
     password: ['', [Validators.required, Validators.minLength(8)]]
   });
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder,
+    private accountService: AccountService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
   }
@@ -27,6 +34,19 @@ export class RegistrationFormComponent implements OnInit {
   get password() { return this.registrationForm.get('password'); }
 
   onSubmit() {
-    console.log("TODO: Register User");
+    this.creds = {
+      email: this.email.value,
+      password: this.password.value,
+      firstName: this.firstName.value,
+      lastName: this.lastName.value,
+      phoneNumber: this.phone.value
+    }
+    this.accountService.register(this.creds)
+      .subscribe(redirectTo => {
+        if (redirectTo) {
+          this.router.navigate([`/${redirectTo}`]);
+        }
+      }
+    )
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Quote } from '../../data/models/domain/quote';
 import { QuoteService } from '../quote.service';
-import { FilterType } from '../../data/models/domain/filtertype';
+import { FilterType } from '../../data/constants/enumerations/filtertype';
 import { filter } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { isNumber, isDate } from 'util';

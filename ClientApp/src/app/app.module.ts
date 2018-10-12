@@ -31,6 +31,7 @@ import { TokenInterceptor } from './token-interceptor';
 import { AgentManagementPageComponent } from './agent-management-page/agent-management-page.component';
 import { PendingAgentsListComponent } from './pending-agents-list/pending-agents-list.component';
 import { AgentManagementListComponent } from './agent-management-list/agent-management-list.component';
+import { RegistrationPageComponent } from './registration-page/registration-page.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { AgentManagementListComponent } from './agent-management-list/agent-mana
     AgentManagementPageComponent,
     PendingAgentsListComponent,
     AgentManagementListComponent,
+    RegistrationPageComponent,
   ],
   imports: [
     BrowserModule,

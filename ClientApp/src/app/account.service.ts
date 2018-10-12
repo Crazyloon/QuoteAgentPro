@@ -4,7 +4,8 @@ import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, tap, take, filter } from 'rxjs/operators';
 import * as jwt_decode from '../../node_modules/jwt-decode';
-import { LoginCredentials } from '../data/models/domain/accountCredentials';
+import { LoginCredentials, RegisterCredentials } from '../data/models/domain/accountCredentials';
+import * as claims from '../data/constants/claims';
 
 
 const httpOptions = {
@@ -39,6 +40,13 @@ export class AccountService {
     );
   }
 
+  register(creds: RegisterCredentials): Observable<string> {
+    return this.http.post(this.registerUrl, creds, { ...httpOptions, responseType: 'text' }).pipe(
+      tap((url) => this.log(`register: ${creds.email} registered.`)),
+      catchError(this.handleError<string>('RegisterCredentials'))
+    );
+  }
+
   getToken(): string {
     return localStorage.getItem(JWT_TOKEN_KEY)
   }
@@ -52,7 +60,7 @@ export class AccountService {
     if (!token) return null;
 
     const decoded = jwt_decode(token);
-    const nameIdentifier = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+    const nameIdentifier = decoded[claims.nameIdentifier];
 
     if (nameIdentifier === undefined) {
       return null;
@@ -65,7 +73,7 @@ export class AccountService {
     if (!token) return null;
 
     const decoded = jwt_decode(token);
-    const roleIdentifier = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    const roleIdentifier = decoded[claims.roleIdentifier];
 
     if (roleIdentifier === undefined) {
       return null;
