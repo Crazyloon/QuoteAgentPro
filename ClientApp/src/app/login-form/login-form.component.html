@@ -1,7 +1,7 @@
 <div class="login-body">
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
     <h2>Login</h2>
-    <p *ngIf="isPendingUser" class="alert alert-danger">{{pendingUserMessage}}</p>
+    <p *ngIf="isUnauthorizedUser" class="alert alert-danger">{{unauthorizedUserMessage}}</p>
     <div class="login-form-group">
       <div class="img-wrapper">
         <img src="../../assets/icons/006-user.svg">

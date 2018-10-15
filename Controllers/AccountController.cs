@@ -49,6 +49,10 @@ namespace web_agent_pro.Controllers
                 {
                     return "Pending";
                 }
+                if(appUser.AccountStatus == AccountStatus.Disabled)
+                {
+                    return "Disabled";
+                }
                 return await GenerateJwtToken(model.Email, appUser);
             }
 

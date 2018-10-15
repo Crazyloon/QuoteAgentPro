@@ -6,6 +6,10 @@ import { Router } from '@angular/router';
 import { User } from '../../data/models/domain/user';
 import { LoginNotificationService } from '../login-notification.service';
 import { Subject } from 'rxjs';
+import { disableDebugTools } from '@angular/platform-browser';
+
+const pendingUserMessage = "Your account has not been activated yet. Please allow for 3-5 business days for approval, or call 555-5555 for account help.";
+const disabledUserMessage = "Your account has been disabled. Please check with a manager if you are recieving this message in error.";
 
 @Component({
   selector: 'app-login-form',
@@ -14,8 +18,8 @@ import { Subject } from 'rxjs';
 })
 export class LoginFormComponent implements OnInit {
   creds: LoginCredentials;
-  isPendingUser: boolean;
-  pendingUserMessage: string = "Your account has not been activated yet. Please allow for 3-5 business days for approval, or call 555-5555 for account help.";
+  isUnauthorizedUser: boolean;
+  unauthorizedUserMessage: string;
   loginForm = this.fb.group({
     username: ['', Validators.required],
     password: ['', Validators.required]
@@ -34,8 +38,14 @@ export class LoginFormComponent implements OnInit {
     
     if (this.creds.email && this.creds.password) {
       this.accountService.login(this.creds).subscribe(token => {
-        if (token == "Pending")
-          this.isPendingUser = true;
+        if (token == 'Pending') {
+          this.isUnauthorizedUser = true;
+          this.unauthorizedUserMessage = pendingUserMessage;
+        }
+        else if (token == 'Disabled') {
+          this.isUnauthorizedUser = true;
+          this.unauthorizedUserMessage = disabledUserMessage;
+        }
         else if (token) {
           localStorage.setItem('token', token);
           localStorage.setItem('userId', this.accountService.getUserId(token));
@@ -54,7 +64,7 @@ export class LoginFormComponent implements OnInit {
   }
 
   onInput() {
-    this.isPendingUser = false;
+    this.isUnauthorizedUser = false;
   }
 
 }
