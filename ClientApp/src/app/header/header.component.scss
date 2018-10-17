@@ -137,9 +137,17 @@ header{
     
   }
 }
+
+.login-button-wrapper{
+  overflow: hidden;
+  button{
+    min-width: 75px;
+  }
+}
+
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+  background: #f1f1f1;
 }
 /* Handle */
 ::-webkit-scrollbar-thumb {
