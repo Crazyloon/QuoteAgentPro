@@ -1,0 +1,26 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/_variables";
+@import "src/_variables";
+
+td.centered, th.centered {
+  text-align: center;
+
+  input[type='checkbox'] {
+    height: 20px;
+    width: 20px;
+  }
+}
+
+.button-container{
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.no-agents-message{
+  border: 1px solid $color-primary;
+  padding: 50px;
+  margin: 40px;
+  text-align: center;
+  box-shadow: 2px 2px 6px 1px $color-primary;
+}

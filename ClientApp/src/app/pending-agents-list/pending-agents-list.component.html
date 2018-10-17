@@ -1,32 +1,37 @@
-<div class="table-responsive">
-  <table class="table table-striped table-hover">
-    <thead class="thead-brand">
-      <tr>
-        <th>User ID</th>
-        <th>Name</th>
-        <th>Registered On</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th class="centered">Activate</th>
-      </tr>
-    </thead>
-    <tbody class="agent-management-list-rows">
-      <ng-container *ngFor="let agent of pendingAgents">
+<ng-container *ngIf="pendingAgents.length > 0 else noPending">
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead class="thead-brand">
         <tr>
-          <td title="{{agent.id}}">{{(agent.id | slice:0:8) + '...'}}</td>
-          <td>{{agent.firstName}} {{agent.lastName}}</td>
-          <td>{{agent.registrationDate | date}}</td>
-          <td>{{agent.email}}</td>
-          <td>{{agent.phoneNumber}}</td>
-          <td class="centered"><input type="checkbox" class="pending" (click)="onActivatePendingAgent($event, agent.id)" /></td>
+          <th>User ID</th>
+          <th>Name</th>
+          <th>Registered On</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th class="centered">Activate</th>
         </tr>
-      </ng-container>
-    </tbody>
-  </table>
-</div>
-<div class="button-container">
-  <button class="btn btn-secondary bevel bevel-md" (click)="onCheckAllPendingAgents()">Check All (Pending)</button>
-</div>
-<div class="button-container">
-  <button class="btn btn-primary bevel bevel-md" [class.btn-success]="isOperationSuccessful" (click)="approveChanges()">Activate Selected Agents</button>
-</div>
+      </thead>
+      <tbody class="agent-management-list-rows">
+        <ng-container *ngFor="let agent of pendingAgents">
+          <tr>
+            <td title="{{agent.id}}">{{(agent.id | slice:0:8) + '...'}}</td>
+            <td>{{agent.firstName}} {{agent.lastName}}</td>
+            <td>{{agent.registrationDate | date}}</td>
+            <td>{{agent.email}}</td>
+            <td>{{agent.phoneNumber}}</td>
+            <td class="centered"><input type="checkbox" class="pending" (click)="onCheckPendingAgent($event, agent.id)" /></td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+  <div class="button-container">
+    <button class="btn btn-secondary bevel bevel-md" (click)="onCheckAllPendingAgents()">Check All (Pending)</button>
+  </div>
+  <div class="button-container">
+    <button class="btn btn-primary bevel bevel-md" [class.btn-success]="isOperationSuccessful" (click)="onApplyChanges()">Activate Selected Agents</button>
+  </div>
+</ng-container>
+<ng-container #noPending>
+  <h1 class="no-agents-message">There are currently no Pending Agents.</h1>
+</ng-container>

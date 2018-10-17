@@ -9,7 +9,7 @@ import { AgentManagementService } from '../agent-management.service';
 })
 export class PendingAgentsListComponent implements OnInit {
   @Input() pendingAgents: Agent[];
-  agentsToActivate: string[];
+  agentsToActivate: string[] = [];
   isOperationSuccessful: boolean = false;
   constructor(private agentManager: AgentManagementService) { }
 
