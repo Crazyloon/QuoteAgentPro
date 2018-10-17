@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Agent } from '../../data/models/domain/agent';
 import { AgentManagementService } from '../agent-management.service';
 
@@ -9,6 +9,7 @@ import { AgentManagementService } from '../agent-management.service';
 })
 export class PendingAgentsListComponent implements OnInit {
   @Input() pendingAgents: Agent[];
+  @Output() onAgentsUpdated = new EventEmitter();
   agentsToActivate: string[] = [];
   isOperationSuccessful: boolean = false;
   constructor(private agentManager: AgentManagementService) { }
@@ -43,6 +44,7 @@ export class PendingAgentsListComponent implements OnInit {
       .subscribe(success => {
         this.isOperationSuccessful = success === false ? false : true;
         this.agentsToActivate = [];
+        this.onAgentsUpdated.emit();
         setTimeout(() => {
           this.isOperationSuccessful = false;
         }, 2000);
