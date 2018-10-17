@@ -1,0 +1,28 @@
+<div class="header-dropdown-links">
+  <ul>
+    <a routerLink="agents/manage" (click)="hideMenu()">
+      <li *ngIf="isUserRoleManager">
+        <img src="../../assets/icons/023-user-management.svg" class="icon" alt="Icon" />
+        <label>Manage Agents</label>
+      </li>
+    </a>
+    <a routerLink="/quote/new" (click)="hideMenu()">
+      <li>
+        <img src="../../assets/icons/001-form.svg" class="icon" alt="Icon" />
+        <label>New Quote</label>
+      </li>
+    </a>
+    <a routerLink="/quote/search" (click)="hideMenu()">
+      <li>
+        <img src="../../assets/icons/003-folder.svg" class="icon" alt="Icon" />
+        <label>Open Quote</label>
+      </li>
+    </a>
+    <a routerLink="/metrics" (click)="hideMenu()">
+      <li>
+        <img src="../../assets/icons/024-analytics.svg" class="icon" alt="Icon" />
+        <label>My Metrics</label>
+      </li>
+    </a>
+  </ul>
+</div>

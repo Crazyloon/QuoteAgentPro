@@ -13,6 +13,8 @@ import { LoginNotificationService } from '../login-notification.service';
 export class HeaderComponent implements OnInit {
   @Input() isUserRoleManager: boolean = false;
   @Input() isUserLoggedIn: boolean = false;
+  isActiveMenu: boolean = false;
+
   constructor(private router: Router, private authService: AccountService, private loginService: LoginNotificationService) { }
 
   ngOnInit() {
@@ -22,5 +24,9 @@ export class HeaderComponent implements OnInit {
     localStorage.clear();
     this.loginService.userLoggedOutEvent();
     this.router.navigate(['login']);
+  }
+
+  onClickMenu() {
+    this.isActiveMenu = !this.isActiveMenu;
   }
 }

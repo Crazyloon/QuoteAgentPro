@@ -8,8 +8,8 @@ import { Agent } from '../../data/models/domain/agent';
   styleUrls: ['./agent-management-page.component.scss']
 })
 export class AgentManagementPageComponent implements OnInit {
-  agents: Agent[];
-  pendingAgents: Agent[];
+  agents: Agent[] = [];
+  pendingAgents: Agent[] = [];
   constructor(private agentMgmtService: AgentManagementService) { }
 
   ngOnInit() {

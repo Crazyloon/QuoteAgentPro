@@ -1,0 +1,32 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/_variables";
+@import "src/_variables";
+
+.header-dropdown-links {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1px solid $color-primary;
+  position: fixed;
+  z-index: 1;
+  background-color: white;
+  top: 84px;
+
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    & * li {
+      padding: 8px 20px;
+
+      &:hover {
+        background-color: #eeeeee;
+      }
+
+      .icon {
+        margin-right: 20px;
+      }
+    }
+  }
+}
