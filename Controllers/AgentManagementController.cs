@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,6 +23,8 @@ namespace web_agent_pro.Controllers
     {
         private readonly WebAgentProDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private const string _manager = "Manager";
+        private const string _agent = "Agent";
 
         public AgentManagementController(WebAgentProDbContext context, UserManager<ApplicationUser> userManager)
         {
@@ -39,14 +42,15 @@ namespace web_agent_pro.Controllers
         [HttpGet("managers")]
         public IEnumerable<ApplicationUser> GetManagers()
         {
-            return GetUsersByRole("Manager").ToList();
+            return GetUsersByRole(_manager).ToList();
         }
 
 
         [HttpGet("agents")]
         public IEnumerable<ApplicationUser> GetAgents()
         {
-            return GetUsersByRole("Agent").ToList();
+            List<ApplicationUser> users = GetUsersByRole(_agent).ToList();
+            return users;
             
         }
 
@@ -58,6 +62,128 @@ namespace web_agent_pro.Controllers
                                 select pu);
 
             return pendingUsers.ToList();
+        }
+
+        [HttpPut("agents/status")]
+        public async Task<IActionResult> UpdateAgentStatusAll([FromBody] Dictionary<string, AccountStatus> agentStatus)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var users = _context.Users;
+            ApplicationUser user;
+            foreach (var status in agentStatus) // key: AgentID, value: Enabled or Disabled
+            {
+                user = users.Where(u => u.Id == status.Key).SingleOrDefault();
+                if(user != null)
+                {
+                    user.AccountStatus = status.Value;
+                    _context.Entry(user).State = EntityState.Modified;
+                }                
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                foreach (var status in agentStatus)
+                {
+                    if (!UserExists(status.Key))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            return NoContent();
+        }
+
+        [HttpPut("agents/promote")]
+        public async Task<Boolean> PromoteAgents([FromBody] Dictionary<string, AccessLevel> agents)
+        {
+            if (!ModelState.IsValid)
+            {
+                return false;
+            }
+
+            var users = _context.Users;
+            IdentityResult roleChangeResult = new IdentityResult();
+            ApplicationUser user;
+            foreach (var agent in agents)
+            {
+                user = users.Where(u => u.Id == agent.Key).SingleOrDefault();
+                if(user != null)
+                {
+                    bool isAgent, isManager;
+                    isAgent = await _userManager.IsInRoleAsync(user, _agent);
+                    isManager = await _userManager.IsInRoleAsync(user, _manager);
+
+                    if (isAgent)
+                    {
+                        var success = await _userManager.RemoveFromRoleAsync(user, _agent);
+                    }
+                    if (isManager)
+                    {
+                        var success = await _userManager.RemoveFromRoleAsync(user, _manager);
+                    }
+
+                    string role = (agent.Value == AccessLevel.Manager) ? _manager : _agent;
+                    roleChangeResult = await _userManager.AddToRoleAsync(user, role);
+                }
+            }
+
+            return roleChangeResult.Succeeded;
+        }
+
+        [HttpPut("agents/activate")]
+        public async Task<Boolean> ActivatePendingUsers([FromBody] string[] pendingUserIds)
+        {
+            if (!ModelState.IsValid)
+            {
+                return false;
+            }
+
+            var users = _context.Users;
+            IdentityResult activateResult = new IdentityResult();
+            ApplicationUser user;
+            foreach (string userId in pendingUserIds)
+            {
+                user = users.Where(u => u.Id == userId).SingleOrDefault();
+                if(user != null)
+                {
+                    user.AccountStatus = AccountStatus.Enabled;
+                    _context.Entry(user).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                foreach (var userId in pendingUserIds)
+                {
+                    if (!UserExists(userId))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            return true;
         }
 
         /// <summary>

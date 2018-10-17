@@ -4,6 +4,8 @@ import { MessageService } from './message.service';
 import { Agent } from '../data/models/domain/agent';
 import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { AgentStatusDictionary } from '../data/models/domain/agentStatusDictionary';
+import { PromotionDictionary } from '../data/models/domain/promotionDictionary';
 
 @Injectable({
   providedIn: 'root'
@@ -49,6 +51,30 @@ export class AgentManagementService {
     return this.http.get<Agent[]>(url).pipe(
       tap(manager => this.log(`${this.serviceName}: Got Managers!`)),
       catchError(this.handleError('GetManagers', []))
+    );
+  }
+
+  setAgentStatusAll(agentStatuses: AgentStatusDictionary): Observable<boolean> {
+    const url = `${this.accountBaseUrl}/agents/status`;
+    return this.http.put<boolean>(url, agentStatuses).pipe(
+      tap(_ => this.log(`${this.serviceName}: Set Agent Statuses!`)),
+      catchError(this.handleError('Enable Users', false))
+    );
+  }
+
+  setAccessLevel(agents: PromotionDictionary): Observable<boolean> {
+    const url = `${this.accountBaseUrl}/agents/promote`;
+    return this.http.put<boolean>(url, agents).pipe(
+      tap(_ => this.log(`${this.serviceName}: Promoted Agents!`)),
+      catchError(this.handleError('Promote Agents', false))
+    );
+  }
+
+  activateAgents(agentIds: string[]): Observable<boolean> {
+    const url = `${this.accountBaseUrl}/agents/activate`;
+    return this.http.put<boolean>(url, agentIds).pipe(
+      tap(_ => this.log(`${this.serviceName}: Activated Agents!`)),
+      catchError(this.handleError('Promote Agents', false))
     );
   }
 

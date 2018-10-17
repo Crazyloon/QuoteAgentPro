@@ -27,8 +27,8 @@
   </table>
 </div>
 <div class="button-container">
-  <button class="btn btn-secondary bevel bevel-md" (click)="toggleEnableAll()">Enable All</button>
+  <button class="btn btn-secondary bevel bevel-md" (click)="toggleEnableAll()">Check All (Enable)</button>
 </div>
 <div class="button-container">
-  <button class="btn btn-primary bevel bevel-md" (click)="approveChanges()">Approve Changes</button>
+  <button class="btn btn-primary bevel bevel-md" [class.btn-success]="isOperationSuccessful" (click)="approveChanges()">Approve Changes</button>
 </div>

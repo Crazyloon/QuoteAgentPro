@@ -1,3 +1,5 @@
+import { AccessLevel } from "../../constants/enumerations/accessLevel";
+
 export interface LoginCredentials {
   email: string;
   password: string;
@@ -9,4 +11,8 @@ export interface RegisterCredentials {
   firstName: string;
   lastName: string;
   phoneNumber: string;
+}
+
+export interface AccessCredentials {
+  [key: string]: AccessLevel;
 }

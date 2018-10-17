@@ -13,8 +13,11 @@ export class AgentManagementPageComponent implements OnInit {
   constructor(private agentMgmtService: AgentManagementService) { }
 
   ngOnInit() {
+    this.onAgentsUpdated();
+  }
+
+  onAgentsUpdated() {
     this.agentMgmtService.getAgentAccounts().subscribe(agents => this.agents = agents);
     this.agentMgmtService.getPendingAccounts().subscribe(agents => this.pendingAgents = agents);
   }
-
 }

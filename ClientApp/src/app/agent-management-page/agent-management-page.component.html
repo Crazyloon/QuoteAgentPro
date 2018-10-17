@@ -1,1 +1,6 @@
-<app-agent-management-list [agents]="agents" [pendingAgents]="pendingAgents"></app-agent-management-list>
+<div class="agent-management-list">
+  <app-agent-management-list [agents]="agents" (onAgentsUpdated)="onAgentsUpdated()"></app-agent-management-list>
+</div>
+<div class="agent-activation-list">
+  <app-pending-agents-list [pendingAgents]="pendingAgents" (onAgentsUpdated)="onAgentsUpdated()"></app-pending-agents-list>
+</div>

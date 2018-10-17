@@ -27,7 +27,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\data\constants\enumerations\accessLevel.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Models\Interfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\data\constants\enumerations\accessLevel.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
