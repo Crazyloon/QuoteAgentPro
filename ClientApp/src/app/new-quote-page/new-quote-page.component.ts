@@ -13,6 +13,7 @@ export class NewQuotePageComponent implements OnInit {
   public driverSelection: {id: number, name: string};
   public driverOptions: {id: number, name: string}[] = [];
   public driverData: {};
+  public isDriverModalActive: boolean = false; //true;
   private isValidQuote: boolean = false;
 
   constructor(private calcEngine: CalculationEngineService, private router: Router) { }
@@ -40,5 +41,9 @@ export class NewQuotePageComponent implements OnInit {
         this.quote.price = price;
         this.router.navigate([`quote/details/${this.quote.id}`]);
       });
+  }
+
+  onDriverModalActivated(driverId: string) {
+    this.isDriverModalActive = true;
   }
 }

@@ -31,6 +31,7 @@ export class DriverFormComponent implements OnInit {
       });
     }
   }
+  @Output() driverModalActivated = new EventEmitter<string>();
   @Output() quoteChange = new EventEmitter<Quote>();
 
   driverForm = this.fb.group({
@@ -59,11 +60,11 @@ export class DriverFormComponent implements OnInit {
   get safeDrivingSchool() { return this.driverForm.get('safeDrivingSchool'); }
   get under23YearsOld() { return this.driverForm.get('under23YearsOld'); }
 
-  onToggleClicked() {
+  onToggleClicked(): void {
     this.isOpen = !this.isOpen;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if(!this.isFormUpdating){
       this.isFormUpdating = true;
 
@@ -120,9 +121,11 @@ export class DriverFormComponent implements OnInit {
     });
   }
 
-  
+  openEditDriverModal(driverId: string): void {
+    this.driverModalActivated.emit(driverId);    
+  }
 
-  calculateAge(birthDate) {
+  calculateAge(birthDate): number {
     const dob = new Date(birthDate);
     const diff_ms = Date.now() - dob.getTime();
     const age_dt = new Date(diff_ms); 

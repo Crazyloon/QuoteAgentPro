@@ -22,7 +22,7 @@
           </thead> 
           <tbody>
             <ng-container *ngFor="let driver of quote.drivers">
-              <tr>
+              <tr (click)="openEditDriverModal(driver.id)">
                 <td>{{driver.firstName}} {{driver.lastName}}</td>
                 <td>{{driver.dateOfBirth | date}}</td>
                 <td>{{calculateAge(driver.dateOfBirth)}}</td>
