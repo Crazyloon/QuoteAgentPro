@@ -31,7 +31,7 @@ export class CustomerFormComponent implements OnInit {
     city: ['', Validators.required],
     state: ['Select State', [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
     zip: ['', Validators.required],
-    ssn: ['648325442', Validators.required],
+    ssn: ['648325442', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
     previousCarrier: ['None', Validators.required],
     pastClaims: [false],
     movingViolations: [false],
@@ -109,7 +109,10 @@ export class CustomerFormComponent implements OnInit {
       .subscribe(quote => {
         this.quoteChange.emit(this.quote);
         this.isFormUpdating = false;
-      })
+      }, (error) => {
+        console.error(error);
+        this.isFormUpdating = false;
+      });
   }
 
   onFormFieldCompleted() {

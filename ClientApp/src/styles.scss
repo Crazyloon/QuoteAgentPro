@@ -93,14 +93,35 @@ select {
   }
 }
 
-div.table-responsive{
+div.table-responsive {
   position: relative;
   top: -2px;
-  table.table.table-striped{
+
+  th,
+  td {
+    padding: 0.2rem 0.7rem;
+
+    @media screen and (min-width: map-get($grid-breakpoints, sm)) {
+      padding: 0.4rem 0.75rem;
+    }
+
+    @media screen and (min-width: map-get($grid-breakpoints, md)) {
+      padding: 0.75rem;
+    }
+  }
+
+  table.table.table-striped {
     margin-bottom: 0;
     overflow-x: auto;
     white-space: nowrap;
   }
+}
+
+.fluid {
+  width: 100%;
+  padding: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 // add no-print to any section of the page that should not show up when printing

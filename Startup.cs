@@ -59,12 +59,15 @@ namespace web_agent_pro
             })
             .AddJwtBearer(config =>
             {
-                config.RequireHttpsMetadata = false;
+                config.RequireHttpsMetadata = false; // TODO: set this true in production
                 config.SaveToken = true;
                 config.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ValidateIssuer = true,
                     ValidIssuer = Configuration["JwtIssuer"],
+                    ValidateAudience = true,
                     ValidAudience = Configuration["JwtIssuer"],
+                    ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
                     ClockSkew = TimeSpan.Zero // remove delay of token when expire
                 };

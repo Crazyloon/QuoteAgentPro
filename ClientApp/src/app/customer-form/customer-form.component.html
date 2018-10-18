@@ -162,6 +162,9 @@
             <span class="invalid-feedback" *ngIf="ssn.errors.required">
               SSN is required.
             </span>
+            <span class="invalid-feedback" *ngIf="ssn.errors.minlength || ssn.errors.maxlength">
+              SSN must be 9 digits Ex. 999551111.
+            </span>
           </div>
         </div>
         <div class="form-group">
@@ -231,4 +234,3 @@
 <pre>{{customerForm.value | json}}</pre>
 <pre>{{quote | json}}</pre>
  -->
- 
