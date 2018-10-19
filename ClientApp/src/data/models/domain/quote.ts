@@ -48,11 +48,11 @@ export class Quote {
     if(!driverToUpdate) return;
 
     let updated = Object.assign(driverToUpdate, driver);
-    debugger; // double check that the correct driver in the list is updated
   }
 
-  deleteDriver(driver: Driver): void {
-    this.drivers.filter(d => d.id != driver.id);
+  deleteDriver(driver: Driver | number): void {
+    const id = typeof driver === 'number' ? driver : driver.id;
+    this.drivers = this.drivers.filter(d => d.id != id);
   }
 
   addVehicle(vehicle: Vehicle): void {
@@ -64,11 +64,11 @@ export class Quote {
     if(!vehicleToUpdate) return;
 
     let updated = Object.assign(vehicleToUpdate, vehicle);
-    debugger;
   }
 
-  deleteVehicle(vehicle: Vehicle): void {
-    this.vehicles.filter(v => v.id != vehicle.id);
+  deleteVehicle(vehicle: Vehicle | number): void {
+    const id = typeof vehicle === 'number' ? vehicle : vehicle.id;
+    this.vehicles = this.vehicles.filter(v => v.id != id);
   }
 
 }

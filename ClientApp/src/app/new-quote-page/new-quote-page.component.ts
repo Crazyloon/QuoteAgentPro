@@ -46,4 +46,8 @@ export class NewQuotePageComponent implements OnInit {
   onDriverModalActivated(driverId: string) {
     this.isDriverModalActive = true;
   }
+
+  onDriverModalDeactivated() {
+    this.isDriverModalActive = false;
+  }
 }

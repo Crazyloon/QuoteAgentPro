@@ -1,9 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Validators, FormBuilder, FormControl } from '@angular/forms';
 import { Vehicle } from '../../data/models/domain/vehicle';
 import { Quote } from '../../data/models/domain/quote';
 import { QuoteService } from '../quote.service';
 import { DriverSelect } from '../../data/models/shared/driverselect';
+
+const submitButtonText_Save = "Save Vehicle";
+const submitButtonText_Edit = "Edit Vehicle";
 
 @Component({
   selector: 'app-vehicle-form',
@@ -12,16 +15,21 @@ import { DriverSelect } from '../../data/models/shared/driverselect';
 })
 export class VehicleFormComponent implements OnInit {
   primaryDriverOptions: DriverSelect[] = [];
-  inputsComplete = 0;
+  submitButtonText = submitButtonText_Save;
   isOpen = true;
-  isFormUpdating = false;
+  isEditMode = false;
+  isRequestInProgress = false;
   vehicle: Vehicle;
   private _quote: Quote;
   @Input() 
   set quote(quote: Quote){
     this._quote = quote;
     this.primaryDriverOptions = [];
-    this._quote.drivers.forEach(d => this.primaryDriverOptions.push({id: d.id, fName: d.firstName, lName: d.lastName})); // d.id returns null because drivers are not added via quoteService or driverService
+    this._quote.drivers.forEach(d => this.primaryDriverOptions.push({ id: d.id, fName: d.firstName, lName: d.lastName }));
+    this._quote.vehicles.forEach(v => {
+      let primaryDriver = this._quote.drivers.find(d => d.id == v.primaryDriverId);
+      v.primaryDriver = `${primaryDriver.firstName} ${primaryDriver.lastName}`;
+    });
   }
 
   @Output() quoteChange = new EventEmitter<Quote>();
@@ -51,6 +59,7 @@ export class VehicleFormComponent implements OnInit {
   }
 
   get primaryDriverId() { return this.vehicleForm.get('primaryDriverId'); }
+  get vehicleId() { return this.vehicleForm.get('id'); }
   get vin() { return this.vehicleForm.get('vin'); }
   get make() { return this.vehicleForm.get('make'); }
   get model() { return this.vehicleForm.get('model'); }
@@ -69,18 +78,16 @@ export class VehicleFormComponent implements OnInit {
     this.isOpen = !this.isOpen;
   }
 
-  onSubmit() {
-    if(!this.isFormUpdating){
-      this.isFormUpdating = true;
+  onSubmit(): void {
+    if(!this.isRequestInProgress){
+      this.isRequestInProgress = true;
       
       this.vehicle = Object.assign({}, this.vehicleForm.value);
       this.vehicle.quoteId = this._quote.id
       this.vehicle.annualMileageUnder6k = this.vehicle.annualMileage < 6000;
       this.vehicle.daysDrivenPerWeekOver4 = this.vehicle.daysDrivenPerWeek > 4;
       this.vehicle.milesToWorkUnder26 = this.vehicle.milesToWork < 26;
-
-      console.log(this.vehicle);
-
+      
       if (!this.vehicle.id) {
         this.addVehicle();
       }
@@ -101,11 +108,12 @@ export class VehicleFormComponent implements OnInit {
 
         this.vehicle = new Vehicle();
         this.vehicleForm.reset();
-        this.isFormUpdating = false;
+        this.resetForm();
+        this.isRequestInProgress = false;
         //this.updateQuote();      
       }, (error) => {
         console.error(error);
-        this.isFormUpdating = false;
+        this.isRequestInProgress = false;
       });
   }
 
@@ -113,27 +121,85 @@ export class VehicleFormComponent implements OnInit {
     this.quoteService.updateVehicle(this.vehicle)
       .subscribe(v => {
         this.vehicle = v;
+        const driver = this.primaryDriverOptions.find(d => d.id == this.vehicle.primaryDriverId);
+        this.vehicle.primaryDriver = `${driver.fName} ${driver.lName}`;
         this._quote.updateVehicle(this.vehicle);
         this.quoteChange.emit(this._quote);
         this.vehicle = new Vehicle();
         this.vehicleForm.reset();
-        this.isFormUpdating = false;
-        ///this.updateQuote();
+        this.resetForm();
+        this.isRequestInProgress = false;
+        this.exitEditMode();
       });
   }
 
-  updateQuote(): void {
-    this.quoteService.updateQuote(this._quote)
-      .subscribe(q => {
-        this.quoteChange.emit(this._quote);
-      });
+  onEditVehicle(vehicleId: number) {
+    this.enterEditMode(vehicleId);
   }
 
-  getPrimaryDrivers(){
+  onDeleteVehicle(vehicleId: number) {
+    if (!this.isEditMode) {
+      this.exitEditMode();
+    }
+    this.quoteService.deleteVehicle(vehicleId)
+      .subscribe(_ => {
+        this.quote.deleteVehicle(vehicleId);
+        this.resetForm();
+        this.quoteChange.emit(this.quote);
+      })
+  }
+
+  exitEditMode(): void {
+    this.vehicle.id = undefined;
+    this.vehicleForm.removeControl('id');
+    this.submitButtonText = submitButtonText_Save;
+    this.isEditMode = false;
+    this.vehicleForm.reset();
+  }
+
+  private enterEditMode(vehicleId: number): void {
+    this.quoteService.getVehicle(vehicleId).subscribe(v => {
+      this.vehicle = v;
+      this.vehicleForm.addControl('id', new FormControl(vehicleId, Validators.required));
+      this.submitButtonText = submitButtonText_Edit;
+      this.isEditMode = true;
+      this.vehicleForm.setValue({
+        'id': this.vehicle.id,
+        'primaryDriverId': v.primaryDriverId,
+        'vin': this.vehicle.vin,
+        'make': this.vehicle.make,
+        'model': this.vehicle.model,
+        'year': this.vehicle.year,
+        'currentValue': this.vehicle.currentValue,
+        'milesToWork': this.vehicle.milesToWork,
+        'annualMileage': this.vehicle.annualMileage,
+        'daysDrivenPerWeek': this.vehicle.daysDrivenPerWeek,
+        'antiTheft': this.vehicle.antiTheft,
+        'antilockBrakes': this.vehicle.antilockBrakes,
+        'daytimeLights': this.vehicle.daytimeLights,
+        'nonResidenceGarage': this.vehicle.nonResidenceGarage,
+        'passiveRestraints': this.vehicle.passiveRestraints,
+        'reducedUsed': this.vehicle.reducedUsed,
+      });
+    }, error => {
+      console.error(error);
+    });
+  }
+
+  private getPrimaryDrivers(){
     this.quoteService.getDrivers(this._quote.id)
       .subscribe(d => {
         this.primaryDriverOptions = [];    
         d.forEach(d => this.primaryDriverOptions.push({id: d.id, fName: d.firstName, lName: d.lastName}));
       });
+  }
+
+  private resetForm() {
+    this.vehicleForm.controls['antiTheft'].setValue(false);
+    this.vehicleForm.controls['antilockBrakes'].setValue(false);
+    this.vehicleForm.controls['daytimeLights'].setValue(false);
+    this.vehicleForm.controls['nonResidenceGarage'].setValue(false);
+    this.vehicleForm.controls['passiveRestraints'].setValue(false);
+    this.vehicleForm.controls['reducedUsed'].setValue(false);
   }
 }

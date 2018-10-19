@@ -48,7 +48,6 @@ export class AgentManagementListComponent implements OnInit {
     if (hasKeys) {
       this.agentManager.setAgentStatusAll(this.agentStatusDictionary).subscribe(success => {
         this.isOperationSuccessful = success === false ? false : true;
-        console.log(success);
         this.agentStatusDictionary = {};
         setTimeout(() => {
           this.isOperationSuccessful = false;

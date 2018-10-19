@@ -1,8 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Quote } from '../../data/models/domain/quote';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Validators, FormBuilder, FormControl } from '@angular/forms';
 import { QuoteService } from '../quote.service';
 import { Driver } from '../../data/models/domain/driver';
+import { stateOptions } from '../../data/constants/stateOptions';
+
+const submitButtonText_Save = "Save Driver";
+const submitButtonText_Edit = "Edit Driver";
 
 @Component({
   selector: 'app-driver-form',
@@ -10,15 +14,16 @@ import { Driver } from '../../data/models/domain/driver';
   styleUrls: ['./driver-form.component.scss']
 })
 export class DriverFormComponent implements OnInit {
-  stateOptions: string[] = ["Select State", "AK", "AL", "AR", "AS", "AZ", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "GU", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "PR", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VI", "VT", "WA", "WI", "WV", "WY"];
-  inputsComplete = 0;
-  isOpen = true;
-  isFormUpdating = false;
+  stateOptions: string[] = stateOptions;
   driver: Driver;
+  submitButtonText = submitButtonText_Save;
+  isOpen = true; // Controls the accordion
+  isRequestInProgress = false; // prevents multiple form submission
+  isEditMode = false; // Modifies the View to show driverId and change the main action to edit instead of save
   @Input() quote: Quote;
   @Input() 
   set driverData(driverData: any) {
-    if(driverData) {
+    if (driverData) {
       this.driverForm.setValue({
         'firstName': driverData['firstName'],
         'lastName': driverData['lastName'],
@@ -51,6 +56,7 @@ export class DriverFormComponent implements OnInit {
     this.driver = new Driver();
   }
 
+  get driverId() { return this.driverForm.get('driverId'); }
   get fName() { return this.driverForm.get('firstName'); }
   get lName() { return this.driverForm.get('lastName'); }
   get dateOfBirth() { return this.driverForm.get('dateOfBirth'); }
@@ -65,8 +71,8 @@ export class DriverFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if(!this.isFormUpdating){
-      this.isFormUpdating = true;
+    if(!this.isRequestInProgress){
+      this.isRequestInProgress = true;
 
       this.driver = Object.assign({}, this.driverForm.value);
       this.driver.quoteId = this.quote.id;
@@ -90,11 +96,12 @@ export class DriverFormComponent implements OnInit {
         // reset data to prepare for next driver inputs
         this.driver = new Driver();
         this.driverForm.reset();
-        this.isFormUpdating = false;
+        this.resetForm();
+        this.isRequestInProgress = false;
         //this.updateQuote();
       }, (error) => {
         console.error(error);
-        this.isFormUpdating = false;
+        this.isRequestInProgress = false;
       });
   }
 
@@ -107,25 +114,65 @@ export class DriverFormComponent implements OnInit {
 
         this.driver = new Driver();
         this.driverForm.reset();
-        this.isFormUpdating = false;
+        this.resetForm();
+        this.isRequestInProgress = false;
+        this.exitEditMode();
       });
   }
+
+  onEditDriver(driverId: number) {
+    this.enterEditMode(driverId);
+  }
+
+  onDeleteDriver(driverId: number) {
+    if (!this.isEditMode) {
+      this.exitEditMode();
+    }
+    this.quoteService.deleteDriver(driverId)
+      .subscribe(_ => {
+        this.quote.deleteDriver(driverId);
+        this.resetForm();
+        this.quoteChange.emit(this.quote);
+      })
+  }
+
+  exitEditMode(): void {
+    this.driver.id = undefined;
+    this.driverForm.removeControl('id');
+    this.submitButtonText = submitButtonText_Save;
+    this.isEditMode = false;
+    this.driverForm.reset();
+  }
   
-  updateQuote(): void {
-    this.quoteService.updateQuote(this.quote)
-    .subscribe(q => {
-      this.quoteChange.emit(this.quote);
-      this.driver = new Driver();
-      this.driverForm.reset();
-      this.isFormUpdating = false;
+  private enterEditMode(driverId: number): void {
+    this.quoteService.getDriver(driverId).subscribe(d => {
+      this.driver = d;
+      this.driverForm.addControl('id', new FormControl(driverId, Validators.required));
+      this.submitButtonText = submitButtonText_Edit;
+      this.isEditMode = true;
+      let driverDob = new Date(this.driver.dateOfBirth);
+      let formattedDate = new Date(driverDob.getTime() - (driverDob.getTimezoneOffset() * 60000)).toISOString().split("T")[0];
+      this.driverForm.setValue({
+        'id': this.driver.id,
+        'firstName': this.driver.firstName,
+        'lastName': this.driver.lastName,
+        'dateOfBirth': formattedDate,
+        'ssn': this.driver.ssn,
+        'driversLicenseNumber': this.driver.driversLicenseNumber,
+        'issuingState': this.driver.issuingState,
+        'safeDrivingSchool': this.driver.safeDrivingSchool,
+        'under23YearsOld': this.driver.under23YearsOld,
+      });
+    }, error => {
+      console.error(error);
     });
   }
 
-  openEditDriverModal(driverId: string): void {
-    this.driverModalActivated.emit(driverId);    
+  private resetForm(): void {
+    this.driverForm.controls['safeDrivingSchool'].setValue(false);
   }
 
-  calculateAge(birthDate): number {
+  private calculateAge(birthDate: Date): number {
     const dob = new Date(birthDate);
     const diff_ms = Date.now() - dob.getTime();
     const age_dt = new Date(diff_ms); 

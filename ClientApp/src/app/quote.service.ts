@@ -34,7 +34,6 @@ export class QuoteService {
 
 
   private log(message: string) {
-    //console.log(`QuoteService: ${message}`);
     this.messageService.add(`QuoteService: ${message}`);
   }
 
@@ -80,7 +79,14 @@ export class QuoteService {
     );
   }
 
-  
+  getDriver(id: number): Observable<Driver> {
+    const url = `${this.driversUrl}/${id}`;
+    return this.http.get<Driver>(url).pipe(
+      tap(d => this.log(`Quote Service: Got Driver ${d.id}`)),
+      catchError(this.handleError<Driver>('getDriver'))
+    );
+  }
+
   getDrivers(quoteId: number): Observable<Driver[]> {
     const url = `${this.driversUrl}`;
     return this.http.get<Driver[]>(url).pipe(
@@ -104,6 +110,23 @@ export class QuoteService {
     );
   }
 
+  deleteDriver(driver: Driver | number): Observable<Driver> {
+    const id = typeof driver === 'number' ? driver : driver.id;
+    const url = `${this.driversUrl}/${id}`
+    return this.http.delete<Driver>(url, httpOptions).pipe(
+      tap(_ => this.log(`Quote Service: Driver - ${id} deleted`)),
+      catchError(this.handleError<Driver>(`deleteDriver`))
+    );
+  }
+
+  getVehicle(id: number): Observable<Vehicle> {
+    const url = `${this.vehiclesUrl}/${id}`;
+    return this.http.get<Vehicle>(url).pipe(
+      tap((v: Vehicle) => this.log(`Quote Service: Vehicle - ${v.id} added!`)),
+      catchError(this.handleError<Vehicle>('getVehicle'))
+      );
+  }
+
   getVehicles(quoteId: number): Observable<Vehicle[]> {
     const url = `${this.vehiclesUrl}`;
     return this.http.get<Vehicle[]>(url).pipe(
@@ -125,6 +148,15 @@ export class QuoteService {
     return this.http.put(url, vehicle, httpOptions).pipe(
       tap(_ => this.log(`Quote Service: Vehicle - ${vehicle.id} updated!`)),
       catchError(this.handleError<Vehicle>(`updateVehicle`))
+    );
+  }
+
+  deleteVehicle(vehicle: Vehicle | number): Observable<Vehicle> {
+    const id = typeof vehicle === 'number' ? vehicle : vehicle.id;
+    const url = `${this.vehiclesUrl}/${id}`
+    return this.http.delete<Vehicle>(url, httpOptions).pipe(
+      tap(_ => this.log(`Quote Service: Vehicle - ${id} deleted`)),
+      catchError(this.handleError<Vehicle>(`deleteVehicle`))
     );
   }
 

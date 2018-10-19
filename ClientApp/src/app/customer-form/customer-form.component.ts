@@ -5,6 +5,8 @@ import { CustomerForm } from '../../data/models/page/customerform';
 import { QuoteInput } from '../../data/models/domain/quoteinput';
 import { QuoteService } from '../quote.service';
 import { AccountService } from '../account.service';
+import { stateOptions } from '../../data/constants/stateOptions';
+import { carrierOptions } from '../../data/constants/carrierOptions';
 
 @Component({
   selector: 'app-customer-form',
@@ -12,9 +14,8 @@ import { AccountService } from '../account.service';
   styleUrls: ['./customer-form.component.scss']
 })
 export class CustomerFormComponent implements OnInit {
-  previousCarrierOptions: string[] = ['Other', 'Lizard', 'Pervasive', 'None']; // Select these from database
-  stateOptions: string[] = ["Select State", "AK", "AL", "AR", "AS", "AZ", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "GU", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "PR", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VI", "VT", "WA", "WI", "WV", "WY"];
-  inputsComplete = 0;
+  previousCarrierOptions: string[] = carrierOptions; // Select these from database OnInit in the future.
+  stateOptions: string[] = stateOptions;
   isOpen = true;
   isFormUpdating = false;
   @Input() quote: Quote;
@@ -26,7 +27,7 @@ export class CustomerFormComponent implements OnInit {
     lastName: ['', Validators.required],
     dateOfBirth: ['1988-08-15', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    phone: [''],
+    phone: ['', [Validators.minLength(10), Validators.maxLength(10)]],
     address: ['', Validators.required],
     city: ['', Validators.required],
     state: ['Select State', [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
@@ -60,11 +61,11 @@ export class CustomerFormComponent implements OnInit {
   get newDriver() { return this.customerForm.get('newDriver'); }
   get multiCar() { return this.customerForm.get('multiCar'); }
 
-  onToggleClicked() {
+  onToggleClicked(): void {
     this.isOpen = !this.isOpen;
   }
   
-  onSubmit() {
+  onSubmit(): void {
     if(!this.isFormUpdating){
       this.isFormUpdating = true;
       if(this.quote.id){
@@ -76,12 +77,12 @@ export class CustomerFormComponent implements OnInit {
     }
   }
 
-  onCopyToDriver() {
+  onCopyToDriver(): void {
     this.driverData.emit({
-      'firstName': this.customerForm.get('firstName').value,
-      'lastName': this.customerForm.get('lastName').value,
-      'dateOfBirth': this.customerForm.get('dateOfBirth').value,
-      'ssn': this.customerForm.get('ssn').value
+      'firstName': this.fName.value,
+      'lastName': this.lName.value,
+      'dateOfBirth': this.dateOfBirth.value,
+      'ssn': this.ssn.value
     });
   }
   
@@ -91,7 +92,6 @@ export class CustomerFormComponent implements OnInit {
     this.quote.userId = this.accountService.getUserId();
     this.quote.previousCarrierLizard = this.quote.previousCarrier == "Lizard";
     this.quote.previousCarrierPervasive = this.quote.previousCarrier == "Pervasive";
-    // TODO: populate discount (on the server?)
     this.quoteService.addQuote(this.quote)
       .subscribe(quote => {
         this.quote.id = quote.id;
@@ -113,9 +113,5 @@ export class CustomerFormComponent implements OnInit {
         console.error(error);
         this.isFormUpdating = false;
       });
-  }
-
-  onFormFieldCompleted() {
-    this.inputsComplete++;
   }
 }

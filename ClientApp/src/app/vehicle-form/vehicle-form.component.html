@@ -8,10 +8,12 @@
     <div class="expanding-card-container" [class.open]="isOpen">
   
       <div class="expanding-card-body">
+        <div class="edit-mode-notification" *ngIf="isEditMode">Edit Mode</div>
         <div *ngIf="_quote.vehicles.length > 0" class="table-responsive">
           <table class="table table-striped table-hover">
             <thead class="thead-brand">
               <tr>
+                <th>Edit</th>
                 <th>Driver</th>
                 <th>Make</th>
                 <th>Model</th>
@@ -22,11 +24,13 @@
                 <th>Days Driven Weekly</th>
                 <th>VIN</th>
                 <th>Discounts...</th>
+                <th>Delete</th>
               </tr>
-            </thead> 
+            </thead>
             <tbody>
               <ng-container *ngFor="let vehicle of _quote.vehicles">
                 <tr>
+                  <td (click)="onEditVehicle(vehicle.id)"><img class="icon" src="../../assets/icons/029-edit.svg" alt="Edit Icon" /></td>
                   <td>{{vehicle.primaryDriver}}</td>
                   <td>{{vehicle.make}}</td>
                   <td>{{vehicle.model}}</td>
@@ -37,20 +41,30 @@
                   <td>{{vehicle.daysDrivenPerWeek | pluralize:'day'}}</td>
                   <td>{{vehicle.vin}}</td>
                   <td>{{vehicle.antiTheft}}</td>
+                  <td (click)="onDeleteVehicle(vehicle.id)"><img class="icon" src="../../assets/icons/028-delete.svg" alt="Delete Icon" /></td>
                 </tr>
               </ng-container>
-            </tbody> 
-          </table>  
+            </tbody>
+          </table>
         </div>
         <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+          <ng-container *ngIf="isEditMode">
+            <button id="btn-stop-edit" type="button" class="btn btn-secondary bevel bevel-md" (click)="exitEditMode()">< Stop Editing</button>
+            <div class="form-group">
+              <label>Vehicle ID</label>
+              <input class="form-control"
+                     formControlName="id"
+                     type="text"
+                     readonly />
+            </div>
+          </ng-container>
           <div class="form-group">
             <label>Primary Driver</label>
             <select class="form-control"
-                [class.is-valid]="primaryDriverId.valid && (primaryDriverId.dirty || primaryDriverId.touched)"
-                [class.is-invalid]="primaryDriverId.invalid && (primaryDriverId.dirty || primaryDriverId.touched)"
-                formControlName="primaryDriverId"
-                >
-              <option *ngFor="let option of primaryDriverOptions"  value="{{option.id}}">
+                    [class.is-valid]="primaryDriverId.valid && (primaryDriverId.dirty || primaryDriverId.touched)"
+                    [class.is-invalid]="primaryDriverId.invalid && (primaryDriverId.dirty || primaryDriverId.touched)"
+                    formControlName="primaryDriverId">
+              <option *ngFor="let option of primaryDriverOptions" value="{{option.id}}">
                 {{option.fName}} {{option.lName}}
               </option>
             </select>
@@ -58,30 +72,28 @@
           <div class="form-group">
             <label>VIN</label>
             <input class="form-control"
-            [class.is-valid]="vin.valid"
-            [class.is-invalid]="vin.invalid && (vin.dirty || vin.touched)" 
-              formControlName="vin"
-              type="text"
-              required 
-              />
+                   [class.is-valid]="vin.valid"
+                   [class.is-invalid]="vin.invalid && (vin.dirty || vin.touched)"
+                   formControlName="vin"
+                   type="text"
+                   required />
             <div *ngIf="vin.invalid && (vin.dirty || vin.touched)" class="alert alert-danger">
-                <span class="invalid-feedback" *ngIf="vin.errors.required">
-                  Enter a valid 17 character VIN.
-                </span>
-                <span class="invalid-feedback" *ngIf="vin.errors.minlength || vin.errors.maxlength">
-                  Enter a valid 17 character VIN.
-                </span>
+              <span class="invalid-feedback" *ngIf="vin.errors.required">
+                Enter a valid 17 character VIN.
+              </span>
+              <span class="invalid-feedback" *ngIf="vin.errors.minlength || vin.errors.maxlength">
+                Enter a valid 17 character VIN.
+              </span>
             </div>
           </div>
           <div class="form-group">
             <label>Make</label>
             <input class="form-control"
-              [class.is-valid]="make.valid"
-              [class.is-invalid]="make.invalid && (make.dirty || make.touched)" 
-              formControlName="make"
-              type="text"
-              required 
-              />
+                   [class.is-valid]="make.valid"
+                   [class.is-invalid]="make.invalid && (make.dirty || make.touched)"
+                   formControlName="make"
+                   type="text"
+                   required />
             <div *ngIf="make.invalid && (make.dirty || make.touched)" class="alert alert-danger">
               <span class="invalid-feedback" *ngIf="make.errors.required">
                 Enter the vehicle's make.
@@ -91,12 +103,11 @@
           <div class="form-group">
             <label>Model</label>
             <input class="form-control"
-              [class.is-valid]="model.valid" 
-              [class.is-invalid]="model.invalid && (model.dirty || model.touched)"
-              formControlName="model"
-              type="text"
-              required 
-            />
+                   [class.is-valid]="model.valid"
+                   [class.is-invalid]="model.invalid && (model.dirty || model.touched)"
+                   formControlName="model"
+                   type="text"
+                   required />
             <div *ngIf="model.invalid && (model.dirty || model.touched)" class="alert alert-danger">
               <span class="invalid-feedback" *ngIf="model.errors.required">
                 Enter the vehicle's model.
@@ -106,27 +117,25 @@
           <div class="form-group">
             <label>Year</label>
             <input class="form-control"
-                [class.is-valid]="year.valid"
-                [class.is-invalid]="year.invalid && (year.dirty || year.touched)"
-                formControlName="year"
-                type="number"
-                required
-                />
+                   [class.is-valid]="year.valid"
+                   [class.is-invalid]="year.invalid && (year.dirty || year.touched)"
+                   formControlName="year"
+                   type="number"
+                   required />
             <div *ngIf="year.invalid && (year.dirty || year.touched)" class="alert alert-danger">
               <span class="invalid-feedback" *ngIf="year.errors.required">
-                  Enter the year this vehicle was manufactured.
+                Enter the year this vehicle was manufactured.
               </span>
             </div>
           </div>
           <div class="form-group">
             <label>Current Value</label>
             <input class="form-control"
-                [class.is-valid]="currentValue.valid"
-                [class.is-invalid]="currentValue.invalid && (currentValue.dirty || currentValue.touched)"
-                formControlName="currentValue"
-                type="number"
-                required
-                />
+                   [class.is-valid]="currentValue.valid"
+                   [class.is-invalid]="currentValue.invalid && (currentValue.dirty || currentValue.touched)"
+                   formControlName="currentValue"
+                   type="number"
+                   required />
             <div *ngIf="currentValue.invalid && (currentValue.dirty || currentValue.touched)" class="alert alert-danger">
               <span class="invalid-feedback" *ngIf="currentValue.errors.required">
                 Enter this vehicle's current value.
@@ -136,11 +145,10 @@
           <div class="form-group">
             <label>Miles to Work</label>
             <input class="form-control"
-                [class.is-valid]="milesToWork.valid"
-                [class.is-invalid]="milesToWork.invalid && (milesToWork.dirty || milesToWork.touched)"
-                formControlName="milesToWork"
-                type="number"
-                />
+                   [class.is-valid]="milesToWork.valid"
+                   [class.is-invalid]="milesToWork.invalid && (milesToWork.dirty || milesToWork.touched)"
+                   formControlName="milesToWork"
+                   type="number" />
             <div *ngIf="milesToWork.invalid && (milesToWork.dirty || milesToWork.touched)" class="alert alert-danger">
               <span class="invalid-feedback" *ngIf="milesToWork.errors.required">
                 Enter the number of miles driven to work.
@@ -150,12 +158,11 @@
           <div class="form-group">
             <label>Annual Mileage</label>
             <input class="form-control"
-                [class.is-valid]="annualMileage.valid"
-                [class.is-invalid]="annualMileage.invalid && (annualMileage.dirty || annualMileage.touched)"
-                formControlName="annualMileage"
-                type="number"
-                required
-                />
+                   [class.is-valid]="annualMileage.valid"
+                   [class.is-invalid]="annualMileage.invalid && (annualMileage.dirty || annualMileage.touched)"
+                   formControlName="annualMileage"
+                   type="number"
+                   required />
             <div *ngIf="annualMileage.invalid && (annualMileage.dirty || annualMileage.touched)" class="alert alert-danger">
               <span class="invalid-feedback" *ngIf="annualMileage.errors.required">
                 Enter the estimated miles driven each year.
@@ -165,12 +172,11 @@
           <div class="form-group">
             <label>Days Driven Weekly</label>
             <input class="form-control"
-                [class.is-valid]="daysDrivenPerWeek.valid"
-                [class.is-invalid]="daysDrivenPerWeek.invalid && (daysDrivenPerWeek.dirty || daysDrivenPerWeek.touched)"
-                formControlName="daysDrivenPerWeek"
-                type="number"
-                required
-                />
+                   [class.is-valid]="daysDrivenPerWeek.valid"
+                   [class.is-invalid]="daysDrivenPerWeek.invalid && (daysDrivenPerWeek.dirty || daysDrivenPerWeek.touched)"
+                   formControlName="daysDrivenPerWeek"
+                   type="number"
+                   required />
             <div *ngIf="daysDrivenPerWeek.invalid && (daysDrivenPerWeek.dirty || daysDrivenPerWeek.touched)" class="alert alert-danger">
               <span class="invalid-feedback" *ngIf="daysDrivenPerWeek.errors.required">
                 Enter number of days driven each week.
@@ -179,62 +185,56 @@
           </div>
           <div class="form-group">
             <label class="check-box-input">
-              <input class="form-control" 
-                formControlName="antiTheft" 
-                type="checkbox" 
-                />
+              <input class="form-control"
+                     formControlName="antiTheft"
+                     type="checkbox" />
               Anti-theft Equipped?
             </label>
           </div>
           <div class="form-group">
             <label class="check-box-input">
-              <input class="form-control" 
-                formControlName="antilockBrakes" 
-                type="checkbox" 
-                />
+              <input class="form-control"
+                     formControlName="antilockBrakes"
+                     type="checkbox" />
               Antilock Brakes Equipped?
             </label>
           </div>
           <div class="form-group">
             <label class="check-box-input">
-              <input class="form-control" 
-                formControlName="daytimeLights" 
-                type="checkbox" 
-                />
+              <input class="form-control"
+                     formControlName="daytimeLights"
+                     type="checkbox" />
               Daytime Lights Equipped?
             </label>
           </div>
           <div class="form-group">
             <label class="check-box-input">
-              <input class="form-control" 
-                formControlName="nonResidenceGarage" 
-                type="checkbox" 
-                />
+              <input class="form-control"
+                     formControlName="nonResidenceGarage"
+                     type="checkbox" />
               Garage Different From address?
             </label>
           </div>
           <div class="form-group">
             <label class="check-box-input">
-              <input class="form-control" 
-                formControlName="passiveRestraints" 
-                type="checkbox" 
-                />
+              <input class="form-control"
+                     formControlName="passiveRestraints"
+                     type="checkbox" />
               Passive Restraints Equipped?
             </label>
           </div>
           <div class="form-group">
             <label class="check-box-input">
-              <input class="form-control" 
-                formControlName="reducedUsed" 
-                type="checkbox" 
-                />
+              <input class="form-control"
+                     formControlName="reducedUsed"
+                     type="checkbox" />
               Reduced Used Discount?
             </label>
           </div>
-          <button type="submit" class="btn btn-success bevel bevel-md" [disabled]="!vehicleForm.valid || !_quote.id || isFormUpdating">Save Vehicle</button>
+          <button type="submit" class="btn btn-success bevel bevel-md" [disabled]="!vehicleForm.valid || !_quote.id || isFormUpdating">{{submitButtonText}}</button>
           <div *ngIf="!_quote.id" class="alert alert-warning">
             <span class="invalid-feedback" style="display: block;">
-                Save customer information before adding a vehicle.
+              Save customer information before adding a vehicle.
             </span>
           </div>
         </form>
@@ -249,4 +249,3 @@
       </div>
     </div>
   </div>
-     

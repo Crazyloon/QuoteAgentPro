@@ -16,7 +16,6 @@ export class CalculationEngineService {
   }
 
   private log(message: string) {
-    console.log(`QuoteService: ${message}`);
     this.messageService.add(`QuoteService: ${message}`);
   }
 

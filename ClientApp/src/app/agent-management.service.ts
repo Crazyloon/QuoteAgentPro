@@ -96,7 +96,6 @@ export class AgentManagementService {
   }
 
   private log(message: string) {
-    //console.log(`AccountService: ${message}`);
     this.messageService.add(`AccountService: ${message}`);
   }
 }

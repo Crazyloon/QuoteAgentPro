@@ -10,7 +10,6 @@ export class AuthRequestOptions extends BaseRequestOptions {
     super();
 
     const token = localStorage.getItem(JWT_TOKEN_KEY);
-    debugger;
     if (token) {
       this.headers.append(AUTH_HEADER_KEY, `${AUTH_PREFIX} ${token}`);
     }

@@ -74,7 +74,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label>Phone</label>
+          <label>Phone <small>(Optional)</small></label>
           <input class="form-control" 
               [class.is-valid]="phone.valid && (phone.dirty || phone.touched)"
               [class.is-invalid]="phone.invalid && (phone.dirty || phone.touched)"
@@ -82,8 +82,8 @@
               type="text" 
               />
           <div *ngIf="phone.invalid && (phone.dirty || phone.touched)" class="alert alert-danger">
-            <span class="invalid-feedback" *ngIf="phone.errors.required">
-              Phone format must be correct.
+            <span class="invalid-feedback" *ngIf="phone.errors.minlength || phone.errors.maxlength">
+              Enter a 10 digit phone number.
             </span>
           </div>
         </div>
@@ -146,7 +146,7 @@
               />
           <div *ngIf="zip.invalid && (zip.dirty || zip.touched)" class="alert alert-danger">
             <span class="invalid-feedback" *ngIf="zip.errors.required">
-              Zip is required.
+              Enter a 5 digit zip code.
             </span>
           </div>
         </div>
@@ -163,7 +163,7 @@
               SSN is required.
             </span>
             <span class="invalid-feedback" *ngIf="ssn.errors.minlength || ssn.errors.maxlength">
-              SSN must be 9 digits Ex. 999551111.
+              Enter a 9 digit Social Security Number.
             </span>
           </div>
         </div>

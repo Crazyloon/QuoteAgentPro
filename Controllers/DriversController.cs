@@ -68,6 +68,9 @@ namespace web_agent_pro.Controllers
                 return BadRequest();
             }
 
+            SetDiscounts(driver);
+
+            _context.Drivers.Update(driver);
             _context.Entry(driver).State = EntityState.Modified;
 
             try
@@ -86,7 +89,7 @@ namespace web_agent_pro.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(driver);
         }
 
         // POST: api/Drivers
@@ -97,16 +100,8 @@ namespace web_agent_pro.Controllers
             {
                 return BadRequest(ModelState);
             }
-            // TODO: Protect against States that aren't in the database (Causes NullReferenceException on '.Amount' below)
-            List<Discount> driverDiscounts = _context.Discounts.Where(d => d.Scope == "Person" && d.State == driver.IssuingState).ToList();
-            if(driver.SafeDrivingSchool)
-            {
-                driver.SafeDrivingSchoolDiscount = driverDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("SafeDriver")).SingleOrDefault().Amount;
-            }
-            if(driver.Under23YearsOld)
-            {
-                driver.Under23YearsOldDiscount = driverDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("YoungDriver")).SingleOrDefault().Amount;
-            }
+
+            SetDiscounts(driver);
 
             _context.Drivers.Add(driver);
             await _context.SaveChangesAsync();
@@ -138,6 +133,23 @@ namespace web_agent_pro.Controllers
         private bool DriverExists(long id)
         {
             return _context.Drivers.Any(e => e.Id == id);
+        }
+
+        private void SetDiscounts(Driver driver)
+        {
+            var relatedQuote = _context.Quotes.Where(q => q.Id == driver.QuoteId).SingleOrDefault();
+            List<Discount> driverDiscounts = _context.Discounts.Where(d => d.Scope == "Person" && d.State == relatedQuote.State).ToList();
+            if (driverDiscounts.Count > 0)
+            {
+                if (driver.SafeDrivingSchool)
+                {
+                    driver.SafeDrivingSchoolDiscount = driverDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("SafeDriver")).SingleOrDefault().Amount;
+                }
+                if (driver.Under23YearsOld)
+                {
+                    driver.Under23YearsOldDiscount = driverDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("YoungDriver")).SingleOrDefault().Amount;
+                }
+            }
         }
     }
 }

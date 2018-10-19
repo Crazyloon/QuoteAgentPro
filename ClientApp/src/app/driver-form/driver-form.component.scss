@@ -67,42 +67,6 @@
         }
       }
 
-      // input {
-      //   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        
-      //   &:focus {
-      //     border-color: $color-trim;
-      //     box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25);
-      //     animation: pulsing_shadow 3s infinite;
-      //   }
-      
-      //   &[type="text"], &[type="date"], &[type="email"] {
-      //     @media screen and (min-width: map-get($grid-breakpoints, sm)) {
-      //       max-width: 250px;
-      //     }
-      //   }
-        
-      //   &[type="checkbox"]{
-      //     &:focus{
-      //       border-color: $color-trim;
-      //       box-shadow: 0 0 8px 0.2rem rgba(0, 11, 106, 0.65);
-      //     }
-      //   }
-      
-      // }
-      
-      // select {
-      //   &:focus{
-      //     border-color: $color-trim;
-      //     box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25);
-      //     animation: pulsing_shadow 3s infinite;
-      //   }
-        
-      //   @media screen and (min-width: map-get($grid-breakpoints, sm)) {
-      //     max-width: 250px;
-      //   }
-      // }
-
       label:not(.check-box-input) {
         display: block;
       }
@@ -132,9 +96,6 @@
           width: 24px;
           cursor: pointer;
           border: 1px solid $color-primary;
-
-          // height: calc(2.25rem + 2px);
-          // width: calc(2.25rem + 2px);
         }
 
         /* Create a custom checkbox */
@@ -233,13 +194,23 @@ div.table-responsive{
   }
 }
 
-// @-webkit-keyframes pulsing_shadow {
-//   0% { box-shadow: 0 0 4px 0.2rem rgba(0, 11, 106, 0.25) }
-//   50% { box-shadow: 0 0 10px 0.2rem rgba(0, 11, 106, 0.65) }
-//   100% { box-shadow: 0 0 4px 0.2rem rgba(0, 11, 106, 0.25) }
-// }
-// @keyframes pulsing_shadow {
-//   0% { box-shadow: 0 0 4px 0.2rem rgba(0, 11, 106, 0.25) }
-//   50% { box-shadow: 0 0 10px 0.2rem rgba(0, 11, 106, 0.65) }
-//   100% { box-shadow: 0 0 4px 0.2rem rgba(0, 11, 106, 0.25) }
-// }
+#btn-stop-edit {
+  margin: 0 0 15px 0;
+}
+
+.edit-mode-notification {
+  background-color: rgb(255, 189, 68);
+  text-align: center;
+  border-radius: 2px;
+  padding: 5px;
+  color: rgb(255, 255, 255);
+}
+
+.icon{
+  width: 20px;
+  height: 20px;
+  @media screen and (min-width: map-get($grid-breakpoints, sm)){
+    width: 30px;
+    height: 30px;
+  }
+}

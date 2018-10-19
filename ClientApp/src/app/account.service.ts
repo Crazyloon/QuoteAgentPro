@@ -118,7 +118,6 @@ export class AccountService {
   }
   
   private log(message: string) {
-    //console.log(`AccountService: ${message}`);
     this.messageService.add(`AccountService: ${message}`);
   }
 }

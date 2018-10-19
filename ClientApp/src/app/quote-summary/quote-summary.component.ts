@@ -22,9 +22,6 @@ export class QuoteSummaryComponent implements OnInit {
 
   ngOnInit() {
     this.getQuote();
-    setTimeout(() =>{
-      console.log(this.quote);
-    }, 1500);
   }
 
   getQuote(): void {

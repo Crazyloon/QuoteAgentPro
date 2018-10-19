@@ -68,6 +68,9 @@ namespace web_agent_pro.Controllers
                 return BadRequest();
             }
 
+            SetDiscounts(vehicle);
+
+            _context.Vehicles.Update(vehicle);
             _context.Entry(vehicle).State = EntityState.Modified;
 
             try
@@ -86,7 +89,7 @@ namespace web_agent_pro.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(vehicle);
         }
 
         // POST: api/Vehicles
@@ -98,50 +101,57 @@ namespace web_agent_pro.Controllers
                 return BadRequest(ModelState);
             }
 
-            // TODO: Protect against NullReferenceException (on relatedQuote and '.Amount' for each discount)
-            var relatedQuote = _context.Quotes.Where(q => q.Id == vehicle.QuoteId).SingleOrDefault();
-            List<Discount> vehicleDiscounts = _context.Discounts.Where(d => d.Scope == "Vehicle" && d.State == relatedQuote.State).ToList();
-            if (vehicle.AnnualMileageUnder6k)
-            {
-                vehicle.AnnualMileageDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("AnnualMilage")).SingleOrDefault().Amount;
-            }
-            if (vehicle.AntilockBrakes)
-            {
-                vehicle.AntilockBrakesDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("AntilockBrakes")).SingleOrDefault().Amount;
-            }
-            if (vehicle.AntiTheft)
-            {
-                vehicle.AntiTheftDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("AntiTheft")).SingleOrDefault().Amount;
-            }
-            if (vehicle.DaysDrivenPerWeekOver4)
-            {
-                vehicle.DaysDrivenPerWeekOver4Discount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("DaysDriven")).SingleOrDefault().Amount;
-            }
-            if (vehicle.DaytimeLights)
-            {
-                vehicle.DaytimeLightsDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("DaytimeLights")).SingleOrDefault().Amount;
-            }
-            if (vehicle.MilesToWorkUnder26)
-            {
-                vehicle.MilesToWorkUnder26Discount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("MilesToWork")).SingleOrDefault().Amount;
-            }
-            if (vehicle.NonResidenceGarage)
-            {
-                vehicle.NonResidenceGarageDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("GarageDiffers")).SingleOrDefault().Amount;
-            }
-            if (vehicle.PassiveRestraints)
-            {
-                vehicle.PassiveRestraintsDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PassiveRestraints")).SingleOrDefault().Amount;
-            }
-            if (vehicle.ReducedUsed)
-            {
-                vehicle.ReducedUsedDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("ReducedUsed")).SingleOrDefault().Amount;
-            }
+            SetDiscounts(vehicle);
 
             _context.Vehicles.Add(vehicle);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetVehicle", new { id = vehicle.Id }, vehicle);
+        }
+
+        private void SetDiscounts(Vehicle vehicle)
+        {
+            var relatedQuote = _context.Quotes.Where(q => q.Id == vehicle.QuoteId).SingleOrDefault();
+            List<Discount> vehicleDiscounts = _context.Discounts.Where(d => d.Scope == "Vehicle" && d.State == relatedQuote.State).ToList();
+            if (vehicleDiscounts.Count > 0)
+            {
+                if (vehicle.AnnualMileageUnder6k)
+                {
+                    vehicle.AnnualMileageDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("AnnualMilage")).SingleOrDefault().Amount;
+                }
+                if (vehicle.AntilockBrakes)
+                {
+                    vehicle.AntilockBrakesDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("AntilockBrakes")).SingleOrDefault().Amount;
+                }
+                if (vehicle.AntiTheft)
+                {
+                    vehicle.AntiTheftDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("AntiTheft")).SingleOrDefault().Amount;
+                }
+                if (vehicle.DaysDrivenPerWeekOver4)
+                {
+                    vehicle.DaysDrivenPerWeekOver4Discount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("DaysDriven")).SingleOrDefault().Amount;
+                }
+                if (vehicle.DaytimeLights)
+                {
+                    vehicle.DaytimeLightsDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("DaytimeLights")).SingleOrDefault().Amount;
+                }
+                if (vehicle.MilesToWorkUnder26)
+                {
+                    vehicle.MilesToWorkUnder26Discount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("MilesToWork")).SingleOrDefault().Amount;
+                }
+                if (vehicle.NonResidenceGarage)
+                {
+                    vehicle.NonResidenceGarageDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("GarageDiffers")).SingleOrDefault().Amount;
+                }
+                if (vehicle.PassiveRestraints)
+                {
+                    vehicle.PassiveRestraintsDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PassiveRestraints")).SingleOrDefault().Amount;
+                }
+                if (vehicle.ReducedUsed)
+                {
+                    vehicle.ReducedUsedDiscount = vehicleDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("ReducedUsed")).SingleOrDefault().Amount;
+                }
+            }
         }
 
         // DELETE: api/Vehicles/5

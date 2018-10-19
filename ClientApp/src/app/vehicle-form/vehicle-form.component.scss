@@ -226,23 +226,24 @@
   }
 }
 
-// div.table-responsive{
-//   position: relative;
-//   top: -2px;
-//   table.table.table-striped{
-//     margin-bottom: 0;
-//     overflow-x: auto;
-//     white-space: nowrap;
-//   }
-// }
+#btn-stop-edit {
+  margin: 0 0 15px 0;
+}
 
-// @-webkit-keyframes pulsing_shadow {
-//   0% { box-shadow: 0 0 4px 0.2rem rgba(0, 11, 106, 0.25) }
-//   50% { box-shadow: 0 0 10px 0.2rem rgba(0, 11, 106, 0.65) }
-//   100% { box-shadow: 0 0 4px 0.2rem rgba(0, 11, 106, 0.25) }
-// }
-// @keyframes pulsing_shadow {
-//   0% { box-shadow: 0 0 4px 0.2rem rgba(0, 11, 106, 0.25) }
-//   50% { box-shadow: 0 0 10px 0.2rem rgba(0, 11, 106, 0.65) }
-//   100% { box-shadow: 0 0 4px 0.2rem rgba(0, 11, 106, 0.25) }
-// }
+.edit-mode-notification {
+  background-color: rgb(255, 189, 68);
+  text-align: center;
+  border-radius: 2px;
+  padding: 5px;
+  color: rgb(255, 255, 255);
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+
+  @media screen and (min-width: map-get($grid-breakpoints, sm)) {
+    width: 30px;
+    height: 30px;
+  }
+}
