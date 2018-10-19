@@ -32,7 +32,6 @@ import { AgentManagementPageComponent } from './agent-management-page/agent-mana
 import { PendingAgentsListComponent } from './pending-agents-list/pending-agents-list.component';
 import { AgentManagementListComponent } from './agent-management-list/agent-management-list.component';
 import { RegistrationPageComponent } from './registration-page/registration-page.component';
-import { EditDriverModalComponent } from './edit-driver-modal/edit-driver-modal.component';
 import { HeaderMenuComponent } from './header-menu/header-menu.component';
 
 @NgModule({
@@ -59,7 +58,6 @@ import { HeaderMenuComponent } from './header-menu/header-menu.component';
     PendingAgentsListComponent,
     AgentManagementListComponent,
     RegistrationPageComponent,
-    EditDriverModalComponent,
     HeaderMenuComponent,
   ],
   imports: [
