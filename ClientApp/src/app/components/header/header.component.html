@@ -1,0 +1,49 @@
+<header class="no-print">
+  <a routerLink="/" class="header-logo"></a>
+  <div class="header-nav-links">
+    <ul *ngIf="isUserLoggedIn">
+      <li *ngIf="isUserRoleManager">
+        <a routerLink="agents/manage">
+          <img src="../../../assets/icons/023-user-management.svg" class="icon" alt="Icon" />
+          <label>Manage Agents</label>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/quote/new">
+          <img src="../../../assets/icons/001-form.svg" class="icon" alt="Icon" />
+          <label>New Quote</label>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/quote/search">
+          <img src="../../../assets/icons/003-folder.svg" class="icon" alt="Icon" />
+          <label>Open Quote</label>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/metrics">
+          <img src="../../../assets/icons/024-analytics.svg" class="icon" alt="Icon" />
+          <label>My Metrics</label>
+        </a>
+      </li>
+    </ul>
+    <div *ngIf="isUserLoggedIn" class="header-nav-menu-button">
+      <button (click)="onClickMenu()">
+        <img src="../../../assets/icons/025-hamburger-menu.svg" class="icon" alt="Icon" />
+      </button>
+    </div>
+  </div>
+  <div class="header-user">
+    <div class="header-logout-button-container">
+      <button *ngIf="isUserLoggedIn; else login" class="btn btn-danger bevel bevel-md" (click)="logOut()">Log Out</button>
+      <ng-template #login>
+        <div class="login-button-wrapper"><button class="btn btn-primary bevel bevel-md" router-link="/login">Log In</button></div>
+      </ng-template>
+    </div>
+  </div>
+</header>
+<div class="header-trim no-print"></div>
+
+<div class="drop-menu" *ngIf="isActiveMenu">
+  <app-header-menu [isUserRoleManager]="isUserRoleManager" (navLinkSelected)="onClickMenu()"></app-header-menu>
+</div>

@@ -1,0 +1,31 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/_variables";
+@import "../../../variables";
+
+td.centered, th.centered {
+  text-align: center;
+
+  input[type='checkbox'] {
+    height: 20px;
+    width: 20px;
+  }
+}
+
+.button-container{
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.no-agents-message {
+  border: 1px solid $color-primary;
+  text-align: center;
+  box-shadow: 2px 2px 6px 1px $color-primary;
+  margin: 10px;
+  padding: 10px;
+
+  @media screen and (min-width: map-get($grid-breakpoints, sm)) {
+    margin: 50px;
+    padding: 40px;
+  }
+}

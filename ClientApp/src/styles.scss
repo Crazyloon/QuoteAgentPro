@@ -2,7 +2,7 @@
 
 @import "node_modules/bootstrap/scss/bootstrap";
 @import "node_modules/bootstrap/scss/_variables";
-@import "src/_variables";
+@import "./variables";
 
 body{
   margin: 0;
@@ -138,14 +138,24 @@ div.table-responsive {
 .bevel:focus{
   box-shadow: $btn-bevel-down !important;
 }
-.bevel-md:active:focus{
-  padding-top: 7px;
-  padding-left: 13px;
-  padding-right: 11px;
-  padding-bottom: 5px;
-  box-shadow: $btn-bevel-up !important;
+.bevel-md:focus{
+  box-shadow: $btn-bevel-focus !important;
+  &:active{
+    padding-top: 7px;
+    padding-left: 13px;
+    padding-right: 11px;
+    padding-bottom: 5px;
+  }
+}
+.accordion-toggle{
+  border-radius: 5px;
+  &:focus{
+    box-shadow: 0px 0px 4px 0px $color-primary,
+          inset 0px 0px 4px 0px $color-primary;
+  }
 }
 
+  
 // shadow animation for form controls: used to indicate focus
 @-webkit-keyframes pulsing_shadow {
   0% { box-shadow: 0 0 4px 0.2rem rgba(0, 11, 106, 0.25) }

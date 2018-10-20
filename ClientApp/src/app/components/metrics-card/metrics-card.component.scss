@@ -1,0 +1,76 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/_variables";
+@import "../../../variables";
+
+.metrics-card{
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 6fr 1fr;
+  grid-gap: 5px;
+  grid-template-areas: "body"
+                       "title";
+  border: 1px solid #555555;
+  flex-direction: column;
+  box-shadow: 2px 3px 5px -1px #555555;
+  border-radius: 0 0 5px 5px;
+  @media screen and (min-width: map-get($grid-breakpoints, md)) {
+    max-width: 800px;
+  }
+}
+
+.metrics-card-body{
+  grid-area: body;
+  border-bottom: 1px solid #555555;
+  display: grid;
+  grid-template-areas: "graph"
+                       "key";
+}
+
+.card-body-graph{
+  img {
+    width: 100%;
+  }
+  grid-area: graph;
+  border-bottom: 1px solid #555555;
+}
+
+.card-body-key{
+  grid-area: key;
+  padding: 5px 20px;
+  border: 1px solid #555555;
+  align-items: center;
+  justify-content: center;
+  margin:10px 4%;
+  @media screen and (min-width: map-get($grid-breakpoints, sm)) {
+    margin: 10px 8%;    
+  }
+  .keys-section{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+
+    label{
+      margin: 0;
+    }
+
+    .key-container{
+      display: flex;
+      margin: 2px 5px;
+      .key-color{
+        width: 24px;
+        height: 24px;
+        margin-right: 5px;
+        background-color: #0088ff;
+      }
+    }
+  }
+}
+
+.card-title{
+  display: flex;
+  grid-area: title;
+  label{
+    margin: auto;
+  }
+}

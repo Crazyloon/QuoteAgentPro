@@ -1,0 +1,109 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/_variables";
+@import "../../../variables";
+
+.expanding-card {
+  max-width: 700px;
+
+  .expanding-card-header{
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    border: 1px solid $color-primary;
+    border-radius: 5px 5px 0 0;
+    height: 40px;
+
+    h5 {
+      margin: 0;
+    }
+
+    button {
+      border: none;
+      background-color: transparent;
+      outline: none;      
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      & img {
+        width: 20px;
+        height: 20px;
+        transform: rotate(0deg);
+        transition: transform 0.4s ease-in-out;
+        &.open{
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
+
+  .expanding-card-container {
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 1s ease-in-out;  
+    
+    &.open {
+      max-height: 1200px;
+    }
+    
+    .expanding-card-body {
+      padding: 5px;
+      //border: 1px solid $color-primary;
+      input{
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+        &[type="text"]{
+          max-width: 100%;
+          @media screen and (min-width: map-get($grid-breakpoints, sm)) {
+            max-width: 250px;
+          }
+        }
+
+        &:focus{
+          border-color: $color-trim;
+          box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25);
+        }
+      }
+
+      label{
+        display: block;
+      }
+      
+    }
+
+    .expanding-card-footer{
+      display: flex;
+      justify-content: space-between;
+      padding: 5px;
+      border: 1px solid $color-primary;
+      border-radius: 0 0 5px 5px;
+      height: 40px;
+
+      h5 {
+        margin: 0;
+      }
+
+      button {
+        border: none;
+        background-color: transparent;
+        outline: none;        
+
+        &:hover {
+          cursor: pointer;
+        }
+
+        & img {
+          width: 20px;
+          height: 20px;
+          transform: rotate(0deg);
+          transition: transform 0.4s ease-in-out;
+
+          &.open{
+            transform: rotate(180deg);
+          }
+        }
+      }
+    }
+  }
+}
