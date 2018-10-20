@@ -33,6 +33,8 @@ import { PendingAgentsListComponent } from './pending-agents-list/pending-agents
 import { AgentManagementListComponent } from './agent-management-list/agent-management-list.component';
 import { RegistrationPageComponent } from './registration-page/registration-page.component';
 import { HeaderMenuComponent } from './header-menu/header-menu.component';
+import { DiscountsFormComponent } from './discounts-form/discounts-form.component';
+import { DiscountsPageComponent } from './discounts-page/discounts-page.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +61,8 @@ import { HeaderMenuComponent } from './header-menu/header-menu.component';
     AgentManagementListComponent,
     RegistrationPageComponent,
     HeaderMenuComponent,
+    DiscountsFormComponent,
+    DiscountsPageComponent,
   ],
   imports: [
     BrowserModule,

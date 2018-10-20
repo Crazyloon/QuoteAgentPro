@@ -3,9 +3,10 @@
 @import "src/_variables";
 
 .quote-summary{
+  max-width: 800px;
   border: 1px solid $color-primary;
   padding: 0 10px 10px 10px;
-  margin: 15px 0;
+  margin: 15px auto;
   h2, h3, h4, h5, h6{
     margin-top: 10px;
   }
@@ -76,5 +77,6 @@
 .recalculate-quote {
   display: flex;
   justify-content: space-between;
-  margin-top: 15px;
+  margin: 15px auto;
+  max-width: 800px;
 }
