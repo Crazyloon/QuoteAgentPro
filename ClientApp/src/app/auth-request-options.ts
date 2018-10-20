@@ -1,5 +1,5 @@
 import { BaseRequestOptions } from "@angular/http";
-import { JWT_TOKEN_KEY } from "./account.service";
+import { JWT_TOKEN_KEY } from "./services/account.service";
 
 const AUTH_HEADER_KEY = 'Authorization';
 const AUTH_PREFIX = 'Bearer';

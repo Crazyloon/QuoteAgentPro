@@ -4,35 +4,30 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './header/header.component';
-import { LandingPageComponent } from './landing-page/landing-page.component';
-import { ExpandingCardComponent } from './expanding-card/expanding-card.component';
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService } from './in-memory-data.service';
-import { CustomerFormComponent } from './customer-form/customer-form.component';
+import { HeaderComponent } from './components/header/header.component';
+import { LandingPageComponent } from './components/landing-page/landing-page.component';
+import { ExpandingCardComponent } from './components/expanding-card/expanding-card.component';
+import { CustomerFormComponent } from './components/customer-form/customer-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { QuoteListComponent } from './quote-list/quote-list.component';
-import { QuoteSummaryComponent } from './quote-summary/quote-summary.component';
-import { DriverFormComponent } from './driver-form/driver-form.component';
-import { NewQuotePageComponent } from './new-quote-page/new-quote-page.component';
-import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
+import { QuoteListComponent } from './components/quote-list/quote-list.component';
+import { QuoteSummaryComponent } from './components/quote-summary/quote-summary.component';
+import { DriverFormComponent } from './components/driver-form/driver-form.component';
+import { NewQuotePageComponent } from './components/new-quote-page/new-quote-page.component';
+import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.component';
 import { PluralLabelPipe } from './pipes/plural-label.pipe';
-import { RegistrationFormComponent } from './registration-form/registration-form.component';
-import { LoginFormComponent } from './login-form/login-form.component';
-import { MetricsCardComponent } from './metrics-card/metrics-card.component';
-import { MetricsPageComponent } from './metrics-page/metrics-page.component';
-import { FilterOptionComponent } from './filter-option/filter-option.component';
-import { SearchResultsPageComponent } from './search-results-page/search-results-page.component';
-import { LoginPageComponent } from './login-page/login-page.component';
-import { AuthRequestOptions } from './auth-request-options';
-import { RequestOptions } from '@angular/http';
-import { AuthErrorHandler } from './auth-error-handler';
-import { TokenInterceptor } from './token-interceptor';
-import { AgentManagementPageComponent } from './agent-management-page/agent-management-page.component';
-import { PendingAgentsListComponent } from './pending-agents-list/pending-agents-list.component';
-import { AgentManagementListComponent } from './agent-management-list/agent-management-list.component';
-import { RegistrationPageComponent } from './registration-page/registration-page.component';
-import { HeaderMenuComponent } from './header-menu/header-menu.component';
+import { RegistrationFormComponent } from './components/registration-form/registration-form.component';
+import { LoginFormComponent } from './components/login-form/login-form.component';
+import { MetricsCardComponent } from './components/metrics-card/metrics-card.component';
+import { MetricsPageComponent } from './components/metrics-page/metrics-page.component';
+import { FilterOptionComponent } from './components/filter-option/filter-option.component';
+import { SearchResultsPageComponent } from './components/search-results-page/search-results-page.component';
+import { LoginPageComponent } from './components/login-page/login-page.component';
+import { TokenInterceptor } from './services/token-interceptor';
+import { AgentManagementPageComponent } from './components/agent-management-page/agent-management-page.component';
+import { PendingAgentsListComponent } from './components/pending-agents-list/pending-agents-list.component';
+import { AgentManagementListComponent } from './components/agent-management-list/agent-management-list.component';
+import { RegistrationPageComponent } from './components/registration-page/registration-page.component';
+import { HeaderMenuComponent } from './components/header-menu/header-menu.component';
 
 @NgModule({
   declarations: [
@@ -65,12 +60,6 @@ import { HeaderMenuComponent } from './header-menu/header-menu.component';
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    //// The HttpClientInMemoryWebApiModule module intercepts HTTP requests
-    //// and returns simulated server responses.
-    //// Remove it when a real server is ready to receive requests.
-    //HttpClientInMemoryWebApiModule.forRoot(
-    //  InMemoryDataService, { dataEncapsulation: false }
-    //),
   ],
   providers: [
     {
@@ -78,10 +67,6 @@ import { HeaderMenuComponent } from './header-menu/header-menu.component';
       useClass: TokenInterceptor,
       multi: true
     },
-    //{
-    //  provide: ErrorHandler,
-    //  useClass: AuthErrorHandler
-    //}
   ],
   bootstrap: [AppComponent]
 })

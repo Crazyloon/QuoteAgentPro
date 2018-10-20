@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AccountService } from './account.service';
-import { LoginNotificationService } from './login-notification.service';
+import { AccountService } from './services/account.service';
+import { LoginNotificationService } from './services/login-notification.service';
 import { User } from '../data/models/domain/user';
 
 @Component({

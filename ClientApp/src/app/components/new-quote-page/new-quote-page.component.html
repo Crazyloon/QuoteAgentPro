@@ -1,0 +1,22 @@
+<div class="container-fluid">
+  <h1>New Quote</h1>
+  <div class="form-grid">
+    <div class="customer-form">
+      <app-customer-form [quote]="quote" (quoteChange)="onQuoteUpdated($event)" (driverData)="onCustomerIsDriver($event)"></app-customer-form>
+    </div>
+    <div class="driver-form">
+      <app-driver-form [quote]="quote" (quoteChange)="onQuoteUpdated($event)" [driverData]="driverData"></app-driver-form>
+    </div>
+    <div class="vehicle-form">
+      <app-vehicle-form [quote]="quote" (quoteChange)="onQuoteUpdated($event)"></app-vehicle-form>
+    </div>
+  </div>
+  <div class="submit-quote">
+    <button [disabled]="!isValidQuote" (click)="calculateQuote()" class="btn btn-primary bevel bevel-md">Calculate Quote</button>
+  </div>
+  <div *ngIf="!isValidQuote" class="alert alert-warning">
+    <span class="invalid-feedback" style="display: block;">
+      Save customer, driver and vehicle info to proceed.
+    </span>
+  </div>
+</div>
