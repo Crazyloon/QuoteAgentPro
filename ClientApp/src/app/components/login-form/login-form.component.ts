@@ -29,6 +29,7 @@ export class LoginFormComponent implements OnInit {
   ngOnInit() {
     if(this.savedUser){
       this.loginForm.patchValue({username: this.savedUser});
+      (this.rememberMe.nativeElement as HTMLInputElement).checked = true;
     }
   }
 
@@ -36,8 +37,8 @@ export class LoginFormComponent implements OnInit {
   get password() { return this.loginForm.get('password'); }
 
   onSubmit() {
-    let creds: LoginCredentials = {email: this.username.value, password: this.password.value};
-    
+    const creds: LoginCredentials = {email: this.username.value, password: this.password.value};
+    const remembered = (this.rememberMe.nativeElement as HTMLInputElement).checked;
     if (creds.email && creds.password) {
       this.accountService.login(creds).subscribe(token => {
         if (token == 'Pending') {
@@ -51,7 +52,7 @@ export class LoginFormComponent implements OnInit {
         else if (token) {
           localStorage.setItem(TOKEN, token);
           localStorage.setItem(USERID, this.accountService.getUserId(token));
-          if (this.rememberMe.nativeElement.value){
+          if (remembered){
             localStorage.setItem(REMEMBERME, creds.email);
           } else {
             localStorage.removeItem(REMEMBERME);
