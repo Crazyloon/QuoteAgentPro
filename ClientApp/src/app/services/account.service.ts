@@ -12,7 +12,9 @@ const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
 
-export const JWT_TOKEN_KEY: string = "token";
+export const TOKEN: string = "token";
+export const USERID: string = 'userID';
+export const REMEMBERME: string = 'rememberMe';
 
 @Injectable({
   providedIn: 'root'
@@ -48,11 +50,11 @@ export class AccountService {
   }
 
   getToken(): string {
-    return localStorage.getItem(JWT_TOKEN_KEY)
+    return localStorage.getItem(TOKEN)
   }
 
   setToken(token: string) {
-    localStorage.setItem(JWT_TOKEN_KEY, `Bearer ${token}`);
+    localStorage.setItem(TOKEN, `Bearer ${token}`);
   }
 
   getUserId(token?: string): string {
@@ -60,7 +62,7 @@ export class AccountService {
     if (!token) return null;
 
     const decoded = jwt_decode(token);
-    const nameIdentifier = decoded[claims.nameIdentifier];
+    const nameIdentifier = decoded[claims.userId];
 
     if (nameIdentifier === undefined) {
       return null;
@@ -73,12 +75,17 @@ export class AccountService {
     if (!token) return null;
 
     const decoded = jwt_decode(token);
-    const roleIdentifier = decoded[claims.roleIdentifier];
+    const roleIdentifier = decoded[claims.userRole];
 
     if (roleIdentifier === undefined) {
       return null;
     }
     return roleIdentifier;
+  }
+
+  isStayLoggedIn(): boolean {
+    if(localStorage.getItem(USERID))
+      return true;
   }
 
   getTokenExpirationDate(token: string): Date {

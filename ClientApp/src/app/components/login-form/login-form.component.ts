@@ -1,12 +1,10 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
-import { AccountService } from '../../services/account.service';
+import { AccountService, REMEMBERME, TOKEN, USERID } from '../../services/account.service';
 import { LoginCredentials } from '../../../data/models/domain/accountCredentials';
 import { Router } from '@angular/router';
 import { User } from '../../../data/models/domain/user';
 import { LoginNotificationService } from '../../services/login-notification.service';
-import { Subject } from 'rxjs';
-import { disableDebugTools } from '@angular/platform-browser';
 
 const pendingUserMessage = "Your account has not been activated yet. Please allow for 3-5 business days for approval, or call 555-5555 for account help.";
 const disabledUserMessage = "Your account has been disabled. Please check with a manager if you are recieving this message in error.";
@@ -17,27 +15,31 @@ const disabledUserMessage = "Your account has been disabled. Please check with a
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent implements OnInit {
-  creds: LoginCredentials;
   isUnauthorizedUser: boolean;
   unauthorizedUserMessage: string;
   loginForm = this.fb.group({
     username: ['', Validators.required],
     password: ['', Validators.required]
   });
+  @Input() savedUser: string;
+  @ViewChild('rememberMe') rememberMe: ElementRef;
 
   constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router, private loginService: LoginNotificationService) { }
 
   ngOnInit() {
+    if(this.savedUser){
+      this.loginForm.patchValue({username: this.savedUser});
+    }
   }
 
   get username() { return this.loginForm.get('username'); }
   get password() { return this.loginForm.get('password'); }
 
   onSubmit() {
-    this.creds = {email: this.username.value, password: this.password.value};
+    let creds: LoginCredentials = {email: this.username.value, password: this.password.value};
     
-    if (this.creds.email && this.creds.password) {
-      this.accountService.login(this.creds).subscribe(token => {
+    if (creds.email && creds.password) {
+      this.accountService.login(creds).subscribe(token => {
         if (token == 'Pending') {
           this.isUnauthorizedUser = true;
           this.unauthorizedUserMessage = pendingUserMessage;
@@ -47,8 +49,13 @@ export class LoginFormComponent implements OnInit {
           this.unauthorizedUserMessage = disabledUserMessage;
         }
         else if (token) {
-          localStorage.setItem('token', token);
-          localStorage.setItem('userId', this.accountService.getUserId(token));
+          localStorage.setItem(TOKEN, token);
+          localStorage.setItem(USERID, this.accountService.getUserId(token));
+          if (this.rememberMe.nativeElement.value){
+            localStorage.setItem(REMEMBERME, creds.email);
+          } else {
+            localStorage.removeItem(REMEMBERME);
+          }
 
           const user = new User(this.username.value, token);
           this.loginService.setUser(user);
@@ -67,4 +74,7 @@ export class LoginFormComponent implements OnInit {
     this.isUnauthorizedUser = false;
   }
 
+  getRememberMe(): string{
+    return localStorage.getItem('username');
+  }
 }

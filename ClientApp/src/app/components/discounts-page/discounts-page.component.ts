@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Discount } from '../../data/models/domain/discount';
+import { Discount } from '../../../data/models/domain/discount';
+import { DiscountService } from 'src/app/services/discount.service';
 
 @Component({
   selector: 'app-discounts-page',

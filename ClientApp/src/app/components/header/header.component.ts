@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { AccountService } from '../../services/account.service';
+import { AccountService, TOKEN, USERID } from '../../services/account.service';
 import { LoginNotificationService } from '../../services/login-notification.service';
 
 
@@ -20,7 +20,11 @@ export class HeaderComponent implements OnInit {
   }
 
   logOut(): void {
-    localStorage.clear();
+    if(!this.authService.isStayLoggedIn()){
+      localStorage.clear();
+    }
+    localStorage.removeItem(TOKEN);
+    localStorage.removeItem(USERID);
     this.loginService.userLoggedOutEvent();
     this.router.navigate(['login']);
   }

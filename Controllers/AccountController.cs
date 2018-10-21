@@ -53,7 +53,7 @@ namespace web_agent_pro.Controllers
                 {
                     return "Disabled";
                 }
-                return await GenerateJwtToken(model.Email, appUser);
+                return await GenerateJwtToken(model, appUser);
             }
 
             throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
@@ -84,17 +84,18 @@ namespace web_agent_pro.Controllers
             throw new ApplicationException("UNKNOWN_ERROR");
         }
 
-        private async Task<object> GenerateJwtToken(string email, ApplicationUser user)
+        private async Task<object> GenerateJwtToken(LoginDto model, ApplicationUser user)
         {
             var userRoles = await _userManager.GetRolesAsync(user);
             var accessLevel = userRoles.Where(r => r == "Manager" || r == "Agent").First();
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, email),
+                new Claim(JwtRegisteredClaimNames.Sub, model.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Role, accessLevel)
+                new Claim(ClaimTypes.Role, accessLevel),
+                new Claim(ClaimTypes.IsPersistent, model.RememberMe.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
@@ -119,6 +120,8 @@ namespace web_agent_pro.Controllers
 
             [Required]
             public string Password { get; set; }
+
+            public bool RememberMe {get;set;}
 
         }
 

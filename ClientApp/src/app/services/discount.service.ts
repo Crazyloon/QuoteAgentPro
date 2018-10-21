@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MessageService } from './message.service';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Discount } from '../data/models/domain/discount';
+import { Observable, of } from 'rxjs';
+import { Discount } from '../../data/models/domain/discount';
 import { tap, catchError } from 'rxjs/operators';
 
 const httpOptions = {

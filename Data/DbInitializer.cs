@@ -25,11 +25,11 @@ namespace web_agent_pro.Data
 
                 if (userResult.Succeeded)
                 {
-                    IdentityRole role = new IdentityRole("RoleName");
+                    IdentityRole role = new IdentityRole("Manager");
                     IdentityResult roleResult = await roleManager.CreateAsync(role);
                     if (roleResult.Succeeded)
                     {
-                        await userManager.AddToRoleAsync(user, "RoleName");
+                        await userManager.AddToRoleAsync(user, "Manager");
                     }
                 }
             }
@@ -43,7 +43,7 @@ namespace web_agent_pro.Data
                 var userManager = serviceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
                 var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
 
-                DbInitializer.Initialize(context, userManager, roleManager).Wait();
+                await DbInitializer.Initialize(context, userManager, roleManager);
             }
         }
     }
