@@ -102,42 +102,12 @@ namespace web_agent_pro.Controllers
         [HttpPost]
         public async Task<IActionResult> PostQuote([FromBody] Quote quote)
         {
-
-
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            // apply quote discounts
-            // BEGIN EXTRACT METHOD
-            List<Discount> quoteDiscounts = _context.Discounts.Where(d => d.Scope == "Quote" && d.State == quote.State).ToList();
-                 if(quote.PastClaims)
-            {
-                quote.PastClaimsDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PastClaims")).SingleOrDefault().Amount;
-            }
-            if(quote.NewDriver)
-            {
-                quote.NewDriverDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("NewDriver")).SingleOrDefault().Amount;
-            }
-            if(quote.MovingViolations) 
-            {
-                quote.MovingViolationsDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("MovingViolations")).SingleOrDefault().Amount;
-            }
-            if(quote.MultiCar)
-            {
-                quote.MultiCarDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("MultiCar")).SingleOrDefault().Amount;
-            }
-            if(quote.PreviousCarrierLizard)
-            {
-                quote.PreviousCarrierLizardDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PreviousCarrierLizard")).SingleOrDefault().Amount;
-            }
-            if(quote.PreviousCarrierPervasive)
-            {
-                quote.PreviousCarrierPervasiveDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PreviousCarrierPervasive")).SingleOrDefault().Amount;
-            }
-            // END EXTRACT METHOD
+            ApplyDiscounts(quote);
             _context.Quotes.Add(quote);
             await _context.SaveChangesAsync();
 
@@ -241,6 +211,34 @@ namespace web_agent_pro.Controllers
         private bool QuoteExists(long id)
         {
             return _context.Quotes.Any(e => e.Id == id);
+        }
+
+        private void ApplyDiscounts(Quote quote){
+            List<Discount> quoteDiscounts = _context.Discounts.Where(d => d.Scope == "Quote" && d.State == quote.State).ToList();
+            if(quote.PastClaims)
+            {
+                quote.PastClaimsDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PastClaims")).SingleOrDefault().Amount;
+            }
+            if(quote.NewDriver)
+            {
+                quote.NewDriverDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("NewDriver")).SingleOrDefault().Amount;
+            }
+            if(quote.MovingViolations) 
+            {
+                quote.MovingViolationsDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("MovingViolations")).SingleOrDefault().Amount;
+            }
+            if(quote.MultiCar)
+            {
+                quote.MultiCarDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("MultiCar")).SingleOrDefault().Amount;
+            }
+            if(quote.PreviousCarrierLizard)
+            {
+                quote.PreviousCarrierLizardDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PreviousCarrierLizard")).SingleOrDefault().Amount;
+            }
+            if(quote.PreviousCarrierPervasive)
+            {
+                quote.PreviousCarrierPervasiveDiscount = quoteDiscounts.Where(d => d.Name == _discountNames.NamesMap.GetValueOrDefault("PreviousCarrierPervasive")).SingleOrDefault().Amount;
+            }
         }
 
         #region DISCOUNTS
