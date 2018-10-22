@@ -5,6 +5,10 @@ import { QuoteService } from '../../services/quote.service';
 import { AccountService } from '../../services/account.service';
 import { stateOptions } from '../../../data/constants/stateOptions';
 import { carrierOptions } from '../../../data/constants/carrierOptions';
+import { ActivatedRoute } from '@angular/router';
+
+const submitButtonText_Save = "Save Customer";
+const submitButtonText_Edit = "Edit Customer";
 
 @Component({
   selector: 'app-customer-form',
@@ -16,6 +20,8 @@ export class CustomerFormComponent implements OnInit {
   stateOptions: string[] = stateOptions;
   isOpen = true;
   isFormUpdating = false;
+  isEditMode = false;
+  submitButtonText = submitButtonText_Save;
   @Input() quote: Quote;
   @Output() quoteChange = new EventEmitter<Quote>();
   @Output() driverData = new EventEmitter<any>();
@@ -38,9 +44,23 @@ export class CustomerFormComponent implements OnInit {
     multiCar: [false]
   });
 
-  constructor(private fb: FormBuilder, private quoteService: QuoteService, private accountService: AccountService) { }
+  constructor(private fb: FormBuilder, private quoteService: QuoteService, private route: ActivatedRoute, private accountService: AccountService) { }
 
   ngOnInit() {
+    let quoteId;
+    let sub = this.route.params.subscribe(params => {
+      quoteId = +params['id'];
+      this.enterEditMode()
+      if(quoteId){
+        this.quoteService.getQuote(quoteId)
+          .subscribe(q => {
+            this.quoteChange.emit(q);
+            const dob = new Date(q.dateOfBirth);
+            const formValues = Object.assign({}, q, {'dateOfBirth': `${dob.getFullYear()}-${(dob.getMonth() + 1).toString().padStart(2, '0')}-${dob.getDate()}`}); // ensures the date field is properly set
+            this.customerForm.patchValue(formValues);
+          });
+      }
+    });
   }
 
   get fName() { return this.customerForm.get('firstName'); }
@@ -71,6 +91,7 @@ export class CustomerFormComponent implements OnInit {
       }
       else{
         this.addQuote();
+        this.enterEditMode()
       }
     }
   }
@@ -111,5 +132,10 @@ export class CustomerFormComponent implements OnInit {
         console.error(error);
         this.isFormUpdating = false;
       });
+  }
+
+  enterEditMode(): void {
+    this.isEditMode = true;
+    this.submitButtonText = submitButtonText_Edit;
   }
 }

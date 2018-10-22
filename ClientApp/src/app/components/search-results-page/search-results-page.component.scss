@@ -1,6 +1,7 @@
 @import "../../../variables";
 
 .filter-options-list {
+  margin: 10px;
   :not(:last-child) {
     margin-right: 10px;
   }

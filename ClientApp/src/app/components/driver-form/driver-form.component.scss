@@ -199,16 +199,19 @@ div.table-responsive{
 }
 
 .edit-mode-notification {
-  background-color: rgb(255, 189, 68);
+  background-color: #ffa500;
   text-align: center;
   border-radius: 2px;
   padding: 5px;
-  color: rgb(255, 255, 255);
+  color: white;
+  font-size: 18px;
 }
 
 .icon{
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+
   @media screen and (min-width: map-get($grid-breakpoints, sm)){
     width: 30px;
     height: 30px;

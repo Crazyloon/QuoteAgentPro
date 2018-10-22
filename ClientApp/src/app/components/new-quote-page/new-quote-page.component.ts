@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Quote } from '../../../data/models/domain/quote';
 import { CalculationEngineService } from '../../services/calculation-engine.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { QuoteService } from 'src/app/services/quote.service';
 
 @Component({
   selector: 'app-new-quote-page',
@@ -9,6 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./new-quote-page.component.scss']
 })
 export class NewQuotePageComponent implements OnInit {
+  public title = 'New Quote';
   public quote: Quote;
   public driverSelection: {id: number, name: string};
   public driverOptions: {id: number, name: string}[] = [];
@@ -16,12 +18,15 @@ export class NewQuotePageComponent implements OnInit {
   public isDriverModalActive: boolean = false; //true;
   private isValidQuote: boolean = false;
 
-  constructor(private calcEngine: CalculationEngineService, private router: Router) { }
+  constructor(private calcEngine: CalculationEngineService, private router: Router, private quoteService: QuoteService) { }
 
   ngOnInit() {
     this.quote = new Quote();
     this.quote.drivers = [];
     this.quote.vehicles = [];
+    if(this.router.url.includes('edit')){
+      this.title = 'Edit Quote';
+    }
   }
 
   onQuoteUpdated(quote: Quote) {

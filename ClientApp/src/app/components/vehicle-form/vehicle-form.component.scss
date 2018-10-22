@@ -66,42 +66,7 @@
           padding: 20px;
         }
       }
-      // input {
-      //   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        
-      //   &:focus {
-      //     border-color: $color-trim;
-      //     box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25);
-      //     animation: pulsing_shadow 3s infinite;
-      //   }
       
-      //   &[type="text"], &[type="date"], &[type="email"], &[type="number"] {
-      //     @media screen and (min-width: map-get($grid-breakpoints, sm)) {
-      //       max-width: 250px;
-      //     }
-      //   }
-        
-      //   &[type="checkbox"]{
-      //     &:focus{
-      //       border-color: $color-trim;
-      //       box-shadow: 0 0 8px 0.2rem rgba(0, 11, 106, 0.65);
-      //     }
-      //   }
-      
-      // }
-      
-      // select {
-      //   &:focus{
-      //     border-color: $color-trim;
-      //     box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25);
-      //     animation: pulsing_shadow 3s infinite;
-      //   }
-        
-      //   @media screen and (min-width: map-get($grid-breakpoints, sm)) {
-      //     max-width: 250px;
-      //   }
-      // }
-
       label:not(.check-box-input) {
         display: block;
       }
@@ -131,9 +96,6 @@
           width: 24px;
           cursor: pointer;
           border: 1px solid $color-primary;
-
-          // height: calc(2.25rem + 2px);
-          // width: calc(2.25rem + 2px);
         }
 
         /* Create a custom checkbox */
@@ -231,16 +193,18 @@
 }
 
 .edit-mode-notification {
-  background-color: rgb(255, 189, 68);
+  background-color: #ffa500;
   text-align: center;
   border-radius: 2px;
   padding: 5px;
-  color: rgb(255, 255, 255);
+  color: white;
+  font-size: 18px;
 }
 
 .icon {
   width: 20px;
   height: 20px;
+  cursor: pointer;
 
   @media screen and (min-width: map-get($grid-breakpoints, sm)) {
     width: 30px;

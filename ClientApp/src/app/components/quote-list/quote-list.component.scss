@@ -1,3 +1,5 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/_variables";
 @import "../../../variables";
 
 table{
@@ -6,16 +8,13 @@ table{
   }
 }
 
-td a img{
-  width: 30px;
-  height: 30px;
-}
-
-a.open-quote-link div{
-  display: flex;
-  justify-content: space-between;
-}
-
-.open-quote-icon{
-  margin-left: 10px;
+.icon{
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  
+  @media screen and (min-width: map-get($grid-breakpoints, sm)){
+    width: 30px;
+    height: 30px;
+  }
 }

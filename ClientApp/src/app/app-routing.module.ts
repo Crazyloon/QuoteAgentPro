@@ -14,6 +14,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full', canActivate: [AuthGuard]},
   { path: 'dashboard', component: LandingPageComponent, canActivate: [AuthGuard] },
   { path: 'quote/new', component: NewQuotePageComponent, canActivate: [AuthGuard] },
+  { path: 'quote/edit/:id', component: NewQuotePageComponent, canActivate: [AuthGuard] },
   { path: 'quote/search', component: SearchResultsPageComponent, canActivate: [AuthGuard] },
   { path: 'quote/details/:id', component: QuoteSummaryComponent, canActivate: [AuthGuard] },
   { path: 'metrics', component: MetricsPageComponent, canActivate: [AuthGuard] },

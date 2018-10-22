@@ -20,6 +20,9 @@
     width: 20px;
     height: 20px;
     margin: auto;
+    &:active{
+      padding: 0.1rem;
+    }
   }
   button{
     width: 20px;

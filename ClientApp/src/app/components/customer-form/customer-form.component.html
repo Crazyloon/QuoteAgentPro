@@ -213,7 +213,7 @@
           </label>
         </div>
         <div class="customer-button-group">
-          <button type="submit" class="btn btn-success bevel bevel-md" [disabled]="!customerForm.valid">Save Customer</button>
+          <button type="submit" class="btn btn-success bevel bevel-md" [disabled]="!customerForm.valid">{{submitButtonText}}</button>
           <button type="button" (click)="onCopyToDriver()" class="btn btn-seconday bevel bevel-md" [disabled]="!customerForm.valid">Copy Customer to Driver Form</button>
         </div>
       </form>

@@ -42,10 +42,10 @@ export class DriverFormComponent implements OnInit {
   driverForm = this.fb.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
-    dateOfBirth: ['1988-08-15', Validators.required],
-    ssn: ['648135223', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
-    driversLicenseNumber: ['TESTR**123NN', Validators.required],
-    issuingState: ['', Validators.required],
+    dateOfBirth: ['', Validators.required],
+    ssn: ['', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]],
+    driversLicenseNumber: ['', Validators.required],
+    issuingState: ['Select State', [Validators.required, Validators.maxLength(2)]],
     safeDrivingSchool: [false],
     under23YearsOld: [false]
   });

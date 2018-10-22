@@ -1,7 +1,4 @@
 <h1 class="container-fluid">Find a Quote:</h1>
-<pre>
-  {{ filters | json }}
-</pre>
 <div class="filter-options-list">
   <app-filter-option (filterRemoved)="onRemoveFilterClick($event)" *ngFor="let filter of filters" [type]="filter.type" [symbol]="filter.symbol" [value]="filter.value"></app-filter-option>
 </div>

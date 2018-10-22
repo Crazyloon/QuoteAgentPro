@@ -22,8 +22,8 @@ img.icon{
   align-self: center;
   width: 40px;
   height: 40px;
-  &:hover{
-    padding: 5px;
+  &:active{
+    padding: 0.1rem;
   }
 }
 

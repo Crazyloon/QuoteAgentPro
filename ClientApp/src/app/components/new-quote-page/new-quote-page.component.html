@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <h1>New Quote</h1>
+  <h1>{{title}}</h1>
   <div class="form-grid">
     <div class="customer-form">
       <app-customer-form [quote]="quote" (quoteChange)="onQuoteUpdated($event)" (driverData)="onCustomerIsDriver($event)"></app-customer-form>
