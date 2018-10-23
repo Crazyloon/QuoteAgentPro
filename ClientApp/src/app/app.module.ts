@@ -28,6 +28,8 @@ import { PendingAgentsListComponent } from './components/pending-agents-list/pen
 import { AgentManagementListComponent } from './components/agent-management-list/agent-management-list.component';
 import { RegistrationPageComponent } from './components/registration-page/registration-page.component';
 import { HeaderMenuComponent } from './components/header-menu/header-menu.component';
+import { DiscountsFormComponent } from './components/discounts-form/discounts-form.component';
+import { DiscountsPageComponent } from './components/discounts-page/discounts-page.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,8 @@ import { HeaderMenuComponent } from './components/header-menu/header-menu.compon
     AgentManagementListComponent,
     RegistrationPageComponent,
     HeaderMenuComponent,
+    DiscountsFormComponent,
+    DiscountsPageComponent
   ],
   imports: [
     BrowserModule,

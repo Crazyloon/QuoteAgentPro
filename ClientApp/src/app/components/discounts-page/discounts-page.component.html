@@ -1,3 +1,9 @@
-<p>
-  discounts-page works!
-</p>
+<div class="discount-page">
+  <h1>Manage Discounts</h1>
+  <select class="form-control" #stateSelect (change)="onStateSelected(stateSelect.value)">
+    <option *ngFor="let state of states" value="{{state}}">
+      {{state}}
+    </option>
+  </select>
+  <app-discounts-form [discounts]="discounts" [isStateLookedup]="isStateLookedup"></app-discounts-form>
+</div>

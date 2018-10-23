@@ -28,6 +28,12 @@ namespace web_agent_pro.Controllers
             return _context.Discounts;
         }
 
+        [HttpGet("states/{state}")]
+        public IEnumerable<Discount> GetDiscountsByState([FromRoute] string state)
+        {
+            return _context.Discounts.Where(d => d.State == state).ToList();
+        }
+
         // GET: api/Discounts/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDiscount([FromRoute] long id)

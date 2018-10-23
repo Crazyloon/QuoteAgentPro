@@ -20,6 +20,13 @@ export class DiscountService {
     this.discountUrl = 'api/discounts';
   }
 
+  getDiscountsByState(state: string): Observable<Discount[]> {
+    return this.http.get<Discount[]>(`${this.discountUrl}/states/${state}`).pipe(
+      tap(discounts => this.log('Discount Service: got discounts!')),
+      catchError(this.handleError<Discount[]>('getDiscountsByState', []))
+    );
+  }
+
   getDiscounts(): Observable<Discount[]> {
     return this.http.get<Discount[]>(this.discountUrl, httpOptions).pipe(
       tap(discounts => this.log('Discount Service: got discounts!')),

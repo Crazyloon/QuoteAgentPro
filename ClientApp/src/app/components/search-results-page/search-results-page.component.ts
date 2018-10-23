@@ -49,12 +49,7 @@ export class SearchResultsPageComponent implements OnInit {
 
 
   onRemoveFilterClick(filterType: string){
-    // TODO A OR B:
-    // A.
     this.filters = this.filters.filter((f: any) => f.type !== filterType);
-    // B.
-    //this.filters = Object.assign([], ...this.filters.filter((f: any) => f.type !== filterType));
-
     this.clearFilterInput(filterType);
     this.applySearchFilters();
   }

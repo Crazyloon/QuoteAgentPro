@@ -1,3 +1,249 @@
-<p>
-  discounts-form works!
-</p>
+<ng-container *ngIf="!isDiscountsAvailable && isStateLookedup">
+  <div class="form-group">
+    <div class="alert alert-danger">
+      <span class="invalid-feedback">
+        There are no discounts available for this state.
+      </span>
+    </div>
+  </div>
+</ng-container>
+<form class="discount-form" [formGroup]="discountsForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label>Moving Violations Discount</label>
+    <input class="form-control"
+           [class.is-valid]="movingViolations.valid"
+           [class.is-invalid]="movingViolations.invalid && (movingViolations.dirty || movingViolations.touched)"
+           formControlName="movingViolations"
+           type="text"
+           required />
+    <div *ngIf="movingViolations.invalid && (movingViolations.dirty || movingViolations.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="movingViolations.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Multi Car Discount</label>
+    <input class="form-control"
+           [class.is-valid]="multiCar.valid"
+           [class.is-invalid]="multiCar.invalid && (multiCar.dirty || multiCar.touched)"
+           formControlName="multiCar"
+           type="text"
+           required />
+    <div *ngIf="multiCar.invalid && (multiCar.dirty || multiCar.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="multiCar.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>New Driver Discount</label>
+    <input class="form-control"
+           [class.is-valid]="newDriver.valid"
+           [class.is-invalid]="newDriver.invalid && (newDriver.dirty || newDriver.touched)"
+           formControlName="newDriver"
+           type="text"
+           required />
+    <div *ngIf="newDriver.invalid && (newDriver.dirty || newDriver.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="newDriver.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Past Claims Discount</label>
+    <input class="form-control"
+           [class.is-valid]="pastClaims.valid"
+           [class.is-invalid]="pastClaims.invalid && (pastClaims.dirty || pastClaims.touched)"
+           formControlName="pastClaims"
+           type="text"
+           required />
+    <div *ngIf="pastClaims.invalid && (pastClaims.dirty || pastClaims.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="pastClaims.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Previous Carrier Lizard Discount</label>
+    <input class="form-control"
+           [class.is-valid]="previousCarrierLizard.valid"
+           [class.is-invalid]="previousCarrierLizard.invalid && (previousCarrierLizard.dirty || previousCarrierLizard.touched)"
+           formControlName="previousCarrierLizard"
+           type="text"
+           required />
+    <div *ngIf="previousCarrierLizard.invalid && (previousCarrierLizard.dirty || previousCarrierLizard.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="previousCarrierLizard.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Previous Carrier Pervasive Discount</label>
+    <input class="form-control"
+           [class.is-valid]="previousCarrierPervasive.valid"
+           [class.is-invalid]="previousCarrierPervasive.invalid && (previousCarrierPervasive.dirty || previousCarrierPervasive.touched)"
+           formControlName="previousCarrierPervasive"
+           type="text"
+           required />
+    <div *ngIf="previousCarrierPervasive.invalid && (previousCarrierPervasive.dirty || previousCarrierPervasive.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="previousCarrierPervasive.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Young Driver Discount</label>
+    <input class="form-control"
+           [class.is-valid]="youngDriver.valid"
+           [class.is-invalid]="youngDriver.invalid && (youngDriver.dirty || youngDriver.touched)"
+           formControlName="youngDriver"
+           type="text"
+           required />
+    <div *ngIf="youngDriver.invalid && (youngDriver.dirty || youngDriver.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="youngDriver.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Safe Driver Discount</label>
+    <input class="form-control"
+           [class.is-valid]="safeDriver.valid"
+           [class.is-invalid]="safeDriver.invalid && (safeDriver.dirty || safeDriver.touched)"
+           formControlName="safeDriver"
+           type="text"
+           required />
+    <div *ngIf="safeDriver.invalid && (safeDriver.dirty || safeDriver.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="safeDriver.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Daytime Lights Discount</label>
+    <input class="form-control"
+           [class.is-valid]="daytimeLights.valid"
+           [class.is-invalid]="daytimeLights.invalid && (daytimeLights.dirty || daytimeLights.touched)"
+           formControlName="daytimeLights"
+           type="text"
+           required />
+    <div *ngIf="daytimeLights.invalid && (daytimeLights.dirty || daytimeLights.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="daytimeLights.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Antilock Brakes Discount</label>
+    <input class="form-control"
+           [class.is-valid]="antilockBrakes.valid"
+           [class.is-invalid]="antilockBrakes.invalid && (antilockBrakes.dirty || antilockBrakes.touched)"
+           formControlName="antilockBrakes"
+           type="text"
+           required />
+    <div *ngIf="antilockBrakes.invalid && (antilockBrakes.dirty || antilockBrakes.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="antilockBrakes.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Annual Mileage Discount</label>
+    <input class="form-control"
+           [class.is-valid]="annualMilage.valid"
+           [class.is-invalid]="annualMilage.invalid && (annualMilage.dirty || annualMilage.touched)"
+           formControlName="annualMilage"
+           type="text"
+           required />
+    <div *ngIf="annualMilage.invalid && (annualMilage.dirty || annualMilage.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="annualMilage.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Passive Restraints Discount</label>
+    <input class="form-control"
+           [class.is-valid]="passiveRestraints.valid"
+           [class.is-invalid]="passiveRestraints.invalid && (passiveRestraints.dirty || passiveRestraints.touched)"
+           formControlName="passiveRestraints"
+           type="text"
+           required />
+    <div *ngIf="passiveRestraints.invalid && (passiveRestraints.dirty || passiveRestraints.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="passiveRestraints.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Anti Theft Discount</label>
+    <input class="form-control"
+           [class.is-valid]="antiTheft.valid"
+           [class.is-invalid]="antiTheft.invalid && (antiTheft.dirty || antiTheft.touched)"
+           formControlName="antiTheft"
+           type="text"
+           required />
+    <div *ngIf="antiTheft.invalid && (antiTheft.dirty || antiTheft.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="antiTheft.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Days Driven Over 4 Discount</label>
+    <input class="form-control"
+           [class.is-valid]="daysDriven.valid"
+           [class.is-invalid]="daysDriven.invalid && (daysDriven.dirty || daysDriven.touched)"
+           formControlName="daysDriven"
+           type="text"
+           required />
+    <div *ngIf="daysDriven.invalid && (daysDriven.dirty || daysDriven.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="daysDriven.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Miles to Work Under 26 Discount</label>
+    <input class="form-control"
+           [class.is-valid]="milesToWork.valid"
+           [class.is-invalid]="milesToWork.invalid && (milesToWork.dirty || milesToWork.touched)"
+           formControlName="milesToWork"
+           type="text"
+           required />
+    <div *ngIf="milesToWork.invalid && (milesToWork.dirty || milesToWork.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="milesToWork.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Reduced Used Discount</label>
+    <input class="form-control"
+           [class.is-valid]="reducedUsed.valid"
+           [class.is-invalid]="reducedUsed.invalid && (reducedUsed.dirty || reducedUsed.touched)"
+           formControlName="reducedUsed"
+           type="text"
+           required />
+    <div *ngIf="reducedUsed.invalid && (reducedUsed.dirty || reducedUsed.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="reducedUsed.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Garage Differs Discount</label>
+    <input class="form-control"
+           [class.is-valid]="garageDiffers.valid"
+           [class.is-invalid]="garageDiffers.invalid && (garageDiffers.dirty || garageDiffers.touched)"
+           formControlName="garageDiffers"
+           type="text"
+           required />
+    <div *ngIf="garageDiffers.invalid && (garageDiffers.dirty || garageDiffers.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="garageDiffers.errors.required">
+        Set a value for this discount.
+      </span>
+    </div>
+  </div>
+</form>
