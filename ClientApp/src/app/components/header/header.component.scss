@@ -66,7 +66,7 @@ header{
         flex-direction: column;
         label{
           display: none;
-          @media screen and (min-width: map-get($grid-breakpoints, md) + 24px){
+          @media screen and (min-width: map-get($grid-breakpoints, lg)){
             display: block;          
           }
         }

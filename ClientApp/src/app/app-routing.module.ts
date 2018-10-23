@@ -10,6 +10,7 @@ import { AuthGuard } from './auth.guard';
 import { AgentManagementPageComponent } from './components/agent-management-page/agent-management-page.component';
 import { RegistrationPageComponent } from './components/registration-page/registration-page.component';
 import { DiscountsPageComponent } from './components/discounts-page/discounts-page.component';
+import { RoleGuard } from './role.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full', canActivate: [AuthGuard]},
@@ -18,9 +19,9 @@ const routes: Routes = [
   { path: 'quote/edit/:id', component: NewQuotePageComponent, canActivate: [AuthGuard] },
   { path: 'quote/search', component: SearchResultsPageComponent, canActivate: [AuthGuard] },
   { path: 'quote/details/:id', component: QuoteSummaryComponent, canActivate: [AuthGuard] },
-  { path: 'discounts', component: DiscountsPageComponent, canActivate: [AuthGuard] },
+  { path: 'discounts', component: DiscountsPageComponent, canActivate: [AuthGuard, RoleGuard] },
   { path: 'metrics', component: MetricsPageComponent, canActivate: [AuthGuard] },
-  { path: 'agents/manage', component: AgentManagementPageComponent, canActivate: [AuthGuard] },
+  { path: 'agents/manage', component: AgentManagementPageComponent, canActivate: [AuthGuard, RoleGuard] },
   { path: 'register', component: RegistrationPageComponent },
   { path: 'login', component: LoginPageComponent }
 ];

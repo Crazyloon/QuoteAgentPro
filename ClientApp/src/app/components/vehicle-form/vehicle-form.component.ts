@@ -28,7 +28,11 @@ export class VehicleFormComponent implements OnInit {
     this._quote.drivers.forEach(d => this.primaryDriverOptions.push({ id: d.id, fName: d.firstName, lName: d.lastName }));
     this._quote.vehicles.forEach(v => {
       const primaryDriver = this._quote.drivers.find(d => d.id == v.primaryDriverId);
-      v.primaryDriver = `${primaryDriver.firstName} ${primaryDriver.lastName}`;
+      if (primaryDriver) {
+        v.primaryDriver = `${primaryDriver.firstName} ${primaryDriver.lastName}`;
+      } else {
+        v.primaryDriver = null;
+      }
     });
   }
 
@@ -102,7 +106,9 @@ export class VehicleFormComponent implements OnInit {
       .subscribe(v => {
         this.vehicle = v;
         const driver = this.primaryDriverOptions.find(d => d.id == this.vehicle.primaryDriverId);
-        this.vehicle.primaryDriver = `${driver.fName} ${driver.lName}`;
+        if (driver) {
+          this.vehicle.primaryDriver = `${driver.fName} ${driver.lName}`;
+        }
         this._quote.addVehicle(this.vehicle);
         this.quoteChange.emit(this._quote);
 
@@ -122,7 +128,9 @@ export class VehicleFormComponent implements OnInit {
       .subscribe(v => {
         this.vehicle = v;
         const driver = this.primaryDriverOptions.find(d => d.id == this.vehicle.primaryDriverId);
-        this.vehicle.primaryDriver = `${driver.fName} ${driver.lName}`;
+        if (driver) {
+          this.vehicle.primaryDriver = `${driver.fName} ${driver.lName}`;
+        }
         this._quote.updateVehicle(this.vehicle);
         this.quoteChange.emit(this._quote);
         this.vehicle = new Vehicle();
@@ -146,9 +154,9 @@ export class VehicleFormComponent implements OnInit {
     }
     this.quoteService.deleteVehicle(vehicleId)
       .subscribe(_ => {
-        this.quote.deleteVehicle(vehicleId);
+        this._quote.deleteVehicle(vehicleId);
         this.resetForm();
-        this.quoteChange.emit(this.quote);
+        this.quoteChange.emit(this._quote);
       })
   }
 

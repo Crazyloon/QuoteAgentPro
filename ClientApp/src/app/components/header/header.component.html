@@ -8,11 +8,17 @@
           <label>Manage Agents</label>
         </a>
       </li>
-      <li>
-        <a routerLink="/quote/new">
-          <img src="../../../assets/icons/001-form.svg" class="icon" alt="Icon" />
-          <label>New Quote</label>
+      <li *ngIf="isUserRoleManager">
+        <a routerLink="/discounts">
+          <img src="../../../assets/icons/029-discount.svg" class="icon" alt="Icon" />
+          <label>Discounts</label>
         </a>
+      </li>
+      <li>
+      <a routerLink="/quote/new">
+        <img src="../../../assets/icons/001-form.svg" class="icon" alt="Icon" />
+        <label>New Quote</label>
+      </a>
       </li>
       <li>
         <a routerLink="/quote/search">

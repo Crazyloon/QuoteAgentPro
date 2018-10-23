@@ -6,8 +6,14 @@
         <label>Manage Agents</label>
       </li>
     </a>
-    <a routerLink="/quote/new" (click)="hideMenu()">
+    <a routerLink="/discounts" (click)="hideMenu()">
       <li>
+        <img src="../../assets/icons/024-analytics.svg" class="icon" alt="Icon" />
+        <label>Discounts</label>
+      </li>
+    </a>
+    <a routerLink="/quote/new" (click)="hideMenu()">
+      <li *ngIf="isUserRoleManager">
         <img src="../../assets/icons/001-form.svg" class="icon" alt="Icon" />
         <label>New Quote</label>
       </li>

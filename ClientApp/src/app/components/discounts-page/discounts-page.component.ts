@@ -30,4 +30,7 @@ export class DiscountsPageComponent implements OnInit {
       });
   }
 
+  private updateDiscounts($event): void {
+    this.discounts = Object.assign({}, $event);
+  }
 }

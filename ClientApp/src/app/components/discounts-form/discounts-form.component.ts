@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Discount } from '../../../data/models/domain/discount';
 import { DiscountNames } from '../../../data/constants/enumerations/discountNames';
@@ -11,6 +11,7 @@ import { DiscountNames } from '../../../data/constants/enumerations/discountName
 export class DiscountsFormComponent implements OnInit {
   isDiscountsAvailable = false;
 
+  @Output() discountsUpdated = new EventEmitter<Discount>();
   @Input() isStateLookedup = false;
   @Input() 
   set discounts(val: Discount[]) {
@@ -86,7 +87,7 @@ export class DiscountsFormComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSubmit(): void {
-
+  onSaveDiscounts(): void {
+    this.discountsUpdated.emit(this.discountsForm.value);
   }
 }

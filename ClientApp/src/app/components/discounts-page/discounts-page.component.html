@@ -1,9 +1,11 @@
 <div class="discount-page">
   <h1>Manage Discounts</h1>
-  <select class="form-control" #stateSelect (change)="onStateSelected(stateSelect.value)">
-    <option *ngFor="let state of states" value="{{state}}">
-      {{state}}
-    </option>
-  </select>
-  <app-discounts-form [discounts]="discounts" [isStateLookedup]="isStateLookedup"></app-discounts-form>
+  <div class="discount-select">
+    <select class="form-control" #stateSelect (change)="onStateSelected(stateSelect.value)">
+      <option *ngFor="let state of states" value="{{state}}">
+        {{state}}
+      </option>
+    </select>
+  </div>
+  <app-discounts-form [discounts]="discounts" [isStateLookedup]="isStateLookedup" (discountsUpdated)="updateDiscounts($event)"></app-discounts-form>
 </div>

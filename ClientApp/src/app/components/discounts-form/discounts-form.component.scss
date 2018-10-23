@@ -1,3 +1,21 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/_variables";
+@import "../../../variables";
+
 .discount-form {
   margin-top: 20px;
+}
+
+.alert {
+  margin-top: 5px;
+  padding: 0 0 0 0.75rem;
+  @media screen and (min-width: map-get($grid-breakpoints, sm)) {
+    max-width: 250px;
+  }
+}
+
+.invalid-feedback {
+  display: block;
+  padding: 0;
+
 }

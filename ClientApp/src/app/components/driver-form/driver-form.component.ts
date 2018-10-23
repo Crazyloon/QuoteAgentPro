@@ -4,6 +4,7 @@ import { Validators, FormBuilder, FormControl } from '@angular/forms';
 import { QuoteService } from '../../services/quote.service';
 import { Driver } from '../../../data/models/domain/driver';
 import { stateOptions } from '../../../data/constants/stateOptions';
+import { Vehicle } from '../../../data/models/domain/vehicle';
 
 const submitButtonText_Save = "Save Driver";
 const submitButtonText_Edit = "Edit Driver";
@@ -36,7 +37,6 @@ export class DriverFormComponent implements OnInit {
       });
     }
   }
-  @Output() driverModalActivated = new EventEmitter<string>();
   @Output() quoteChange = new EventEmitter<Quote>();
 
   driverForm = this.fb.group({
@@ -128,12 +128,29 @@ export class DriverFormComponent implements OnInit {
     if (!this.isEditMode) {
       this.exitEditMode();
     }
-    this.quoteService.deleteDriver(driverId)
-      .subscribe(_ => {
-        this.quote.deleteDriver(driverId);
-        this.resetForm();
-        this.quoteChange.emit(this.quote);
-      })
+    if (this.confirmDelete()) {
+      let vehiclesWithDriver = this.quote.vehicles.filter(v => v.primaryDriverId == driverId);
+      vehiclesWithDriver.forEach((v, i) => {
+        v.primaryDriverId = null;
+        this.quoteService.updateVehicle(v).subscribe(
+          (vehicle: Vehicle) => {
+            this.quote.updateVehicle(vehicle);
+          },
+          (error) => {
+            console.error(error);
+          },
+          () => {
+            if (i == vehiclesWithDriver.length - 1) {
+              this.quoteService.deleteDriver(driverId)
+                .subscribe(_ => {
+                  this.quote.deleteDriver(driverId);
+                  this.resetForm();
+                  this.quoteChange.emit(this.quote);
+                });
+            }
+          })
+      });
+    }
   }
 
   exitEditMode(): void {
@@ -166,6 +183,10 @@ export class DriverFormComponent implements OnInit {
     }, error => {
       console.error(error);
     });
+  }
+
+  private confirmDelete(): boolean {
+    return confirm("Deleting this driver will also remove them as the primary driver for any vehciles");
   }
 
   private resetForm(): void {

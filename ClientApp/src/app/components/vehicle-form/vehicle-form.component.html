@@ -23,7 +23,6 @@
                 <th>Annual Mileage</th>
                 <th>Days Driven Weekly</th>
                 <th>VIN</th>
-                <th>Discounts...</th>
                 <th>Delete</th>
               </tr>
             </thead>
@@ -40,7 +39,6 @@
                   <td>{{vehicle.annualMileage | number:'1.0-0'}} mi</td>
                   <td>{{vehicle.daysDrivenPerWeek | pluralize:'day'}}</td>
                   <td>{{vehicle.vin}}</td>
-                  <td>{{vehicle.antiTheft}}</td>
                   <td (click)="onDeleteVehicle(vehicle.id)"><img class="icon" src="../../assets/icons/028-delete.svg" alt="Delete Icon" /></td>
                 </tr>
               </ng-container>
