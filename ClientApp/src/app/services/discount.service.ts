@@ -42,14 +42,14 @@ export class DiscountService {
     );
   }
 
-  addQuote(discount: Discount): Observable<Discount> {
+  addDiscount(discount: Discount): Observable<Discount> {
     return this.http.post<Discount>(this.discountUrl, discount, httpOptions).pipe(
       tap((q: Discount) => this.log(`Discount Service: discount: ${q.id} added!`)),
       catchError(this.handleError<Discount>('addQuote'))
     );
   }
 
-  deleteQuote(discount: Discount | number): Observable<Discount> {
+  deleteDiscount(discount: Discount | number): Observable<Discount> {
     const id = typeof discount === 'number' ? discount : discount.id;
     const url = `${this.discountUrl}/${id}`;
 
@@ -59,11 +59,27 @@ export class DiscountService {
     );
   }
 
-  updateQuote(discount: Discount): Observable<any> {
+  updateDiscount(discount: Discount): Observable<any> {
     const url = `${this.discountUrl}/${discount.id}`;
     return this.http.put<Discount>(url, discount, httpOptions).pipe(
       tap(_ => this.log(`Discount Service: Discount - ${discount.id} updated!`)),
       catchError(this.handleError<Discount>('updateQuote'))
+    );
+  }
+
+  getStatesOfOperation(): Observable<string[]> {
+    const url = `${this.discountUrl}/states`;
+    return this.http.get<string[]>(url).pipe(
+      tap(_ => this.log(`Discount Service: Got states list`)),
+      catchError(this.handleError<string[]>('getStatesOfOperation'))
+    );
+  }
+
+  addDiscounts(discounts: Discount[]): Observable<Discount[]> {
+    const url = `${this.discountUrl}/addmany`;
+    return this.http.post<Discount[]>(url, discounts, httpOptions).pipe(
+      tap(_ => this.log(`Discount Service: Added list of discounts`)),
+      catchError(this.handleError<Discount[]>(`addDiscounts`, []))
     );
   }
 

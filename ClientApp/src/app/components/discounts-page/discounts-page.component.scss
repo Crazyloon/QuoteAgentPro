@@ -1,3 +1,7 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/_variables";
+@import "../../../variables";
+
 .discount-page {
   margin: 15px;
 }
@@ -5,4 +9,20 @@
 .discount-select{
   display: flex;
   justify-content: flex-end;
+
+  button{
+    margin-right: 20px;
+  }
+
+  input[type="text"]{
+    margin-right: 20px;
+  }
 }
+
+.icon {
+  width: 22px;
+  height: 22px;
+}
+
+
+

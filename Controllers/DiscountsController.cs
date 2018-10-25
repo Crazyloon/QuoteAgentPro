@@ -34,6 +34,26 @@ namespace web_agent_pro.Controllers
             return _context.Discounts.Where(d => d.State == state).ToList();
         }
 
+        [HttpGet("states")]
+        public IEnumerable<string> GetAllStatesOfOperation()
+        {
+            return _context.Discounts.Select(d => d.State).Distinct();
+        }
+
+        [HttpPost("states")]
+        public async Task<IActionResult> AddDiscounts(Discount[] discounts)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _context.Discounts.AddRange(discounts);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("AddDiscounts", discounts);
+        }
+
         // GET: api/Discounts/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDiscount([FromRoute] long id)

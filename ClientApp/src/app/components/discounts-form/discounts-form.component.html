@@ -9,126 +9,6 @@
 </ng-container>
 <form class="discount-form" [formGroup]="discountsForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
-    <label>Moving Violations Discount</label>
-    <input class="form-control"
-           [class.is-valid]="movingViolations.valid"
-           [class.is-invalid]="movingViolations.invalid && (movingViolations.dirty || movingViolations.touched)"
-           formControlName="movingViolations"
-           type="number"
-           step="0.01"
-           required />
-    <div *ngIf="movingViolations.invalid && (movingViolations.dirty || movingViolations.touched)" class="alert alert-danger">
-      <span class="invalid-feedback" *ngIf="movingViolations.errors.required">
-        Set a value for this discount.
-      </span>
-    </div>
-  </div>
-  <div class="form-group">
-    <label>Multi Car Discount</label>
-    <input class="form-control"
-           [class.is-valid]="multiCar.valid"
-           [class.is-invalid]="multiCar.invalid && (multiCar.dirty || multiCar.touched)"
-           formControlName="multiCar"
-           type="number"
-           step="0.01"
-           required />
-    <div *ngIf="multiCar.invalid && (multiCar.dirty || multiCar.touched)" class="alert alert-danger">
-      <span class="invalid-feedback" *ngIf="multiCar.errors.required">
-        Set a value for this discount.
-      </span>
-    </div>
-  </div>
-  <div class="form-group">
-    <label>New Driver Discount</label>
-    <input class="form-control"
-           [class.is-valid]="newDriver.valid"
-           [class.is-invalid]="newDriver.invalid && (newDriver.dirty || newDriver.touched)"
-           formControlName="newDriver"
-           type="number"
-           step="0.01"
-           required />
-    <div *ngIf="newDriver.invalid && (newDriver.dirty || newDriver.touched)" class="alert alert-danger">
-      <span class="invalid-feedback" *ngIf="newDriver.errors.required">
-        Set a value for this discount.
-      </span>
-    </div>
-  </div>
-  <div class="form-group">
-    <label>Past Claims Discount</label>
-    <input class="form-control"
-           [class.is-valid]="pastClaims.valid"
-           [class.is-invalid]="pastClaims.invalid && (pastClaims.dirty || pastClaims.touched)"
-           formControlName="pastClaims"
-           type="number"
-           step="0.01"
-           required />
-    <div *ngIf="pastClaims.invalid && (pastClaims.dirty || pastClaims.touched)" class="alert alert-danger">
-      <span class="invalid-feedback" *ngIf="pastClaims.errors.required">
-        Set a value for this discount.
-      </span>
-    </div>
-  </div>
-  <div class="form-group">
-    <label>Previous Carrier Lizard Discount</label>
-    <input class="form-control"
-           [class.is-valid]="previousCarrierLizard.valid"
-           [class.is-invalid]="previousCarrierLizard.invalid && (previousCarrierLizard.dirty || previousCarrierLizard.touched)"
-           formControlName="previousCarrierLizard"
-           type="number"
-           step="0.01"
-           required />
-    <div *ngIf="previousCarrierLizard.invalid && (previousCarrierLizard.dirty || previousCarrierLizard.touched)" class="alert alert-danger">
-      <span class="invalid-feedback" *ngIf="previousCarrierLizard.errors.required">
-        Set a value for this discount.
-      </span>
-    </div>
-  </div>
-  <div class="form-group">
-    <label>Previous Carrier Pervasive Discount</label>
-    <input class="form-control"
-           [class.is-valid]="previousCarrierPervasive.valid"
-           [class.is-invalid]="previousCarrierPervasive.invalid && (previousCarrierPervasive.dirty || previousCarrierPervasive.touched)"
-           formControlName="previousCarrierPervasive"
-           type="number"
-           step="0.01"
-           required />
-    <div *ngIf="previousCarrierPervasive.invalid && (previousCarrierPervasive.dirty || previousCarrierPervasive.touched)" class="alert alert-danger">
-      <span class="invalid-feedback" *ngIf="previousCarrierPervasive.errors.required">
-        Set a value for this discount.
-      </span>
-    </div>
-  </div>
-  <div class="form-group">
-    <label>Young Driver Discount</label>
-    <input class="form-control"
-           [class.is-valid]="youngDriver.valid"
-           [class.is-invalid]="youngDriver.invalid && (youngDriver.dirty || youngDriver.touched)"
-           formControlName="youngDriver"
-           type="number"
-           step="0.01"
-           required />
-    <div *ngIf="youngDriver.invalid && (youngDriver.dirty || youngDriver.touched)" class="alert alert-danger">
-      <span class="invalid-feedback" *ngIf="youngDriver.errors.required">
-        Set a value for this discount.
-      </span>
-    </div>
-  </div>
-  <div class="form-group">
-    <label>Safe Driver Discount</label>
-    <input class="form-control"
-           [class.is-valid]="safeDriver.valid"
-           [class.is-invalid]="safeDriver.invalid && (safeDriver.dirty || safeDriver.touched)"
-           formControlName="safeDriver"
-           type="number"
-           step="0.01"
-           required />
-    <div *ngIf="safeDriver.invalid && (safeDriver.dirty || safeDriver.touched)" class="alert alert-danger">
-      <span class="invalid-feedback" *ngIf="safeDriver.errors.required">
-        Set a value for this discount.
-      </span>
-    </div>
-  </div>
-  <div class="form-group">
     <label>Daytime Lights Discount</label>
     <input class="form-control"
            [class.is-valid]="daytimeLights.valid"
@@ -140,6 +20,9 @@
     <div *ngIf="daytimeLights.invalid && (daytimeLights.dirty || daytimeLights.touched)" class="alert alert-danger">
       <span class="invalid-feedback" *ngIf="daytimeLights.errors.required">
         Set a value for this discount.
+      </span>
+      <span class="invalid-feedback" *ngIf="daytimeLights.errors.minlength || daytimeLights.errors.maxlength">
+        Set discount value between -1 and 1.
       </span>
     </div>
   </div>
@@ -156,6 +39,9 @@
       <span class="invalid-feedback" *ngIf="antilockBrakes.errors.required">
         Set a value for this discount.
       </span>
+      <span class="invalid-feedback" *ngIf="antilockBrakes.errors.minlength || antilockBrakes.errors.maxlength">
+        Set discount value between -1 and 1.
+      </span>
     </div>
   </div>
   <div class="form-group">
@@ -170,6 +56,9 @@
     <div *ngIf="annualMilage.invalid && (annualMilage.dirty || annualMilage.touched)" class="alert alert-danger">
       <span class="invalid-feedback" *ngIf="annualMilage.errors.required">
         Set a value for this discount.
+      </span>
+      <span class="invalid-feedback" *ngIf="annualMilage.errors.minlength || annualMilage.errors.maxlength">
+        Set discount value between -1 and 1.
       </span>
     </div>
   </div>
@@ -186,6 +75,9 @@
       <span class="invalid-feedback" *ngIf="passiveRestraints.errors.required">
         Set a value for this discount.
       </span>
+      <span class="invalid-feedback" *ngIf="passiveRestraints.errors.minlength || passiveRestraints.errors.maxlength">
+        Set discount value between -1 and 1.
+      </span>
     </div>
   </div>
   <div class="form-group">
@@ -200,6 +92,9 @@
     <div *ngIf="antiTheft.invalid && (antiTheft.dirty || antiTheft.touched)" class="alert alert-danger">
       <span class="invalid-feedback" *ngIf="antiTheft.errors.required">
         Set a value for this discount.
+      </span>
+      <span class="invalid-feedback" *ngIf="antiTheft.errors.minlength || antiTheft.errors.maxlength">
+        Set discount value between -1 and 1.
       </span>
     </div>
   </div>
@@ -216,6 +111,9 @@
       <span class="invalid-feedback" *ngIf="daysDriven.errors.required">
         Set a value for this discount.
       </span>
+      <span class="invalid-feedback" *ngIf="daysDriven.errors.minlength || daysDriven.errors.maxlength">
+        Set discount value between -1 and 1.
+      </span>
     </div>
   </div>
   <div class="form-group">
@@ -230,6 +128,9 @@
     <div *ngIf="milesToWork.invalid && (milesToWork.dirty || milesToWork.touched)" class="alert alert-danger">
       <span class="invalid-feedback" *ngIf="milesToWork.errors.required">
         Set a value for this discount.
+      </span>
+      <span class="invalid-feedback" *ngIf="milesToWork.errors.minlength || milesToWork.errors.maxlength">
+        Set discount value between -1 and 1.
       </span>
     </div>
   </div>
@@ -246,6 +147,9 @@
       <span class="invalid-feedback" *ngIf="reducedUsed.errors.required">
         Set a value for this discount.
       </span>
+      <span class="invalid-feedback" *ngIf="reducedUsed.errors.minlength || reducedUsed.errors.maxlength">
+        Set discount value between -1 and 1.
+      </span>
     </div>
   </div>
   <div class="form-group">
@@ -261,8 +165,154 @@
       <span class="invalid-feedback" *ngIf="garageDiffers.errors.required">
         Set a value for this discount.
       </span>
+      <span class="invalid-feedback" *ngIf="garageDiffers.errors.minlength || garageDiffers.errors.maxlength">
+        Set discount value between -1 and 1.
+      </span>
     </div>
   </div>
-
+  <div class="form-group">
+    <label>New Driver Discount</label>
+    <input class="form-control"
+           [class.is-valid]="newDriver.valid"
+           [class.is-invalid]="newDriver.invalid && (newDriver.dirty || newDriver.touched)"
+           formControlName="newDriver"
+           type="number"
+           step="0.01"
+           required />
+    <div *ngIf="newDriver.invalid && (newDriver.dirty || newDriver.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="newDriver.errors.required">
+        Set a value for this discount.
+      </span>
+      <span class="invalid-feedback" *ngIf="newDriver.errors.minlength || newDriver.errors.maxlength">
+        Set discount value between -1 and 1.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Previous Carrier Lizard Discount</label>
+    <input class="form-control"
+           [class.is-valid]="previousCarrierLizard.valid"
+           [class.is-invalid]="previousCarrierLizard.invalid && (previousCarrierLizard.dirty || previousCarrierLizard.touched)"
+           formControlName="previousCarrierLizard"
+           type="number"
+           step="0.01"
+           required />
+    <div *ngIf="previousCarrierLizard.invalid && (previousCarrierLizard.dirty || previousCarrierLizard.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="previousCarrierLizard.errors.required">
+        Set a value for this discount.
+      </span>
+      <span class="invalid-feedback" *ngIf="previousCarrierLizard.errors.minlength || previousCarrierLizard.errors.maxlength">
+        Set discount value between -1 and 1.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Previous Carrier Pervasive Discount</label>
+    <input class="form-control"
+           [class.is-valid]="previousCarrierPervasive.valid"
+           [class.is-invalid]="previousCarrierPervasive.invalid && (previousCarrierPervasive.dirty || previousCarrierPervasive.touched)"
+           formControlName="previousCarrierPervasive"
+           type="number"
+           step="0.01"
+           required />
+    <div *ngIf="previousCarrierPervasive.invalid && (previousCarrierPervasive.dirty || previousCarrierPervasive.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="previousCarrierPervasive.errors.required">
+        Set a value for this discount.
+      </span>
+      <span class="invalid-feedback" *ngIf="previousCarrierPervasive.errors.minlength || previousCarrierPervasive.errors.maxlength">
+        Set discount value between -1 and 1.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Moving Violations Discount</label>
+    <input class="form-control"
+           [class.is-valid]="movingViolations.valid"
+           [class.is-invalid]="movingViolations.invalid && (movingViolations.dirty || movingViolations.touched)"
+           formControlName="movingViolations"
+           type="number"
+           step="0.01"
+           required />
+    <div *ngIf="movingViolations.invalid && (movingViolations.dirty || movingViolations.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="movingViolations.errors.required">
+        Set a value for this discount.
+      </span>
+      <span class="invalid-feedback" *ngIf="movingViolations.errors.minlength || movingViolations.errors.maxlength">
+        Set discount value between -1 and 1.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Past Claims Discount</label>
+    <input class="form-control"
+           [class.is-valid]="pastClaims.valid"
+           [class.is-invalid]="pastClaims.invalid && (pastClaims.dirty || pastClaims.touched)"
+           formControlName="pastClaims"
+           type="number"
+           step="0.01"
+           required />
+    <div *ngIf="pastClaims.invalid && (pastClaims.dirty || pastClaims.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="pastClaims.errors.required">
+        Set a value for this discount.
+      </span>
+      <span class="invalid-feedback" *ngIf="pastClaims.errors.minlength || pastClaims.errors.maxlength">
+        Set discount value between -1 and 1.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Multi Car Discount</label>
+    <input class="form-control"
+           [class.is-valid]="multiCar.valid"
+           [class.is-invalid]="multiCar.invalid && (multiCar.dirty || multiCar.touched)"
+           formControlName="multiCar"
+           type="number"
+           step="0.01"
+           required />
+    <div *ngIf="multiCar.invalid && (multiCar.dirty || multiCar.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="multiCar.errors.required">
+        Set a value for this discount.
+      </span>
+      <span class="invalid-feedback" *ngIf="multiCar.errors.minlength || multiCar.errors.maxlength">
+        Set discount value between -1 and 1.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Young Driver Discount</label>
+    <input class="form-control"
+           [class.is-valid]="youngDriver.valid"
+           [class.is-invalid]="youngDriver.invalid && (youngDriver.dirty || youngDriver.touched)"
+           formControlName="youngDriver"
+           type="number"
+           step="0.01"
+           required />
+    <div *ngIf="youngDriver.invalid && (youngDriver.dirty || youngDriver.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="youngDriver.errors.required">
+        Set a value for this discount.
+      </span>
+      <span class="invalid-feedback" *ngIf="youngDriver.errors.minlength || youngDriver.errors.maxlength">
+        Set discount value between -1 and 1.
+      </span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Safe Driver Discount</label>
+    <input class="form-control"
+           [class.is-valid]="safeDriver.valid"
+           [class.is-invalid]="safeDriver.invalid && (safeDriver.dirty || safeDriver.touched)"
+           formControlName="safeDriver"
+           type="number"
+           step="0.01"
+           required />
+    <div *ngIf="safeDriver.invalid && (safeDriver.dirty || safeDriver.touched)" class="alert alert-danger">
+      <span class="invalid-feedback" *ngIf="safeDriver.errors.required">
+        Set a value for this discount.
+      </span>
+      <span class="invalid-feedback" *ngIf="safeDriver.errors.minlength || safeDriver.errors.maxlength">
+        Set discount value between -1 and 1.
+      </span>
+    </div>
+  </div>
   <button type="button" (click)="onSaveDiscounts()"></button>
 </form>

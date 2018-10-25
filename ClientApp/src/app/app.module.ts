@@ -30,6 +30,8 @@ import { RegistrationPageComponent } from './components/registration-page/regist
 import { HeaderMenuComponent } from './components/header-menu/header-menu.component';
 import { DiscountsFormComponent } from './components/discounts-form/discounts-form.component';
 import { DiscountsPageComponent } from './components/discounts-page/discounts-page.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,9 @@ import { DiscountsPageComponent } from './components/discounts-page/discounts-pa
     RegistrationPageComponent,
     HeaderMenuComponent,
     DiscountsFormComponent,
-    DiscountsPageComponent
+    DiscountsPageComponent,
+    ForgotPasswordComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,

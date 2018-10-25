@@ -12,6 +12,7 @@ export class DiscountsFormComponent implements OnInit {
   isDiscountsAvailable = false;
 
   @Output() discountsUpdated = new EventEmitter<Discount>();
+  @Input() isAddStateShown = false;
   @Input() isStateLookedup = false;
   @Input() 
   set discounts(val: Discount[]) {
@@ -43,25 +44,25 @@ export class DiscountsFormComponent implements OnInit {
     }
   }
 
-
+  validators = [Validators.required, Validators.min(-0.99), Validators.max(1)];
   discountsForm = this.fb.group({
-    movingViolations: ['', Validators.required],
-    multiCar: ['', Validators.required],
-    newDriver: ['', Validators.required],
-    pastClaims: ['', Validators.required],
-    previousCarrierLizard: ['', Validators.required],
-    previousCarrierPervasive: ['', Validators.required],
-    youngDriver: ['', Validators.required],
-    safeDriver: ['', Validators.required],
-    daytimeLights: ['', Validators.required],
-    antilockBrakes: ['', Validators.required],
-    annualMilage: ['', Validators.required],
-    passiveRestraints: ['', Validators.required],
-    antiTheft: ['', Validators.required],
-    daysDriven: ['', Validators.required],
-    milesToWork: ['', Validators.required],
-    reducedUsed: ['', Validators.required],
-    garageDiffers: ['', Validators.required]
+    movingViolations: ['', this.validators],
+    multiCar: ['', this.validators],
+    newDriver: ['', this.validators],
+    pastClaims: ['', this.validators],
+    previousCarrierLizard: ['', this.validators],
+    previousCarrierPervasive: ['', this.validators],
+    youngDriver: ['', this.validators],
+    safeDriver: ['', this.validators],
+    daytimeLights: ['', this.validators],
+    antilockBrakes: ['', this.validators],
+    annualMilage: ['', this.validators],
+    passiveRestraints: ['', this.validators],
+    antiTheft: ['', this.validators],
+    daysDriven: ['', this.validators],
+    milesToWork: ['', this.validators],
+    reducedUsed: ['', this.validators],
+    garageDiffers: ['', this.validators]
   });
 
   get movingViolations() { return this.discountsForm.get('movingViolations'); }

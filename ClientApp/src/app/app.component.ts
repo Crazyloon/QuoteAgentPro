@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AccountService } from './services/account.service';
 import { LoginNotificationService } from './services/login-notification.service';
 import { User } from '../data/models/domain/user';
+import { DiscountService } from './services/discount.service';
+import { setStateOptions } from '../data/constants/stateOptions';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +15,7 @@ export class AppComponent implements OnInit {
   isUserRoleManager: boolean = false;
   isUserLoggedIn: boolean = false;
 
-  constructor(private authService: AccountService, private loginService: LoginNotificationService) {
+  constructor(private authService: AccountService, private loginService: LoginNotificationService, private discountService: DiscountService) {
     loginService.userLoggedIn$.subscribe((u: User) => {
       if (u) {
         this.isUserRoleManager = u.role == "Manager"
@@ -24,7 +26,10 @@ export class AppComponent implements OnInit {
     loginService.userLoggedOut$.subscribe((action: string) => {
       this.isUserRoleManager = false;
       this.isUserLoggedIn = false;
-    })
+    });
+
+    discountService.getStatesOfOperation()
+      .subscribe(states => setStateOptions(states));
   }
 
   ngOnInit() {

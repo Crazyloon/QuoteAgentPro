@@ -11,6 +11,8 @@ import { AgentManagementPageComponent } from './components/agent-management-page
 import { RegistrationPageComponent } from './components/registration-page/registration-page.component';
 import { DiscountsPageComponent } from './components/discounts-page/discounts-page.component';
 import { RoleGuard } from './role.guard';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full', canActivate: [AuthGuard]},
@@ -23,7 +25,10 @@ const routes: Routes = [
   { path: 'metrics', component: MetricsPageComponent, canActivate: [AuthGuard] },
   { path: 'agents/manage', component: AgentManagementPageComponent, canActivate: [AuthGuard, RoleGuard] },
   { path: 'register', component: RegistrationPageComponent },
-  { path: 'login', component: LoginPageComponent }
+  { path: 'login', component: LoginPageComponent },
+  { path: 'forgotpassword', component: ForgotPasswordComponent },
+  { path: '**', component: NotFoundComponent }
+
 ];
 
 @NgModule({
