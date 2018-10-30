@@ -7,7 +7,7 @@
     </div>
   </div>
 </ng-container>
-<form class="discount-form" [formGroup]="discountsForm" (ngSubmit)="onSubmit()">
+<form class="discount-form" [formGroup]="discountsForm">
   <div class="form-group">
     <label>Daytime Lights Discount</label>
     <input class="form-control"
@@ -314,5 +314,5 @@
       </span>
     </div>
   </div>
-  <button type="button" (click)="onSaveDiscounts()"></button>
+  <button type="button" (click)="onSubmit()">Save Discounts</button>
 </form>

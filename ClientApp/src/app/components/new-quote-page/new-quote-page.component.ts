@@ -16,7 +16,7 @@ export class NewQuotePageComponent implements OnInit {
   public driverOptions: {id: number, name: string}[] = [];
   public driverData: {};
   public isDriverModalActive: boolean = false; //true;
-  private isValidQuote: boolean = false;
+  public isValidQuote: boolean = false;
 
   constructor(private calcEngine: CalculationEngineService, private router: Router, private quoteService: QuoteService) { }
 

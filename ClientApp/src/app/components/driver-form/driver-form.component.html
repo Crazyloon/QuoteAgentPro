@@ -143,7 +143,7 @@
             Attended Safe Driving School?
           </label>
         </div>
-        <button type="submit" class="btn btn-success bevel bevel-md" [disabled]="!driverForm.valid || !quote.id || isFormUpdating">{{submitButtonText}}</button>
+        <button type="submit" class="btn btn-success bevel bevel-md" [disabled]="!driverForm.valid || !quote.id || isRequestInProgress">{{submitButtonText}}</button>
         <div *ngIf="!quote.id" class="alert alert-warning">
           <span class="invalid-feedback" style="display: block;">
             Save customer information before adding a driver.

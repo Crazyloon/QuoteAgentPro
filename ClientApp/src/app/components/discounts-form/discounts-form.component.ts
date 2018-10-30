@@ -88,7 +88,7 @@ export class DiscountsFormComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSaveDiscounts(): void {
+  onSubmit(): void {
     this.discountsUpdated.emit(this.discountsForm.value);
   }
 }

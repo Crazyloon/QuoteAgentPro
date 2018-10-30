@@ -53,7 +53,7 @@
         </label>
       </div>
     </div>
-    <div *ngIf="loginForm.invalid && loginForm.errors && (loginForm.diry || loginForm.touched)" class="alert alert-danger form-control">
+    <div *ngIf="loginForm.invalid && loginForm.errors && (loginForm.dirty || loginForm.touched)" class="alert alert-danger form-control">
       <span class="invalid-feedback">
         {{loginForm.errors}}
       </span>

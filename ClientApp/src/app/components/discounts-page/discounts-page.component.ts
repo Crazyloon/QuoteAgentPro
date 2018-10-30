@@ -169,7 +169,7 @@ export class DiscountsPageComponent implements OnInit {
     this.isAddStateShown = true;
   }
 
-  private updateDiscounts($event): void {
+  updateDiscounts($event): void {
     this.discounts = Object.assign({}, $event);
   }
 }

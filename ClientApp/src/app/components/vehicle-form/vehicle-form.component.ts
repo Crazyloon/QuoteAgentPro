@@ -20,7 +20,7 @@ export class VehicleFormComponent implements OnInit {
   isEditMode = false; // controls form look & submission functionality
   isRequestInProgress = false; // prevents duplicate submissions
   vehicle: Vehicle;
-  private _quote: Quote;
+  _quote: Quote;
   @Input() 
   set quote(quote: Quote){
     this._quote = quote;
