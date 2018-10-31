@@ -41,11 +41,12 @@ export class RegistrationFormComponent implements OnInit {
       lastName: this.lastName.value,
       phoneNumber: this.phone.value
     }
-    this.accountService.register(this.creds)
+    let obs = this.accountService.register(this.creds)
       .subscribe(redirectTo => {
         if (redirectTo) {
           this.router.navigate([`/${redirectTo}`]);
         }
+        obs.unsubscribe();
       }
     )
   }

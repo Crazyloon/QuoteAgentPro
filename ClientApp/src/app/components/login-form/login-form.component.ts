@@ -40,7 +40,8 @@ export class LoginFormComponent implements OnInit {
     const creds: LoginCredentials = {email: this.username.value, password: this.password.value};
     const remembered = (this.rememberMe.nativeElement as HTMLInputElement).checked;
     if (creds.email && creds.password) {
-      this.accountService.login(creds).subscribe(token => {
+      let sub = this.accountService.login(creds).subscribe(token => {
+        console.log(token);
         if (token == 'Pending') {
           this.isUnauthorizedUser = true;
           this.unauthorizedUserMessage = pendingUserMessage;
@@ -67,7 +68,8 @@ export class LoginFormComponent implements OnInit {
         else {
           this.loginForm.setErrors(['Unabled to match username with password']);
         }
-      });
+        sub.unsubscribe();
+      }, (error) => console.log(error));
     }
   }
 

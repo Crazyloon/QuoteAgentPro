@@ -32,6 +32,14 @@ namespace web_agent_pro
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<WebAgentProDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("WebAgentProDbContext")));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("EnableCORS", builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials().Build();
+                });
+            });
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -59,7 +67,7 @@ namespace web_agent_pro
             })
             .AddJwtBearer(config =>
             {
-                config.RequireHttpsMetadata = false; // TODO: set this true in production
+                config.RequireHttpsMetadata = true; // TODO: set this true in production
                 config.SaveToken = true;
                 config.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -91,6 +99,7 @@ namespace web_agent_pro
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseAuthentication();
+            app.UseCors();
 
             app.UseMvc(routes =>
             {
@@ -106,10 +115,10 @@ namespace web_agent_pro
 
                 spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
+                //if (env.IsDevelopment())
+                //{
+                //    spa.UseAngularCliServer(npmScript: "start");
+                //}
             });
         }
     }
