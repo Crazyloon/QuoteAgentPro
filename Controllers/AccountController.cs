@@ -41,6 +41,7 @@ namespace web_agent_pro.Controllers
         public async Task<object> Login([FromBody] LoginDto model)
         {
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+            
 
             if (result.Succeeded)
             {
@@ -55,8 +56,7 @@ namespace web_agent_pro.Controllers
                 }
                 return await GenerateJwtToken(model, appUser);
             }
-
-            throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
+            return BadRequest("INVALID_LOGIN_ATTEMPT");
         }
 
         [Route("Register")]
