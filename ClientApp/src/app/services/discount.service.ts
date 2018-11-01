@@ -44,26 +44,26 @@ export class DiscountService {
 
   addDiscount(discount: Discount): Observable<Discount> {
     return this.http.post<Discount>(this.discountUrl, discount, httpOptions).pipe(
-      tap((q: Discount) => this.log(`Discount Service: discount: ${q.id} added!`)),
-      catchError(this.handleError<Discount>('addQuote'))
+      tap((d: Discount) => this.log(`Discount Service: discount: ${d.discountId} added!`)),
+      catchError(this.handleError<Discount>('addDiscount'))
     );
   }
 
   deleteDiscount(discount: Discount | number): Observable<Discount> {
-    const id = typeof discount === 'number' ? discount : discount.id;
+    const id = typeof discount === 'number' ? discount : discount.discountId;
     const url = `${this.discountUrl}/${id}`;
 
     return this.http.delete<Discount>(url, httpOptions).pipe(
       tap(_ => this.log(`Discount Service: ${id} deleted!`)),
-      catchError(this.handleError<Discount>('deleteQuote'))
+      catchError(this.handleError<Discount>('deleteDiscount'))
     );
   }
 
   updateDiscount(discount: Discount): Observable<any> {
-    const url = `${this.discountUrl}/${discount.id}`;
+    const url = `${this.discountUrl}/${discount.discountId}`;
     return this.http.put<Discount>(url, discount, httpOptions).pipe(
-      tap(_ => this.log(`Discount Service: Discount - ${discount.id} updated!`)),
-      catchError(this.handleError<Discount>('updateQuote'))
+      tap(_ => this.log(`Discount Service: Discount - ${discount.discountId} updated!`)),
+      catchError(this.handleError<Discount>('updateDiscount'))
     );
   }
 
@@ -83,8 +83,16 @@ export class DiscountService {
     );
   }
 
+  updateDiscounts(discounts: Discount[]): Observable<Discount[]> {
+    const url = `${this.discountUrl}/updatemany`;
+    return this.http.put<Discount[]>(url, discounts, httpOptions).pipe(
+      tap(_ => this.log(`Discount Service: Discounts updated!`)),
+      catchError(this.handleError<Discount[]>('updateDiscounts'))
+    );
+  }
+
   private log(message: string) {
-    this.messageService.add(`QuoteService: ${message}`);
+    this.messageService.add(`DiscountService: ${message}`);
   }
 
   /**

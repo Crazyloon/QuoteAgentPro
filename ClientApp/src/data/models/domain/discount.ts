@@ -1,7 +1,12 @@
 export class Discount {
-  constructor() { }
+  constructor(name: string, scope: string, amount: number, state: string) {
+    this.name = name;
+    this.scope = scope;
+    this.amount = amount;
+    this.state = state;
+  }
 
-  id: number;
+  discountId: number;
   name: string;
   scope: string;
   amount: number;

@@ -1,50 +1,61 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { Discount } from '../../../data/models/domain/discount';
 import { DiscountService } from 'src/app/services/discount.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { stateOptions, setStateOptions } from '../../../data/constants/stateOptions';
 import { DiscountNames } from '../../../data/constants/enumerations/discountNames';
+import { Subscription } from 'rxjs/internal/Subscription';
+import { Subscribable, Observable } from 'rxjs';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { flatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-discounts-page',
   templateUrl: './discounts-page.component.html',
   styleUrls: ['./discounts-page.component.scss']
 })
-export class DiscountsPageComponent implements OnInit {
+export class DiscountsPageComponent implements OnInit, OnDestroy {
   discounts: Discount[] = [];
   states: string[] = stateOptions;
+  selectedState: string;
   isStateLookedup: boolean = false;
   isAddStateShown: boolean = false;
   isAddStateSuccess: boolean = false;
   addStateErrorMessage: string;
-  
+
+  apiSubscriptions: Subscription[] = [];
+
   @ViewChild('txtAddState') txtAddState: ElementRef;
 
   constructor(private discountService: DiscountService, private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.discountService.getStatesOfOperation()
+    const sub = this.discountService.getStatesOfOperation()
       .subscribe(states => {
-        setStateOptions(states);
-      });
+        this.states = setStateOptions(states);
+      }, (error) => console.error(error));
+  }
+
+  ngOnDestroy() {
+    this.apiSubscriptions.forEach(sub => sub.unsubscribe());
   }
 
   onStateSelected(state: string): void {
     this.isStateLookedup = true;
-    this.discountService.getDiscountsByState(state)
-      .subscribe(discs => {
-        this.discounts = discs;
-      },
-      (error) => {
-        console.error(error);
-      });
+    this.selectedState = state;
+
+    this.discountService.getDiscountsByState(state).subscribe(discounts => {
+      this.discounts = discounts;
+    }, (error) => {
+      console.error(error);
+    });
   }
 
   onAddState() {
-    let state: string = (<string>this.txtAddState.nativeElement.value).toUpperCase();
+    let state: string = (this.txtAddState.nativeElement as HTMLInputElement).value.toUpperCase();
     if (state.length == 2) {
-      let matchedState = this.discounts.filter(d => d.state == state);
-      if (matchedState.length == 0) {
+      let existingStates = this.discounts.filter(d => d.state == state);
+      if (existingStates.length == 0) {
         let discounts = [];
         discounts.push(
           {
@@ -149,11 +160,23 @@ export class DiscountsPageComponent implements OnInit {
             amount: 0,
             state: state
           });
-        this.discountService.addDiscounts(discounts).subscribe(() => {
-          this.discountService.getStatesOfOperation().subscribe(states => {
-            this.states = setStateOptions(states);
-          });
-        }, (error) => console.error(error));
+
+        //this.discountService.addDiscounts(discounts).subscribe(() => {
+        //  this.discountService.getStatesOfOperation().subscribe(states => {
+        //    this.states = setStateOptions(states);
+        //  }, (error) => console.error(error));
+        //}, (error) => console.error(error));
+
+        this.discountService.addDiscounts(discounts).pipe(
+          flatMap(disc => {
+            if (disc) {
+              return this.discountService.getStatesOfOperation();
+            }
+            else {
+              return Observable.create() as Observable<string[]>;
+            }
+          })
+        ).subscribe(st => this.states = setStateOptions(st));
       } else {
         this.isAddStateSuccess = false;
         this.addStateErrorMessage = `${state} already exists`;
@@ -170,6 +193,50 @@ export class DiscountsPageComponent implements OnInit {
   }
 
   updateDiscounts($event): void {
-    this.discounts = Object.assign({}, $event);
+    let discounts = Object.assign([], this.discounts);
+    Object.keys($event).forEach((k, i) => {
+      const key = k.toString();
+      const scope = this.getDiscountScope(key);
+      const id = this.discounts[i].discountId;
+      discounts[i] = new Discount(this.getDiscountName(k), scope, $event[k], this.selectedState);
+      discounts[i].discountId = id;
+    });
+    this.discounts = Object.assign([], discounts);
+    this.discountService.updateDiscounts(discounts)
+      .subscribe(d => this.discounts = d);
+  }
+
+  private getDiscountName(name) {
+    return DiscountNames[name];
+  }
+
+  private getDiscountScope(name): string {
+    let scope = 'Vehicle';
+    if (name == 'daytimeLights' ||
+      name == 'antilockBrakes' ||
+      name == 'annualMilage' ||
+      name == 'passiveRestraints' ||
+      name == 'antiTheft' ||
+      name == 'daysDriven' ||
+      name == 'milesToWork' ||
+      name == 'reducedUsed' ||
+      name == 'garageDiffers') {
+      scope = 'Vehicle'
+    } else {
+      if (name == 'newDriver' ||
+        name == 'previousCarrierLizard' ||
+        name == 'previousCarrierPervasive' ||
+        name == 'movingViolations' ||
+        name == 'pastClaims' ||
+        name == 'multiCar') {
+        scope = 'Quote';
+      } else {
+        if (name == 'youngDriver' ||
+          name == 'safeDriver') {
+          scope = 'Person';
+        }
+      }
+    }
+    return scope;
   }
 }

@@ -40,7 +40,7 @@ namespace web_agent_pro.Controllers
             return _context.Discounts.Select(d => d.State).Distinct();
         }
 
-        [HttpPost("states")]
+        [HttpPost("addmany")]
         public async Task<IActionResult> AddDiscounts(Discount[] discounts)
         {
             if (!ModelState.IsValid)
@@ -52,6 +52,20 @@ namespace web_agent_pro.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("AddDiscounts", discounts);
+        }
+
+        [HttpPut("updatemany")]
+        public async Task<IActionResult> UpdateDiscounts(Discount[] discounts)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _context.Discounts.UpdateRange(discounts);
+            await _context.SaveChangesAsync();
+
+            return Ok(discounts);
         }
 
         // GET: api/Discounts/5

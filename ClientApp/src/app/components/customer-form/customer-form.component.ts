@@ -50,8 +50,8 @@ export class CustomerFormComponent implements OnInit {
     let quoteId;
     let sub = this.route.params.subscribe(params => {
       quoteId = +params['id'];
-      this.enterEditMode()
       if(quoteId){
+        this.enterEditMode()
         this.quoteService.getQuote(quoteId)
           .subscribe(q => {
             this.quoteChange.emit(q);
