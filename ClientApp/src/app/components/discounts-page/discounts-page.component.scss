@@ -8,10 +8,18 @@
 
 .discount-select{
   display: flex;
-  justify-content: flex-end;
+
+  @media screen and (min-width: map-get($grid-breakpoints, sm)){
+    justify-content: flex-end;
+  }
+
 
   button{
+    display: flex;
     margin-right: 20px;
+    img{
+      margin-right: 10px;
+    }
   }
 
   input[type="text"]{

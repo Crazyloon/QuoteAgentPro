@@ -1,10 +1,10 @@
 <div class="discount-page">
   <h1>Manage Discounts</h1>
   <div class="discount-select">
+    <input class="form-control" type="text" placeholder="State Code" #txtAddState />
     <button class="btn btn-primary bevel bevel-md" (click)="onAddState()">
-      <img class="icon" src="../../../assets/icons/031-add.svg" alt="icon"/> Add State
+      <img class="icon" src="../../../assets/icons/032-add-white.svg" alt="icon"/> Add State
     </button>
-    <input type="text" #txtAddState />
     <select class="form-control" #stateSelect (change)="onStateSelected(stateSelect.value)">
       <option *ngFor="let state of states" value="{{state}}">
         {{state}}

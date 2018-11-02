@@ -1,20 +1,20 @@
-import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { Discount } from '../../../data/models/domain/discount';
 import { DiscountService } from 'src/app/services/discount.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { stateOptions, setStateOptions } from '../../../data/constants/stateOptions';
 import { DiscountNames } from '../../../data/constants/enumerations/discountNames';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { Subscribable, Observable } from 'rxjs';
+import { Subscribable, Observable, fromEvent } from 'rxjs';
 import { switchMap } from 'rxjs/internal/operators/switchMap';
-import { flatMap } from 'rxjs/operators';
+import { flatMap, map, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-discounts-page',
   templateUrl: './discounts-page.component.html',
   styleUrls: ['./discounts-page.component.scss']
 })
-export class DiscountsPageComponent implements OnInit, OnDestroy {
+export class DiscountsPageComponent implements OnInit, OnDestroy, AfterViewInit {
   discounts: Discount[] = [];
   states: string[] = stateOptions;
   selectedState: string;
@@ -24,6 +24,7 @@ export class DiscountsPageComponent implements OnInit, OnDestroy {
   addStateErrorMessage: string;
 
   apiSubscriptions: Subscription[] = [];
+  stateCodeSub: Subscription;
 
   @ViewChild('txtAddState') txtAddState: ElementRef;
 
@@ -38,6 +39,7 @@ export class DiscountsPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.apiSubscriptions.forEach(sub => sub.unsubscribe());
+    this.stateCodeSub.unsubscribe();
   }
 
   onStateSelected(state: string): void {
@@ -238,5 +240,35 @@ export class DiscountsPageComponent implements OnInit, OnDestroy {
       }
     }
     return scope;
+  }
+
+  ngAfterViewInit() {
+    const regex = /^[A-Z]+$/
+    const txtAddState = this.txtAddState.nativeElement as HTMLInputElement;
+    let onKeyUp$ = fromEvent<KeyboardEvent>(txtAddState, 'keyup');
+    let onStateCodeKeyUp$ = onKeyUp$.pipe(
+      map((event, index) => {
+        let nextVal = (event.target as HTMLInputElement).value;
+        console.log('val: ', nextVal);
+        if (event.keyCode >= 65 && event.keyCode <= 90) { // Keys A-Z
+          return nextVal.trim().slice(nextVal.length - 2).toUpperCase();
+        }
+        if (nextVal.length > 1) {
+          return (event.target as HTMLInputElement).value[1];
+        }
+        if (event.keyCode == 8 || event.keyCode == 46){
+          return (nextVal);
+        }
+        return '';
+      })
+      //,
+      //filter((value: string) => {
+      //  if (value.match(regex)) {
+      //    return true;
+      //  }
+      //  return false;
+      //})
+    )
+    this.stateCodeSub = onStateCodeKeyUp$.subscribe(input => txtAddState.value = input);
   }
 }

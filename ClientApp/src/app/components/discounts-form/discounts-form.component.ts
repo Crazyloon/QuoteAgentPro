@@ -1,7 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Discount } from '../../../data/models/domain/discount';
 import { DiscountNames } from '../../../data/constants/enumerations/discountNames';
+import { fromEvent } from 'rxjs/internal/observable/fromEvent';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-discounts-form',
@@ -43,6 +45,7 @@ export class DiscountsFormComponent implements OnInit {
       this.isDiscountsAvailable = false;
     }
   }
+  @ViewChild('txtAddState') txtAddState: ElementRef;
 
   validators = [Validators.required, Validators.min(-0.99), Validators.max(1)];
   discountsForm = this.fb.group({
@@ -85,8 +88,8 @@ export class DiscountsFormComponent implements OnInit {
 
   constructor(private fb: FormBuilder) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {    
+  }  
 
   onSubmit(): void {
     this.discountsUpdated.emit(this.discountsForm.value);
