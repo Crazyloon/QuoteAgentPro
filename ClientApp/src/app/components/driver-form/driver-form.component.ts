@@ -185,6 +185,8 @@ export class DriverFormComponent implements OnInit {
     });
   }
 
+
+
   private confirmDelete(): boolean {
     return confirm("Deleting this driver will also remove them as the primary driver for any vehciles");
   }

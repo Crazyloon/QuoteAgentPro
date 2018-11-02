@@ -15,7 +15,6 @@ export class NewQuotePageComponent implements OnInit {
   public driverSelection: {id: number, name: string};
   public driverOptions: {id: number, name: string}[] = [];
   public driverData: {};
-  public isDriverModalActive: boolean = false; //true;
   public isValidQuote: boolean = false;
 
   constructor(private calcEngine: CalculationEngineService, private router: Router, private quoteService: QuoteService) { }
@@ -46,13 +45,5 @@ export class NewQuotePageComponent implements OnInit {
         this.quote.price = price;
         this.router.navigate([`quote/details/${this.quote.id}`]);
       });
-  }
-
-  onDriverModalActivated(driverId: string) {
-    this.isDriverModalActive = true;
-  }
-
-  onDriverModalDeactivated() {
-    this.isDriverModalActive = false;
   }
 }

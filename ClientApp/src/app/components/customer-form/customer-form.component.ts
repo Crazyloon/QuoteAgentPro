@@ -56,7 +56,7 @@ export class CustomerFormComponent implements OnInit {
           .subscribe(q => {
             this.quoteChange.emit(q);
             const dob = new Date(q.dateOfBirth);
-            const formValues = Object.assign({}, q, {'dateOfBirth': `${dob.getFullYear()}-${(dob.getMonth() + 1).toString().padStart(2, '0')}-${dob.getDate()}`}); // ensures the date field is properly set
+            const formValues = Object.assign({}, q, { 'dateOfBirth': new Date(dob.getTime() - (dob.getTimezoneOffset() * 60000)).toISOString().split("T")[0]}); // ensures the date field is properly set
             this.customerForm.patchValue(formValues);
           });
       }

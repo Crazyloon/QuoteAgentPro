@@ -176,7 +176,7 @@ export class DiscountsPageComponent implements OnInit, OnDestroy {
               return Observable.create() as Observable<string[]>;
             }
           })
-        ).subscribe(st => this.states = setStateOptions(st));
+        ).subscribe(st => this.states = setStateOptions(st), (error) => console.error(error));
       } else {
         this.isAddStateSuccess = false;
         this.addStateErrorMessage = `${state} already exists`;
