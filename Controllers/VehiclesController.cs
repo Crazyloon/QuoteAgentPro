@@ -92,6 +92,43 @@ namespace web_agent_pro.Controllers
             return Ok(vehicle);
         }
 
+        [HttpPut("updatemany")]
+        public async Task<IActionResult> PutVehicles([FromBody] Vehicle[] vehicles)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _context.Vehicles.UpdateRange(vehicles);
+            foreach (var v in vehicles)
+            {
+                _context.Entry(v).State = EntityState.Modified;
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                foreach (var v in vehicles)
+                {
+                    if (!VehicleExists(v.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                throw;
+            }
+
+            return Ok(vehicles);
+        }
+
         // POST: api/Vehicles
         [HttpPost]
         public async Task<IActionResult> PostVehicle([FromBody] Vehicle vehicle)

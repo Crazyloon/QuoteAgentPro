@@ -151,6 +151,14 @@ export class QuoteService {
     );
   }
 
+  updateVehicles(vehicles: Vehicle[]): Observable<any> {
+    const url = `${this.vehiclesUrl}/updatemany`;
+    return this.http.put<Vehicle[]>(url, vehicles, httpOptions).pipe(
+      tap(_ => this.log(`Quote Service: Vehicles updated!`)),
+      catchError(this.handleError<Vehicle[]>('updateVehicles'))
+    );
+  }
+
   deleteVehicle(vehicle: Vehicle | number): Observable<Vehicle> {
     const id = typeof vehicle === 'number' ? vehicle : vehicle.id;
     const url = `${this.vehiclesUrl}/${id}`

@@ -132,24 +132,23 @@ export class DriverFormComponent implements OnInit {
       let vehiclesWithDriver = this.quote.vehicles.filter(v => v.primaryDriverId == driverId);
       vehiclesWithDriver.forEach((v, i) => {
         v.primaryDriverId = null;
-        this.quoteService.updateVehicle(v).subscribe(
-          (vehicle: Vehicle) => {
-            this.quote.updateVehicle(vehicle);
-          },
-          (error) => {
-            console.error(error);
-          },
-          () => {
-            if (i == vehiclesWithDriver.length - 1) {
-              this.quoteService.deleteDriver(driverId)
-                .subscribe(_ => {
-                  this.quote.deleteDriver(driverId);
-                  this.resetForm();
-                  this.quoteChange.emit(this.quote);
-                });
-            }
-          })
       });
+      this.quoteService.updateVehicles(vehiclesWithDriver).subscribe(
+        (vehicles: Vehicle[]) => {
+          vehicles.forEach(v => this.quote.updateVehicle(v));
+        },
+        (error) => {
+          console.error(error);
+        },
+        () => {          
+          this.quoteService.deleteDriver(driverId)
+            .subscribe(_ => {
+              this.quote.deleteDriver(driverId);
+              this.resetForm();
+              this.quoteChange.emit(this.quote);
+            }, (error) => console.error(error));
+        }
+      );
     }
   }
 
