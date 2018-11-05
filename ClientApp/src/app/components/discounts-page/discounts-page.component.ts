@@ -242,33 +242,36 @@ export class DiscountsPageComponent implements OnInit, OnDestroy, AfterViewInit 
     return scope;
   }
 
+  txtAddStateValue = '';
   ngAfterViewInit() {
-    const regex = /^[A-Z]+$/
     const txtAddState = this.txtAddState.nativeElement as HTMLInputElement;
-    let onKeyUp$ = fromEvent<KeyboardEvent>(txtAddState, 'keyup');
-    let onStateCodeKeyUp$ = onKeyUp$.pipe(
+    const onKeyUp$ = fromEvent<KeyboardEvent>(txtAddState, 'keyup');
+    const onStateCodeKeyUp$ = onKeyUp$.pipe(
       map((event, index) => {
-        let nextVal = (event.target as HTMLInputElement).value;
-        console.log('val: ', nextVal);
         if (event.keyCode >= 65 && event.keyCode <= 90) { // Keys A-Z
-          return nextVal.trim().slice(nextVal.length - 2).toUpperCase();
+          return event.key.toUpperCase();
         }
-        if (nextVal.length > 1) {
-          return (event.target as HTMLInputElement).value[1];
+        if (event.keyCode == 8 || event.keyCode == 46) {
+          return -1;
         }
-        if (event.keyCode == 8 || event.keyCode == 46){
-          return (nextVal);
-        }
-        return '';
       })
-      //,
-      //filter((value: string) => {
-      //  if (value.match(regex)) {
-      //    return true;
-      //  }
-      //  return false;
-      //})
     )
-    this.stateCodeSub = onStateCodeKeyUp$.subscribe(input => txtAddState.value = input);
+    this.stateCodeSub = onStateCodeKeyUp$.subscribe(
+      (input) => {
+        if (input == -1) {
+          this.txtAddStateValue = '';
+          txtAddState.value = '';
+          return;
+        }
+        txtAddState.value = this.txtAddStateValue;
+        if (input) {
+          this.txtAddStateValue = this.txtAddStateValue.concat(input);
+          if (this.txtAddStateValue.length > 2) {
+            this.txtAddStateValue = this.txtAddStateValue.slice(this.txtAddStateValue.length - 2);
+          }
+          txtAddState.value = this.txtAddStateValue;
+        }
+      }
+    );
   }
 }

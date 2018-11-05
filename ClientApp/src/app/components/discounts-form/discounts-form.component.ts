@@ -91,7 +91,10 @@ export class DiscountsFormComponent implements OnInit {
   ngOnInit() {    
   }  
 
-  onSubmit(): void {
+  onSubmit($event): void {
     this.discountsUpdated.emit(this.discountsForm.value);
+    let btn = ($event.target as HTMLButtonElement);
+    btn.classList.replace('btn-primary', 'btn-success');
+    setTimeout(() => btn.classList.replace('btn-success', 'btn-primary'), 2000);
   }
 }

@@ -315,4 +315,4 @@
     </div>
   </div>
 </form>
-<button type="button" class="btn btn-primary bevel bevel-md" (click)="onSubmit()">Save Discounts</button>
+<button [disabled]="!discountsForm.valid" type="button" class="btn btn-primary bevel bevel-md" (click)="onSubmit($event)">Save Discounts</button>
