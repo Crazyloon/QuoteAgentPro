@@ -1,4 +1,4 @@
-# Auto Insurance of America
+# Automobile Insurers of US
 ### A quoting application
 
 
